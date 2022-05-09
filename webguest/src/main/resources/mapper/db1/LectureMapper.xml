@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.LectureMapper">
+    <!-- 강의 목록 -->
+    <select id="selectLectureList" resultType="LectureModel" parameterType="Integer">
+        <![CDATA[
+            SELECT l.lecture_id, l.fk_team_id, l.start_dt, l.start_time, l.homework,
+                   l.zoom_link, l.chapter, l.is_del,
+                   DATE_FORMAT(l.reg_dt,'%Y-%m-%d') reg_dt
+            FROM dreamer.lecture AS l
+                     LEFT JOIN dreamer.team as t
+                           ON l.fk_team_id = t.team_id
+            WHERE l.is_del != 1 AND l.fk_team_id = #{fkTeamId}
+            ORDER BY l.chapter
+        ]]>
+    </select>
+
+    <!-- 다가오는 강의 -->
+    <select id="selectNearestLecture" resultType="LectureModel" parameterType="Integer">
+        <![CDATA[
+            SELECT lec.lecture_id, lec.start_dt, lec.start_time, lec.chapter, lec.zoom_link, lec.homework
+            FROM dreamer.lecture lec
+            WHERE lec.start_dt > now() AND lec.fk_team_id = #{fkTeamId}
+            LIMIT 1
+        ]]>
+    </select>
+
+    <!-- 강의 상세 -->
+    <select id="getLectureDetail" resultType="LectureModel" parameterType="HashMap">
+        <![CDATA[
+            SELECT l.lecture_id, l.fk_team_id, l.start_dt, l.start_time, l.homework,
+                   l.zoom_link, l.chapter, l.is_del,
+                   DATE_FORMAT(l.reg_dt,'%Y-%m-%d') reg_dt,VT.user_name
+            FROM dreamer.lecture AS l
+            LEFT JOIN dreamer.team as t
+                   ON l.fk_team_id = t.team_id
+            LEFT JOIN dreamer.view_teacher_user VT
+                    ON t.fk_tuser_id = VT.fk_tuser_id
+            WHERE l.lecture_id = #{lectureId}
+            AND t.fk_tuser_id = #{fkTeacherId}
+        ]]>
+    </select>
+
+    <!-- 강의 등록 -->
+    <insert id="insertLecture"  parameterType="HashMap" >
+        INSERT INTO dreamer.lecture (
+            fk_team_id,
+            start_dt,
+            start_time,
+            homework,
+            zoom_link,
+            chapter
+        ) VALUES
+        <foreach item="item" index="index" collection="lectureModel" separator=",">
+            (#{item.fkTeamId},
+            #{item.startDt},
+            #{item.startTime},
+            #{item.homework},
+            #{item.zoomLink},
+            #{item.chapter})
+        </foreach>
+    </insert>
+
+    <!-- 강의 수정 -->
+    <update id="updateLecture" parameterType="LectureListModel">
+        <![CDATA[
+            UPDATE  dreamer.lecture
+            SET
+                fk_team_id = #{fkTeamId},
+                start_dt = #{startDt},
+                start_time = #{startTime},
+                homework = #{homework},
+                zoom_link = #{zoomLink},
+                chapter = #{chapter}
+            WHERE lecture_id = #{lectureId}
+        ]]>
+    </update>
+
+    <!-- 강의 삭제 -->
+    <update id="deleteLecture" parameterType="Integer">
+        <![CDATA[
+            UPDATE  dreamer.lecture
+            SET is_del = 1
+            WHERE lecture_id = #{lectureId}
+        ]]>
+    </update>
+
+    <!-- 강의 단건 추가 -->
+    <insert id="insertOneLecture"  parameterType="LectureListModel" useGeneratedKeys="true"  keyProperty="lectureId">
+        INSERT INTO dreamer.lecture (
+            fk_team_id,
+            chapter,
+            start_dt,
+            start_time,
+            zoom_link,
+            homework
+        )
+        VALUES(
+            #{fkTeamId},
+            #{chapter},
+            #{startDt},
+            #{startTime},
+            #{zoomLink},
+            #{homework}
+        )
+    </insert>
+
+    <!-- 강의 상세 - 해당 팀의 모든 일정 가져오기  -->
+    <select id="getLectureListByTeam" resultType="LectureModel" parameterType="HashMap">
+        <![CDATA[
+        SELECT lecture_id, LTR.start_dt, start_time, zoom_link, chapter, team_id,
+               team_name, program_name, category_name,user_name
+        FROM dreamer.lecture LTR
+                 JOIN dreamer.view_use_team VUT ON LTR.fk_team_id = VUT.team_id
+                 JOIN dreamer.view_teacher_user VTU ON VUT.fk_tuser_id = VTU.fk_tuser_id
+                 LEFT JOIN dreamer.program PRG ON VUT.fk_program_id = PRG.program_id
+                 LEFT JOIN dreamer.team_category TCR ON VUT.fk_category_id = TCR.team_category_id
+        WHERE VUT.team_id = #{teamId}
+        AND LTR.is_del = 0
+        ]]>
+        <if test="searchMonth != null and searchMonth != ''">
+            AND MONTH(LTR.start_dt) = #{searchMonth}
+        </if>
+        <if test="searchYear != null and searchYear != ''">
+            AND YEAR(LTR.start_dt) = #{searchYear}
+        </if>
+        ORDER BY LTR.start_dt
+    </select>
+
+    <!-- 강의 chapter 재정렬 -->
+    <update id="setLectureChapter" parameterType="Integer">
+        SET @num:=0;
+        UPDATE dreamer.lecture LTR
+        SET LTR.chapter = @num:=@num+1
+        WHERE LTR.is_del != 1 AND LTR.fk_team_id = #{fkTeamId}
+        ORDER BY LTR.start_dt;
+    </update>
+
+    <!-- 강의 개수 -->
+    <select id="getAllLectureCount" resultType="Integer" parameterType="HashMap">
+        <![CDATA[
+            SELECT COUNT(lecture_id)
+            FROM dreamer.lecture LTR
+                     JOIN dreamer.view_use_team VUT ON LTR.fk_team_id = VUT.team_id
+            WHERE LTR.is_del != 1 AND VUT.team_id = #{teamId}
+        ]]>
+    </select>
+
+
+</mapper>

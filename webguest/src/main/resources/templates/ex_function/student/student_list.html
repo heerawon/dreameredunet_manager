@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <table id="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>가입일시</th>
+                <th>이름</th>
+                <th>성별</th>
+                <th>생년월일</th>
+                <th>구독횟수</th>
+                <th>결제금액</th>
+                <th>구독만료</th>
+                <th>수강중인팀</th>
+                <th>특별활동팀</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each='_,num : ${resList}' class="cursor" th:onclick="moveDetails([[${_.userId}]]);">
+                <td th:text='${num.count}'></td>
+                <td th:text='${_.userRegDt}'></td>
+                <td th:text='${_.userName}'></td>
+                <td th:text='${_.studentGender eq "F" ? "여" : "남"}'></td>
+                <td th:text='${_.studentBirth}'></td>
+                <td >23</td>
+                <td >1,220,000</td>
+                <td >22일전</td>
+                <td >기초(주니어) 기초+(주니어)</td>
+                <td >1팀(독서클럽) 2팀(명사특강)</td>
+            </tr>
+            </tbody>
+        </table>
+        <div>
+            <button type="submit" onclick="moveRegister()">등록</button>
+        </div>
+    </div>
+
+
+    <!-- third party js -->
+    <script src="../assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="../assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+
+    <!-- Datatables init -->
+    <script src="../assets/js/pages/datatables.init.js"></script>
+
+    <!-- App js -->
+    <script src="../assets/js/app.min.js"></script>
+
+    <script type="text/javaScript">
+
+        let table;
+
+        function moveDetails(id){
+            console.log("id",id);
+            location.href =  conPath + "student/detail?id="+id;
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link rel="stylesheet" th:href="@{/assets/css/order.css}" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Order-01-03 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">주문 상세</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/user/list}">주문 목록</a></li>
+                                    <li class="breadcrumb-item active">주문 상세</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <label class="form-label mb-3 form_title">주문내역</label>
+
+                                    <div class="row">
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">주문번호</label>
+                                            <input name="orderNumber" type="text" class="form-control" value="382817081700202" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">주문일</label>
+                                            <input name="orderDate" type="text" class="form-control" value="2021-10-30 10:30" disabled>
+                                        </div>
+
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">주문자명</label>
+                                            <input name="orderName" type="text" class="form-control" value="김연우" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">구독정보</label>
+                                            <input name="subsInfo" type="text" class="form-control" value="1개월" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">결제수단</label>
+                                            <input name="paymentMethod" type="text" class="form-control" value="카드" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">결제금액</label>
+                                            <input name="paymentAmount" type="text" class="form-control" value="235,500원" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">배송정보</label>
+                                            <div class="form-control deliveryInfo">
+                                                김연수 010-2039-0960 <br/><br/>
+                                                경기도 화성시 동탄대로 53 502호<br/>
+                                                고객메모 : 문앞(#1234#) 빠른배송<br/>
+                                                배송정보 : 아이가 있어서 벨을 누르지 말아주세요.
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </form>
+
+
+                        <!-- 하단 버튼 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-start">
+                                    <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">주문 목록</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+<script th:src="@{/assets/js/summernote.min.js}"></script>
+
+<!-- Init js 에디터-->
+
+
+<script type="text/javaScript">
+    let table;
+
+    $(document).ready(function () {
+        $('.menu06').addClass('menuitem-active');
+        $('.menu06-menu').addClass('show');
+        $('.menu06-1').addClass('active');
+    });
+
+
+
+    //사용자 목록으로
+    function moveBack() {
+        location.href =  conPath + "pub/order/list";
+    }
+
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+    <!--custom Css -->
+    <link rel="stylesheet" th:href="@{/assets/css/teacher.css}" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Teacher-01-03 / Teacher-01-04 강사 등록, 수정-->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">강사 등록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/notice/list}">강사관리</a></li>
+                                    <li class="breadcrumb-item active">강사 등록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="text-end">
+                                        <span class="text-danger">*</span> 표시는 필수 입니다.
+                                    </p>
+
+                                    <div class="row">
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">ID <span class="text-danger">*</span></label>
+                                            <input name="teacherID" type="text" class="form-control" required placeholder="ID를 입력해 주세요.">
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">비밀번호 <span class="text-danger">*</span></label>
+                                            <input name="teacherPassword" type="text" class="form-control" required placeholder="비밀번호를 입력해 주세요.">
+                                        </div>
+
+                                        <div class="mb-3 col-md-5">
+                                            <label class="form-label">강사이름 <span class="text-danger">*</span></label>
+                                            <input name="teacherName" type="text" class="form-control" required placeholder="강사이름을 입력해 주세요.">
+                                        </div>
+
+                                        <div class="mb-3 col-md-3">
+                                            <label class="form-label">성별</label>
+                                            <div class="pt-1 pb-1">
+                                                <div class="form-check form-check-inline">
+                                                    <input name="genderRadio" class="form-check-input" type="radio" id="manRadio" value="option1" checked>
+                                                    <label class="form-check-label" for="manRadio">남성</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input name="genderRadio" class="form-check-input" type="radio" id="womanRadio" value="option2">
+                                                    <label class="form-check-label" for="womanRadio">여성</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">생년월일</label>
+                                            <input name="teacherBirthDate" class="form-control" type="date">
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">휴대전화 <span class="text-danger">*</span></label>
+                                            <input name="teacherPhoneNumber" type="text" class="form-control"
+                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required placeholder="휴대폰번호를 입력해 주세요.">
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">이메일</label>
+                                            <input name="teacherEmail" type="email" class="form-control" placeholder="이메일을 입력해 주세요.">
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">주소</label>
+                                            <div class="mb-1 input-group addressSearch">
+                                                <input name="address" type="text" class="form-control">
+                                                <button class="btn btn-primary" type="button">주소검색</button>
+                                            </div>
+                                            <input name="detailAddress" type="text" class="form-control">
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">프로필 사진</label>
+                                            <input name="profilePhoto" type="file" class="form-control" placeholder="파일첨부">
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">분야</label>
+                                            <div>
+                                                <textarea class="form-control" id="area" rows="10" placeholder="분야를 작성해 주세요."></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">이력</label>
+                                            <div>
+                                                <textarea class="form-control" id="speck" rows="10" placeholder="이력을 작성해 주세요."></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">소개말</label>
+                                            <div>
+                                                <textarea class="form-control" id="introduction" rows="10" placeholder="소개말을 작성해 주세요."></textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 하단 버튼 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="float-start">
+                                        <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">취소</button>
+                                    </div>
+                                    <div class="float-end button-list">
+                                        <button type="submit" class="btn btn-primary btn_bg" onclick="moveDetail();">등록 완료</button>
+                                        <button type="submit" class="btn btn-primary btn_bg" onclick="moveDetail();">수정 완료</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+<script th:src="@{/assets/js/summernote.min.js}"></script>
+
+<!-- Init js 에디터-->
+
+
+<script type="text/javaScript">
+
+    $(document).ready(function () {
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02 a').addClass('active');
+
+    });
+
+    //강사 목록으로
+    function moveBack() {
+        location.href =  conPath + "pub/teacher/list";
+    }
+
+    //강사 상세
+    function moveDetail() {
+        location.href =  conPath + "pub/teacher/detail";
+    }
+
+</script>
+
+</body>
+
+</html>

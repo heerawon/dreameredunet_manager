@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/notice.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Member-01-02 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">사용자 수정</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/user/list}">사용자 목록</a></li>
+                                    <li class="breadcrumb-item active">사용자 수정</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">이름 <span class="text-danger">*</span></label>
+                                            <input name="userName" type="text" class="form-control" value="도지은">
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">성별</label>
+
+                                            <div>
+                                                <div class="form-check float-start ms-2">
+                                                    <input class="form-check-input" type="radio" name="gender" id="gender1">
+                                                    <label class="form-check-label" for="gender1">
+                                                        남성
+                                                    </label>
+                                                </div>
+                                                <div class="form-check float-start ms-2">
+                                                    <input class="form-check-input" type="radio" name="gender" id="gender2">
+                                                    <label class="form-check-label" for="gender2">
+                                                        여성
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">생년월일</label>
+                                            <input name="teacherBirthDate" class="form-control dateInput" type="date">
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">휴대전화 <span class="text-danger">*</span></label>
+                                            <input name="userPhoneNumber" type="text" class="form-control" value="01045632144">
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">가입일</label>
+                                            <input name="joinDate" type="text" class="form-control" value="2020-09-27 10:30" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">수강 중인 팀</label>
+                                            <input name="classCounting" type="text" class="form-control" value="3팀" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">특별활동 중인 팀</label>
+                                            <input name="specialClassCounting" type="text" class="form-control" value="독서활동2팀" disabled>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="grayLine"></div>
+
+                                <div class="card-body position-relative">
+                                    <label class="form-label mb-3 form_title">주문내역</label>
+                                    <div class="titleTopBtn">
+                                        <button type="button" class="btn btn-outline-primary align-bottom">전체보기</button>
+                                    </div>
+
+                                    <p class="totalOrder">총 125건</p>
+
+                                    <table id="table" class="table table-bordered nowrap w-100">
+                                        <thead>
+                                        <tr class="text-center">
+                                            <th>주문번호</th>
+                                            <th>결제일시</th>
+                                            <th>상품명</th>
+                                            <th>결제</th>
+                                            <th>결제금액</th>
+                                        </tr>
+                                        </thead>
+
+
+                                        <tbody>
+                                        <tr class="text-center">
+                                            <td>20200718122231</td>
+                                            <td>2020-07-18 15:46</td>
+                                            <td>1개월</td>
+                                            <td>무통장</td>
+                                            <td>246,000</td>
+                                        </tr>
+
+                                        <tr class="text-center">
+                                            <td>20200718122231</td>
+                                            <td>2020-07-18 15:46</td>
+                                            <td>1개월</td>
+                                            <td>무통장</td>
+                                            <td>246,000</td>
+                                        </tr>
+
+                                        <tr class="text-center">
+                                            <td>20200718122231</td>
+                                            <td>2020-07-18 15:46</td>
+                                            <td>1개월</td>
+                                            <td>무통장</td>
+                                            <td>246,000</td>
+                                        </tr>
+
+                                        <tr class="text-center">
+                                            <td>20200718122231</td>
+                                            <td>2020-07-18 15:46</td>
+                                            <td>1개월</td>
+                                            <td>무통장</td>
+                                            <td>246,000</td>
+                                        </tr>
+
+                                        <tr class="text-center">
+                                            <td>20200718122231</td>
+                                            <td>2020-07-18 15:46</td>
+                                            <td>1개월</td>
+                                            <td>무통장</td>
+                                            <td>246,000</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+
+                                <div class="grayLine"></div>
+
+                                <div class="card-body position-relative">
+                                    <label class="form-label mb-3 form_title">배송내역</label>
+                                    <div class="titleTopBtn">
+                                        <button type="button" class="btn btn-outline-primary align-bottom">전체보기</button>
+                                    </div>
+
+                                    <p class="totalOrder">총 125건</p>
+
+                                    <table id="table" class="table table-bordered nowrap w-100">
+                                        <thead>
+                                        <tr class="text-center">
+                                            <th>주문번호</th>
+                                            <th>강의 이름</th>
+                                            <th>결제금액</th>
+                                            <th>상태</th>
+                                            <th>수령인</th>
+                                            <th>배송정보</th>
+                                        </tr>
+                                        </thead>
+
+
+                                        <tbody>
+                                        <tr class="text-center">
+                                            <td>20200718122231</td>
+                                            <td>하이틴</td>
+                                            <td>246,000</td>
+                                            <td>발송전</td>
+                                            <td>김연우<br/>010-2039-0960<br/>38nibnoW</td>
+                                            <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>고객메모 : 문앞(#1234#) 빠른배송<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                        </tr>
+
+                                        <tr class="text-center">
+                                            <td>20200718122231</td>
+                                            <td>하이틴</td>
+                                            <td>246,000</td>
+                                            <td>발송완료<span class="d-block"><ins>12354402255</ins></span></td>
+                                            <td>김연우<br/>010-2039-0960<br/>38nibnoW</td>
+                                            <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>고객메모 : 문앞(#1234#) 빠른배송<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                        </tr>
+                                        <tr class="text-center">
+                                            <td>20200718122231</td>
+                                            <td>하이틴</td>
+                                            <td>246,000</td>
+                                            <td>발송완료<span class="d-block"><ins>12354402255</ins></span></td>
+                                            <td>김연우<br/>010-2039-0960<br/>38nibnoW</td>
+                                            <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>고객메모 : 문앞(#1234#) 빠른배송<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                        </tr>
+                                        <tr class="text-center">
+                                            <td>20200718122231</td>
+                                            <td>하이틴</td>
+                                            <td>246,000</td>
+                                            <td>발송완료<span class="d-block"><ins>12354402255</ins></span></td>
+                                            <td>김연우<br/>010-2039-0960<br/>38nibnoW</td>
+                                            <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>고객메모 : 문앞(#1234#) 빠른배송<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                        </tr>
+                                        <tr class="text-center">
+                                            <td>20200718122231</td>
+                                            <td>하이틴</td>
+                                            <td>246,000</td>
+                                            <td>발송완료<span class="d-block"><ins>12354402255</ins></span></td>
+                                            <td>김연우<br/>010-2039-0960<br/>38nibnoW</td>
+                                            <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>고객메모 : 문앞(#1234#) 빠른배송<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+
+
+                            </div>
+                        </form>
+
+
+                        <!-- 하단 버튼 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-start">
+                                    <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">사용자 목록</button>
+                                </div>
+                                <div class="float-end button-list">
+                                    <button type="button" class="btn btn-outline-primary btn_bg" data-bs-toggle="modal" data-bs-target="#delete-modal" onclick="membershipWithdrawal(0);">회원탈퇴
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn_bg" onclick="moveUpdate();">수정 완료</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+<script th:src="@{/assets/js/summernote.min.js}"></script>
+
+<!-- Init js 에디터-->
+
+
+<script type="text/javaScript">
+    let table;
+
+    $(document).ready(function () {
+        $('.menu05').addClass('menuitem-active');
+        $('.menu05 a').addClass('active');
+    });
+
+
+    //알림
+    function membershipWithdrawal(params) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '삭제 알림',
+            html: '탈퇴처리 하시겠습니까?',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '삭제', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                Swal.fire('탈퇴처리가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+
+    }
+
+    //사용자 목록으로
+    function moveBack() {
+        location.href =  conPath + "pub/user/list";
+    }
+
+    //수정
+    function moveUpdate() {
+        location.href =  conPath + "pub/user/update";
+    }
+
+</script>
+
+</body>
+
+</html>

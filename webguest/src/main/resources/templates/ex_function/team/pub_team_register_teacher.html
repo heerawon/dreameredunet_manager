@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+    <!--custom Css -->
+    <link th:href="@{/assets/css/team.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Lecture-01-03-02 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">팀등록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/team/list}">팀목록</a></li>
+                                    <li class="breadcrumb-item active">팀등록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="form_title">강사목록</p>
+                                <p class="m-0">강사를 선택하시면 등록됩니다.</p>
+
+                                <table id="table" class="table nowrap w-100">
+                                    <thead>
+                                    <tr>
+                                        <th>dataID</th>
+                                        <th>강사 정보</th>
+                                        <th>강의</th>
+                                        <th>특별활동</th>
+                                        <th> </th>
+                                    </tr>
+                                    </thead>
+
+
+                                    <tbody>
+                                    <tr th:each='_,num : ${teacherList}'>
+                                        <td th:text="${num.count}"></td>
+                                        <td>
+                                            <div class="teacherImg rounded overflow-hidden">
+                                                <img src="/images/teacher01.png" alt="teacher-image" class="img-fluid">
+                                            </div>
+                                            <p class="text-center mb-0 mt-1 teacherName"
+                                               th:text='${_.userName}'></p>
+                                        </td>
+                                        <td>
+                                            <p>주니어 1팀 2021-10-20 ~ 2021-12-20</p>
+                                            <p>주니어 2팀 2021-10-20 ~ 2021-12-20</p>
+                                            <p>주니어 3팀 2021-10-20 ~ 2021-12-20</p>
+                                        </td>
+                                        <td>
+                                            <p>특활 1팀 2021-10-20 ~ 2021-12-20</p>
+                                            <p>특활 2팀 2021-10-20 ~ 2021-12-20</p>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-primary" onclick="moveRegister([[${_.userId}]])">선택</button>
+                                        </td>
+                                    </tr>
+
+
+                                    </tbody>
+                                </table>
+
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<script type="text/javaScript">
+    let table;
+
+    $(document).ready(function () {
+        $('.menu03').addClass('menuitem-active');
+        $('.menu03-menu').addClass('show');
+        $('.menu03-1').addClass('active');
+
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+                { "width": "100px", "targets": 1 },
+                { "width": "10%", "targets": 4 }
+            ],
+            "lengthChange": false,//페이지 개수 삭제
+            "ordering": false,
+            "scrollX": true,
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+    });
+
+
+
+    $('#table tbody').on('click', 'td', function () {
+        let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+        let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+        let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+        let totalColumnCount = table.columns().count(); //전체 열 갯수
+        let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+
+        // if (indexColumn < totalColumnCount) {
+        //     // 수정&삭제 영역은 클릭 적용하지 않음
+        //     location.href = "/pub/notice/detail?id=" + indexData;
+        // }
+    });
+
+
+    //팀 등록
+    function moveRegister(){
+        location.href = "/pub/team/register1";
+    }
+</script>
+
+</body>
+
+</html>

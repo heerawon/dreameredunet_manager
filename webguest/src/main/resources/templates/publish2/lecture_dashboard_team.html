@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/lecture.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+    <!--calendar Css -->
+    <!--Insert style sheet files-->
+    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css"/>
+
+    <!-- If you use the default popups, use this. -->
+    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css"/>
+    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css"/>
+
+    <!--  Insert JavaScript file  -->
+    <script src="https://uicdn.toast.com/tui.code-snippet/v1.5.2/tui-code-snippet.min.js"></script>
+    <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
+    <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+    <script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
+    <!-- end carlendar Css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-01-02 -->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">팀 대시보드</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub2/lecture/dashboard/total}">전체 대시보드</a></li>
+                                    <li class="breadcrumb-item active">팀 대시보드</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 상단 부분 -->
+                            <div class="row">
+                                <div class="col-12">
+
+                                    <div class="button-list">
+                                        <button type="button" class="btn btn-outline-primary btn_bg active">[주니어] 기초</button>
+                                        <button type="button" class="btn btn-outline-primary btn_bg">[주니어] 기초 +</button>
+                                        <button type="button" class="btn btn-outline-danger btn_bg">[주니어] 기초 +</button>
+                                    </div>
+
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <p class="lecture_txt01 d-inline-block">[주니어] 기초</p>
+                                            <p class="lecture_txt01 d-inline-block">총 학생 수 : 43명</p>
+                                            <p class="lecture_txt01 d-inline-block">강의 기간 : 2021.08.01 ~2021.09.21</p>
+                                            <p class="lecture_txt01 d-inline-block">총 강의 수 : 25회</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <!-- 복습 -->
+                                        <div class="col-lg-6">
+                                            <div class="card card-body">
+                                                <h5 class="text-break mb-3">복습 <a th:href="@{/pub2/lecture/review/detail}"><span class="text-danger ms-1">[21]</span></a></h5>
+                                                <div class="boardBtn">
+                                                    <button type="button" class="btn btn-primary" onclick="moveReview()">전체보기</button>
+                                                </div>
+
+                                                <p>이를 전체과 공유하며 2학기 때 실시하게 될 프로젝트들을 좀 더 성공적으로 수행할 수 있는 방법들에 대해 모색하며 브로젝트를 시작한다.</p>
+
+                                                <div class="ratio ratio-16x9">
+                                                    <iframe src="https://www.youtube.com/embed/PrUxWZiQfy4?ecver=1"></iframe>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 예습 -->
+                                        <div class="col-lg-6">
+                                            <div class="card card-body">
+                                                <h5 class="text-break mb-3">예습 <a th:href="@{/pub2/lecture/preview/detail}"><span class="text-danger ms-1">[21]</span></a></h5>
+                                                <div class="boardBtn">
+                                                    <button type="button" class="btn btn-primary" onclick="movePreview()">전체보기</button>
+                                                </div>
+
+                                                <p>이를 전체과 공유하며 2학기 때 실시하게 될 프로젝트들을 좀 더 성공적으로 수행할 수 있는 방법들에 대해 모색하며 브로젝트를 시작한다.</p>
+
+                                                <div class="ratio ratio-16x9">
+                                                    <iframe src="https://www.youtube.com/embed/PrUxWZiQfy4?ecver=1"></iframe>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 출석현황 -->
+                                        <div class="col-lg-6 mb-3">
+                                            <div class="card card-body h-100">
+                                                <h5 class="text-break mb-3">출석현황 </h5>
+                                                <div class="boardBtn">
+                                                    <button type="button" class="btn btn-primary" onclick="moveAttendance()">자세히 보기</button>
+                                                </div>
+
+                                                <div>
+                                                    <!-- 캘린더가 들어가는 자리 -->
+                                                    <label>일정</label>
+                                                    <div id="calendar"></div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+
+                                        <!-- 학생목록 -->
+                                        <div class="col-lg-6 mb-3 studentList">
+                                            <div class="card card-body h-100">
+                                                <h5 class="text-break mb-3">학생목록 <span>112명</span></h5>
+                                                <div class="boardBtn">
+                                                    <button type="button" class="btn btn-primary" onclick="moveMember()">전체보기</button>
+                                                </div>
+
+                                                <table id="table" class="table nowrap w-100 studentListWrap">
+                                                    <thead>
+                                                    <tr class="text-center">
+                                                        <th>dataID</th>
+                                                        <th>학생 MBTI</th>
+                                                        <th>이름(생년월일)</th>
+                                                        <th>성별</th>
+                                                        <th>수강중인 팀</th>
+                                                    </tr>
+                                                    </thead>
+
+
+                                                    <tbody>
+                                                    <tr class="text-center">
+                                                        <td>1</td>
+                                                        <td>
+                                                            <div>
+                                                                <div class="studentMbti float-start rounded">
+                                                                    <img src="/images/teacher01.png" class="img-fluid">
+                                                                </div>
+                                                                <p class="studentMbtiTxt">NTJS</p>
+                                                            </div>
+                                                        </td>
+                                                        <td>원빈(999.10.23)</td>
+                                                        <td>남성</td>
+                                                        <td>[주니어]-기초</td>
+                                                    </tr>
+                                                    <tr class="text-center">
+                                                        <td>1</td>
+                                                        <td>
+                                                            <div>
+                                                                <div class="studentMbti float-start rounded">
+                                                                    <img src="/images/teacher01.png" class="img-fluid">
+                                                                </div>
+                                                                <p class="studentMbtiTxt">NTJS</p>
+                                                            </div>
+                                                        </td>
+                                                        <td>원빈(999.10.23)</td>
+                                                        <td>남성</td>
+                                                        <td>[주니어]-기초</td>
+                                                    </tr>
+                                                    <tr class="text-center">
+                                                        <td>1</td>
+                                                        <td>
+                                                            <div>
+                                                                <div class="studentMbti float-start rounded">
+                                                                    <img src="/images/teacher01.png" class="img-fluid">
+                                                                </div>
+                                                                <p class="studentMbtiTxt">NTJS</p>
+                                                            </div>
+                                                        </td>
+                                                        <td>원빈(999.10.23)</td>
+                                                        <td>남성</td>
+                                                        <td>[주니어]-기초</td>
+                                                    </tr>
+                                                    <tr class="text-center">
+                                                        <td>1</td>
+                                                        <td>
+                                                            <div>
+                                                                <div class="studentMbti float-start rounded">
+                                                                    <img src="/images/teacher01.png" class="img-fluid">
+                                                                </div>
+                                                                <p class="studentMbtiTxt">NTJS</p>
+                                                            </div>
+                                                        </td>
+                                                        <td>원빈(999.10.23)</td>
+                                                        <td>남성</td>
+                                                        <td>[주니어]-기초</td>
+                                                    </tr>
+                                                    <tr class="text-center">
+                                                        <td>1</td>
+                                                        <td>
+                                                            <div>
+                                                                <div class="studentMbti float-start rounded">
+                                                                    <img src="/images/teacher01.png" class="img-fluid">
+                                                                </div>
+                                                                <p class="studentMbtiTxt">NTJS</p>
+                                                            </div>
+                                                        </td>
+                                                        <td>원빈(999.10.23)</td>
+                                                        <td>남성</td>
+                                                        <td>[주니어]-기초</td>
+                                                    </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <!-- Q&A -->
+                                        <div class="col-lg-6">
+                                            <div class="card card-body">
+                                                <h5 class="text-break mb-3">Q&A</h5>
+                                                <div class="boardBtn">
+                                                    <button type="button" class="btn btn-primary" onclick="moveQaList()">전체보기</button>
+                                                </div>
+
+                                                <ul class="boardList">
+                                                    <li>
+                                                        <a th:href="@{/pub2/lecture/qa/detail}">
+                                                            <p class="board_txt01">강의내용중에--라는 부분에 강의내용중에--라는 부분에강의내용중에--라는 부분에</p>
+                                                            <p class="board_txt02">원빈</p>
+                                                            <p class="board_txt03">[주니어]-기초</p>
+                                                            <p class="board_txt04">2021.08.01</p>
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a th:href="@{/pub2/lecture/qa/detail}">
+                                                            <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                            <p class="board_txt02">원빈</p>
+                                                            <p class="board_txt03">[주니어]-기초</p>
+                                                            <p class="board_txt04">2021.08.01</p>
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a th:href="@{/pub2/lecture/qa/detail}">
+                                                            <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                            <p class="board_txt02">원빈</p>
+                                                            <p class="board_txt03">[주니어]-기초</p>
+                                                            <p class="board_txt04">2021.08.01</p>
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a th:href="@{/pub2/lecture/qa/detail}">
+                                                            <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                            <p class="board_txt02">원빈</p>
+                                                            <p class="board_txt03">[주니어]-기초</p>
+                                                            <p class="board_txt04">2021.08.01</p>
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a th:href="@{/pub2/lecture/qa/detail}">
+                                                            <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                            <p class="board_txt02">원빈</p>
+                                                            <p class="board_txt03">[주니어]-기초</p>
+                                                            <p class="board_txt04">2021.08.01</p>
+                                                        </a>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <!-- 과제 -->
+                                        <div class="col-lg-6">
+                                            <div class="card card-body">
+                                                <h5 class="text-break mb-3">최근 과제</h5>
+                                                <div class="boardBtn">
+                                                    <button type="button" class="btn btn-primary" onclick="moveHomeworkList()">전체보기</button>
+                                                </div>
+
+                                                <ul class="boardList">
+                                                    <li>
+                                                        <a th:href="@{/pub2/lecture/homework/detail}">
+                                                            <p class="board_txt01">강의내용중에--라는 부분에 강의내용중에--라는 부분에강의내용중에--라는 부분에</p>
+                                                            <p class="board_txt02">원빈</p>
+                                                            <p class="board_txt03">[주니어]-기초</p>
+                                                            <p class="board_txt04">2021.08.01</p>
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a th:href="@{/pub2/lecture/homework/detail}">
+                                                            <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                            <p class="board_txt02">원빈</p>
+                                                            <p class="board_txt03">[주니어]-기초</p>
+                                                            <p class="board_txt04">2021.08.01</p>
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a th:href="@{/pub2/lecture/homework/detail}">
+                                                            <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                            <p class="board_txt02">원빈</p>
+                                                            <p class="board_txt03">[주니어]-기초</p>
+                                                            <p class="board_txt04">2021.08.01</p>
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a th:href="@{/pub2/lecture/homework/detail}">
+                                                            <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                            <p class="board_txt02">원빈</p>
+                                                            <p class="board_txt03">[주니어]-기초</p>
+                                                            <p class="board_txt04">2021.08.01</p>
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a th:href="@{/pub2/lecture/homework/detail}">
+                                                            <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                            <p class="board_txt02">원빈</p>
+                                                            <p class="board_txt03">[주니어]-기초</p>
+                                                            <p class="board_txt04">2021.08.01</p>
+                                                        </a>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<script type="text/javaScript">
+    let table;
+
+    $(document).ready(function () {
+
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02 a').addClass('active');
+
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "searching": false, //검색 삭제
+            "info": false, //하단 정보 삭제 (Showing 1 to 8 of 8 entries)
+            "lengthChange": false, //테이블의 페이징 표시
+            "paging": false,
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+
+    });
+
+    //캘린더
+    var calendar = new tui.Calendar(document.getElementById('calendar'), {
+        defaultView: 'month',
+        taskView: true,    // Can be also ['milestone', 'task']
+        scheduleView: true,  // Can be also ['allday', 'time']
+        template: {
+            milestone: function (schedule) {
+                return '<span style="color:red;"><i class="fa fa-flag"></i> ' + schedule.title + '</span>';
+            },
+            milestoneTitle: function () {
+                return 'Milestone';
+            },
+            task: function (schedule) {
+                return '&nbsp;&nbsp;#' + schedule.title;
+            },
+            taskTitle: function () {
+                return '<label><input type="checkbox" />Task</label>';
+            },
+            allday: function (schedule) {
+                return schedule.title + ' <i class="fa fa-refresh"></i>';
+            },
+            alldayTitle: function () {
+                return 'All Day';
+            },
+            time: function (schedule) {
+                return schedule.title + ' <i class="fa fa-refresh"></i>' + schedule.start;
+            }
+        },
+        month: {
+            daynames: ['일', '월', '화', '수', '목', '금', '토'],
+            startDayOfWeek: 0,
+            narrowWeekend: true
+        },
+
+    });
+
+    // event handlers
+    calendar.on({
+        'clickDayname': function (date) {
+            console.log('clickDayname', date);
+        },
+        'clickSchedule': function (e) {
+            console.log('clickSchedule', e);
+        },
+        'beforeCreateSchedule': function (e) {
+            console.log('beforeCreateSchedule', e);
+            // open a creation popup
+            // If you dont' want to show any popup, just use `e.guide.clearGuideElement()`
+            // then close guide element(blue box from dragging or clicking days)
+            e.guide.clearGuideElement();
+        },
+        'beforeUpdateSchedule': function (e) {
+            console.log('beforeUpdateSchedule', e);
+            e.schedule.start = e.start;
+            e.schedule.end = e.end;
+            cal.updateSchedule(e.schedule.id, e.schedule.calendarId, e.schedule);
+        },
+        'beforeDeleteSchedule': function (e) {
+            console.log('beforeDeleteSchedule', e);
+            cal.deleteSchedule(e.schedule.id, e.schedule.calendarId);
+        }
+    });
+
+    //복습 목록으로 이동
+    function moveReview() {
+        location.href = conPath+"pub2/lecture/review";
+    }
+
+    //예습 목록으로 이동
+    function movePreview() {
+        location.href = conPath+"pub2/lecture/preview";
+    }
+
+    //출석현황으로 이동
+    function moveAttendance() {
+        location.href = conPath+"pub2/lecture/attendance";
+    }
+
+    //팀목록
+    function  moveMember() {
+        location.href = conPath+"pub2/lecture/member/list";
+    }
+
+    //Q&A 목록으로 이동
+    function moveQaList() {
+        location.href = conPath+"pub2/lecture/qa/list";
+    }
+
+    //과제 목록으로 이동
+    function moveHomeworkList() {
+        location.href = conPath+"pub2/lecture/homework/list";
+    }
+</script>
+
+</body>
+
+</html>

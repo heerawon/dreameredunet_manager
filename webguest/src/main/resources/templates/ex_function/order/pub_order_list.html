@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!--custom Css -->
+    <link rel="stylesheet" th:href="@{/assets/css/order.css}" type="text/css"/>
+    <!-- end custom css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Order-01-01 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">주문 목록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">주문 목록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <button type="button" id="btn-subscribe" class="btn btn-sm " th:classappend="${type=='subscribe'} ? 'btn-primary' : 'btn-outline-primary'" onclick="chgListType('subscribe')">구독결제</button>
+                                    <button type="button" id="btn-item" class="btn btn-sm " th:classappend="${type=='item'} ? 'btn-primary' : 'btn-outline-primary'" onclick="chgListType('item')">상품결제</button>
+                                </div>
+
+                                <div class="searchTable mb-3">
+<!--                                    <div class="articleWrap">-->
+<!--                                        <div class="d-table-cell align-middle text-center fw-bold articleTit">-->
+<!--                                            <p>주문상품</p>-->
+<!--                                        </div>-->
+<!--                                        <div class="d-table-cell align-middle articleChoice">-->
+<!--                                            <div class="form-check float-start">-->
+<!--                                                <input class="form-check-input" type="checkbox" value="">-->
+<!--                                                <label class="form-check-label">구독</label>-->
+<!--                                            </div>-->
+<!--                                            <div class="form-check float-start ms-2">-->
+<!--                                                <input class="form-check-input" type="checkbox" value="">-->
+<!--                                                <label class="form-check-label">상품</label>-->
+<!--                                            </div>-->
+<!--                                    </div>-->
+
+                                    <div class="articleWrap row">
+                                        <div class="col-md-6 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>결제방법</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <div class="form-check float-start">
+                                                    <input class="form-check-input" type="checkbox" value="" checked disabled>
+                                                    <label class="form-check-label">카드</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>주문자</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input name="orderName" type="text" class="form-control" id="order" th:value='${order}'>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="articleWrap">
+                                        <!--검색 날짜 articleWrap -->
+                                        <th:block th:include="ex_function/init/init_pub_filter_bar.html"></th:block>
+                                    </div>
+                                </div>
+
+                                <div class="button-list text-center mb-3">
+                                    <button type="button" class="btn btn-primary btn_bg btn90" id="btn_serch">검색</button>
+                                    <button type="button" class="btn btn-outline-success float-end" onclick="excelDownload()">검색결과 엑셀다운로드</button>
+                                </div>
+
+                                <div class="button-list">
+
+                                </div>
+
+
+                                <table id="table" class="table table-hover nowrap w-100">
+                                    <thead>
+                                    <tr class="text-center">
+                                        <th>dataID</th>
+                                        <th>userID</th>
+<!--                                        <th><input class="form-check-input" type="checkbox" value=""></th>-->
+                                        <th>주문일시</th>
+                                        <th>주문번호</th>
+                                        <th>배송상태</th>
+                                        <th>주문상품</th>
+                                        <th>결제</th>
+                                        <th>주문액</th>
+                                        <th>결제상태</th>
+                                        <th>주문자명</th>
+                                        <th>계정</th>
+                                        <th>배송정보</th>
+                                    </tr>
+                                    </thead>
+
+
+                                    <tbody>
+                                    <tr class="cursor text-center" th:each='_,num : ${resList}'>
+                                        <td th:text="${_.orderId}"></td>
+                                        <td th:text="${_.userId}"></td>
+<!--                                        <td><input class="form-check-input" type="checkbox" value=""></td>-->
+                                        <td th:text="${#dates.format(_.regDt, 'yyyy-MM-dd HH:mm')}"></td>
+                                        <td th:text="${_.merchantUid}"></td>
+                                        <td>
+                                            <span th:if="${_?.isShipping eq '' || _?.isShipping eq null}">미처리</span>
+                                            <span th:if="${_?.isShipping eq '0'}">배송없음</span>
+                                            <span th:if="${_?.isShipping eq '1'}">배송있음</span>
+                                        </td>
+                                        <td >
+                                            <span th:if="${_.subscribeName ne null}">[[ ${_.subscribeName} ]]  </br>[[ ${_.subscribeTerm} ]]일</span>
+                                            <span th:if="${_.itemsName ne null}">[[ ${_.itemsName} ]]</span>
+                                        </td>
+                                        <td>카드</td>
+                                        <td>[[ ${#numbers.formatInteger(_.totalPrice, 0, 'COMMA')} ]]</td>
+                                        <td>
+                                            <span th:if="${_.orderStatus =='paid'}">결제완료</span>
+                                            <span th:if="${_.orderStatus =='failed'}">결제실패</span>
+                                            <span th:if="${_.orderStatus =='ready'}">가상계좌 발급</span>
+                                        </td>
+                                        <td>[[ ${_.orderName} ]]<br/>[[ ${_.orderCell} ]]</td>
+                                        <td>
+                                            [[ ${_.userSnsType} ]]<br/>
+                                            <a href="#" th:onclick="moveUserDetails([[${_.userId}]])">
+                                                [[ ${_.email} ]]
+                                            </a>
+                                        </td>
+                                        <td class="text-start">[[${_.orderMemo}]]</td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+<!--                                <div class="completeCheck">-->
+<!--                                    <button type="button" class="btn btn-outline-primary position_Btm_btn_left">-->
+<!--                                        <span class="btn-label"><i class="fe-check"></i></span>결제완료처리-->
+<!--                                    </button>-->
+<!--                                </div>-->
+
+
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<!-- custom date setting  -->
+<script th:src="@{/assets/js/date_setting.js}"></script>
+
+<script type="text/javaScript">
+    let table;
+
+    $(function () {
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+                {
+                    "targets": [1],
+                    "visible": false,
+                    "searchable": false,
+                },
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "searching": false, //검색 삭제
+            "info": false, //하단 정보 삭제 (Showing 1 to 8 of 8 entries)
+            "lengthChange": false, //테이블의 페이징 표시
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+
+        //조건 검색 동작
+        $("#btn_serch").on( "click", function() {
+            const userName = $("#order").val();
+            const searchStartDt = $("#searchStart").val();
+            const searchEndDt = $("#searchEnd").val();
+            let type = $("#btn-subscribe").hasClass("btn-primary")? 'subscribe':'item';
+            location.href =  "?type="+type+"&order="+userName+"&startDt="+searchStartDt+"&endDt="+searchEndDt;
+        });
+
+        //날짜 세팅 버튼 동작
+        $(".btn_func_date").on("click", function() {
+            setStartEnd($(this));
+        });
+
+        //날짜 초기화 버튼 동작
+        $("#btn_set_no_date").on( "click", function() {
+            $("#searchStart").val("");
+            $("#searchEnd").val("");
+        });
+    });
+
+
+    $('#table tbody').on('click', 'td', function () {
+        let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+        let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+        let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+        let totalColumnCount = table.columns().count(); //전체 열 갯수
+        let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+        let userId = table.row(this).data()[1]; //감춰진 0번째 userID 값
+
+        if (indexColumn < totalColumnCount -2 && indexColumn > 1) {
+            let type = $("#btn-subscribe").hasClass("btn-primary")? 'subscribe':'item';
+            location.href =  conPath + "order/detail?type="+type+"&id=" + indexData + "&userId=" + encodeURI(userId);
+        }
+
+    });
+
+    function chgListType(type) {
+        location.href =  "?type="+type;
+    }
+
+    //학생 상세로 이동
+    const moveUserDetails = function (id) {
+        window.open(conPath + "student/detail?id="+encodeURI(id));
+    }
+
+    //엑셀 다운로드
+    const excelDownload = function() {
+        const userName = $("#order").val();
+        const searchStartDt = $("#searchStart").val();
+        const searchEndDt = $("#searchEnd").val();
+        let type = $("#btn-subscribe").hasClass("btn-primary")? 'subscribe':'item';
+        location.href = conPath+ "excelDown/orderList?type="+type+"&order="+userName+"&startDt="+searchStartDt+"&endDt="+searchEndDt;
+    }
+
+    //input date 세팅부
+    const setStartEnd = function (argument) {
+        let type = String($(argument).attr("id")).trim();
+        const getDates =  getFormatDate(type);
+
+        $("#searchStart").val("");
+        $("#searchEnd").val("");
+        $("#searchStart").val(getDates.startDt);
+        $("#searchEnd").val(getDates.endDt);
+    }
+
+</script>
+
+</body>
+
+</html>

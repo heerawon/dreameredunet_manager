@@ -1,0 +1,40 @@
+@charset "UTF-8";
+/* 강사 목록 */
+.teacherImg {
+    width: 100px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orderChange {
+    display: inline-block;
+}
+
+.orderChange i {
+    background: #ffffff;
+    padding: 2px;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 3px;
+    border: 1px solid #cfcfcf;
+}
+
+.orderChange i:hover {
+    background: #e9e9e9;
+}
+
+.ceoBadge {
+    margin-left: 5px;
+}
+
+
+/* 강사등록 */
+.addressSearch {
+    width: 50%;
+}
+
+@media screen and (max-width: 767px) {
+    .addressSearch { width: 100%; }
+}

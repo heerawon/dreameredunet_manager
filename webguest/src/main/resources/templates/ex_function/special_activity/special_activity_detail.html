@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form>
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label for="teamName" class="form-label">팀명</label>
+            <input type="text" class="form-control" id="teamName" th:value='${resModel?.teamName}' readonly>
+        </div>
+        <div class="mb-3 col-md-6">
+            <label for="totalLecture" class="form-label">전체 강의 횟수</label>
+            <input type="text" class="form-control" id="totalLecture" th:value='${resModel?.totalLecture}' readonly>
+        </div>
+        <div class="mb-3 col-md-6">
+            <label for="startDt" class="form-label">강의기간</label>
+            <input type="text" class="form-control" id="startDt" th:value='${resModel?.startDt}' readonly>
+            ~
+            <input type="text" class="form-control" id="endDt" th:value='${resModel?.endDt}' readonly>
+        </div>
+    </div>
+
+    <div class="row">
+        <label for="introduction" >강의소개</label>
+        <div>
+            <textarea required class="form-control" id="introduction" rows="5"
+                      th:text='${resModel?.introduce}' readonly ></textarea>
+        </div>
+        <label for="link" class="form-label">강의자료 youtube 링크</label>
+        <input type="text" class="form-control" id="link" th:value='${resModel?.link}' readonly>
+    </div>
+
+    <div class="row">
+        <label>일정</label>
+        캘린더
+    </div>
+
+    <div class="row">
+        <label>학생목록</label>
+        학생
+    </div>
+
+    <div class="float-start">
+        <button type="button" th:onclick="deleteTeam([[${resModel?.teamId}]]);">삭제</button>
+    </div>
+    <div class="float-end">
+        <button type="button"  th:onclick="moveChange([[${resModel?.teamId}]]);">수정</button>
+        <button type="button"  onclick="moveList();">뒤로</button>
+    </div>
+</form>
+
+<script type="text/javaScript">
+    /*<![CDATA[*/
+    let teamId = [[${resModel?.teamId}]];
+    /*]]>*/
+
+    function deleteTeam(id) {
+        location.href =  conPath + "specialActivity/delete?id="+id;
+    }
+
+    function moveChange(id){
+        location.href =  conPath + "specialActivity/register?type=edit&id="+id;
+    }
+
+    function moveList(){
+        location.href =  conPath + "specialActivity/list";
+    }
+</script>
+</body>
+</html>

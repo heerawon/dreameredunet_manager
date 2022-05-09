@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/team.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Extra-01-03-01 -->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">특별활동 팀등록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/class/list}">특별활동 팀목록</a></li>
+                                    <li class="breadcrumb-item active">특별활동 팀등록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="mb-3 col-lg-2">
+                                            <label class="form-label">특별 활동목록</label>
+                                            <div class="d-table-cell align-middle">
+                                                <select name="programName" class="form-select">
+                                                    <option value="1">동화작가</option>
+                                                    <option value="2">칼럼리스트</option>
+                                                    <option value="3">독서클럽</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-lg-3">
+                                            <label class="form-label">팀명 <span class="text-danger">*</span></label>
+                                            <input name="teamName" type="text" class="form-control" required placeholder="팀명을 입력해 주세요.">
+                                        </div>
+
+                                        <div class="mb-3 col-lg-3">
+                                            <label class="form-label">전체강의횟수</label>
+                                            <input name="classCount" type="text" class="form-control">
+                                        </div>
+
+                                        <div class="mb-3 col-lg-4">
+                                            <label class="form-label">강의기간</label>
+                                            <div class="classPeriod">
+                                                <input name="classPeriod" class="form-control" type="date" required> ~ <input name="classPeriod" class="form-control float-right" type="date" required>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="grayLine"></div>
+
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="form-label form_title">강사</label>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <div class="mb-2 pt-1">
+                                                        <img th:src='@{/images/teacher01.png}' class="img-fluid rounded" />
+                                                    </div>
+                                                    <button type="button" class="btn btn-outline-primary align-bottom"  onclick="moveTeacherList();">강사 목록</button>
+                                                </div>
+
+                                                <div class="col-md-10">
+                                                    <div class="mb-2">
+                                                        <label class="form-label">강의 소개</label>
+                                                        <div>
+                                                            <textarea class="form-control" id="lectureIntroduction" rows="5" placeholder="강의 소개를 작성해 주세요."></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">강의자료 YouTube 링크</label>
+                                                        <input name="lectureMtrls" type="text" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+
+                        <!-- 하단 버튼 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-start">
+                                    <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">취소</button>
+                                </div>
+                                <div class="float-end button-list">
+                                    <button type="button" class="btn btn-primary btn_bg" onclick="moveStudentRegister();">팀 생성후 일정/학생등록</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<script type="text/javaScript">
+    let table;
+    let cntChapter = 0;
+
+    $(document).ready(function () {
+        $('.menu04').addClass('menuitem-active');
+        $('.menu04-menu').addClass('show');
+        $('.menu04-1').addClass('active');
+
+    });
+
+
+    //강사목록
+    function moveTeacherList() {
+        location.href = conPath + "pub/special/team/register/teacher";
+    }
+
+    //뒤로
+    function moveBack() {
+        location.href =  conPath + "pub/special/team/list";
+    }
+
+    //팀 생성후 일정/학생등록
+    function moveStudentRegister() {
+        location.href =  conPath + "pub/special/team/register2";
+    }
+
+</script>
+
+</body>
+
+</html>

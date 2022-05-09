@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!--custom Css -->
+    <link rel="stylesheet" th:href="@{/assets/css/order.css}" type="text/css"/>
+    <!-- end custom css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Order-02-01 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">배송 목록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">배송 목록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="searchTable mb-3">
+
+                                    <div class="articleWrap row">
+                                        <div class="col-md-6 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>학생명</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input name="studentName" type="text" class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>배송상태</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <div class="form-check float-start">
+                                                    <input class="form-check-input" type="checkbox" value="">
+                                                    <label class="form-check-label">발송전</label>
+                                                </div>
+                                                <div class="form-check float-start ms-2">
+                                                    <input class="form-check-input" type="checkbox" value="">
+                                                    <label class="form-check-label">발송완료</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="articleWrap">
+                                        <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                            <p>주문일</p>
+                                        </div>
+                                        <div class="d-table-cell align-middle articleChoice">
+                                            <div class="float-start searchDate me-2">
+                                                <input class="form-control dateInput" type="date" name="searchDate"> ~
+                                                <input class="form-control dateInput" type="date" name="searchDate">
+                                            </div>
+
+                                            <div class="button-list float-start">
+                                                <button type="button" class="btn btn-outline-primary">어제</button>
+                                                <button type="button" class="btn btn-outline-primary active">오늘</button>
+                                                <button type="button" class="btn btn-outline-primary">이번주</button>
+                                                <button type="button" class="btn btn-outline-primary">이번달</button>
+                                                <button type="button" class="btn btn-outline-primary">지난주</button>
+                                                <button type="button" class="btn btn-outline-primary">지난달</button>
+                                                <button type="button" class="btn btn-outline-primary">전체</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="button-list text-center mb-3">
+                                    <button type="button" class="btn btn-primary btn_bg btn90">검색</button>
+                                    <button type="button" class="btn btn-outline-success float-end">검색결과 엑셀다운로드</button>
+                                </div>
+
+                                <div class="button-list">
+
+                                </div>
+
+
+                                <table id="table" class="table nowrap w-100">
+                                    <thead>
+                                    <tr class="text-center">
+                                        <th>dataID</th>
+                                        <th>등록일시</th>
+                                        <th>학생명</th>
+                                        <th>팀이름</th>
+                                        <th>상태</th>
+                                        <th>수령인</th>
+                                        <th>배송정보</th>
+                                        <th>관리</th>
+                                    </tr>
+                                    </thead>
+
+
+                                    <tbody>
+                                    <tr class="text-center">
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td><a th:href="@{/pub/user/update}"><ins>원빈</ins></a></td>
+                                        <td>1xla</td>
+                                        <td>발송전
+                                            <div><button type="button" class="btn btn-sm btn-outline-primary" onclick="moveSend()">발송</button></div>
+                                        </td>
+                                        <td>김연우<br/>010-4563-4563</td>
+                                        <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>고객메모 : 문앞(#1234#) 빠른배송<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                        <td><button type="button" class="btn btn-primary" onclick="moveUpdate()">수정</button></td>
+                                    </tr>
+
+                                    <tr class="text-center">
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td><a href=""><ins>원빈</ins></a></td>
+                                        <td>1xla</td>
+                                        <td>발송완료<br/> <ins>우체국 123550022455</ins></td>
+                                        <td>김연우<br/>010-4563-4563</td>
+                                        <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>고객메모 : 문앞(#1234#) 빠른배송<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                        <td><button type="button" class="btn btn-primary" onclick="moveUpdate()">수정</button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="completeCheck">
+                                    <button type="button" class="btn btn-outline-primary position_Btm_btn_right" onclick="moveRegister()">배송등록</button>
+                                </div>
+
+
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<script type="text/javaScript">
+    let table;
+
+    $(document).ready(function () {
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "searching": false, //검색 삭제
+            "info": false, //하단 정보 삭제 (Showing 1 to 8 of 8 entries)
+            "lengthChange": false, //테이블의 페이징 표시
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+    });
+
+
+    $('#table tbody').on('click', 'td', function () {
+        let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+        let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+        let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+        let totalColumnCount = table.columns().count(); //전체 열 갯수
+        let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+
+        // if (indexColumn < totalColumnCount) {
+        //     location.href = "/pub/order/detail?id=" + indexData;
+        // }
+    });
+
+    //배송발송
+    function moveSend() {
+        location.href = conPath + "pub/order/delivery/register3";
+    }
+
+    //배송수정
+    function moveUpdate() {
+        location.href = conPath + "pub/order/delivery/register2";
+    }
+
+    //배송등록
+    function moveRegister() {
+        location.href =  conPath + "pub/order/delivery/register1";
+    }
+
+</script>
+
+</body>
+
+</html>

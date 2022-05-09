@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form>
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label for="nameInput" class="form-label">제목</label>
+            <input type="text" class="form-control" id="nameInput" th:value='${resModel?.boardTitle}' readonly>
+        </div>
+    </div>
+
+    <div class="row">
+        <label for="introduction" >내용</label>
+        <div>
+            <textarea required class="form-control" id="introduction" rows="5"
+                      th:text='${resModel?.boardContent}' readonly ></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <label for="profile" >이미지</label>
+        <div >
+            <input name="file" type="file" th:text='${resModel?.boardImg}'
+                   id="profile" required placeholder="파일첨부" disabled>
+        </div>
+    </div>
+
+    <div class="float-start">
+        <button type="button" onclick="deleteBoard();">삭제</button>
+    </div>
+    <div class="float-end">
+        <button type="button"  th:onclick="moveChange([[${resModel?.boardId}]]);">수정</button>
+        <button type="button"  onclick="moveList();">뒤로</button>
+    </div>
+</form>
+
+<script type="text/javaScript">
+    /*<![CDATA[*/
+    let boardId = [[${resModel.boardId}]];
+    /*]]>*/
+
+    function deleteBoard() {
+        location.href = conPath + "board/delete?id="+boardId;
+    }
+
+    function moveChange(id){
+        location.href =  conPath + "board/register?type=edit&id="+id;
+    }
+
+    function moveList(){
+        location.href =  conPath + "board/list";
+    }
+</script>
+</body>
+</html>

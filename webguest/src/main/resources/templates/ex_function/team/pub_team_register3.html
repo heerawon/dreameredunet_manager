@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/team.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+    <!-- AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.serializeObject/2.0.3/jquery.serializeObject.min.js"></script>
+
+    <!--calendar Css -->
+    <!--Insert style sheet files-->
+    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css" />
+
+    <!-- If you use the default popups, use this. -->
+    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css" />
+    <link th:href="@{/assets/libs/calendar.css}" rel="stylesheet" type="text/css" />
+
+    <!--  Insert JavaScript file  -->
+    <script src="https://uicdn.toast.com/tui.code-snippet/v1.5.2/tui-code-snippet.min.js"></script>
+    <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
+    <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+    <!--    <script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>-->
+
+    <!-- end carlendar Css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-01-02 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">팀 상세</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/class/list}">팀목록</a></li>
+                                    <li class="breadcrumb-item active">팀 상세</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="mb-3 col-md-3">
+                                            <label class="form-label">프로그램</label>
+                                            <input name="program" type="text" class="form-control" th:value='${resModel?.programName}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-3">
+                                            <label class="form-label">팀명</label>
+                                            <input name="teamName" type="text" class="form-control" th:value='${resModel?.teamName}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-3">
+                                            <label class="form-label">전체강의횟수</label>
+                                            <input name="classCount" type="text" class="form-control" th:value='${resModel?.totalLecture}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-3">
+                                            <label class="form-label">강의기간</label>
+                                            <input name="classPeriod" type="text" class="form-control" th:value='|${resModel?.startDt}~${resModel?.endDt}|' disabled>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="grayLine"></div>
+
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="form-label form_title">강사</label>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <div class="mb-2 pt-1">
+                                                        <img th:src='${resModel?.teacherProfile}' class="img-fluid rounded" width="200"/>
+                                                    </div>
+                                                        <input name="lectureMtrls" type="text" class="form-control" th:value='${resModel?.userName}' disabled>
+                                                </div>
+
+                                                <div class="col-md-10">
+                                                    <div class="mb-2">
+                                                        <label class="form-label">강의 소개</label>
+                                                        <div>
+                                                            <textarea class="form-control" id="lectureIntroduction" rows="5" th:text='${resModel?.introduce}' disabled></textarea>
+                                                        </div>
+                                                    </div>
+<!--                                                    <div>-->
+<!--                                                        <label class="form-label">강의자료 YouTube 링크</label>-->
+<!--                                                        <input name="lectureMtrls" type="text" class="form-control" th:value='${resModel?.link}' disabled>-->
+<!--                                                    </div>-->
+                                                </div>
+
+                                                <div>
+                                                    <div class="d-inline-block float-end mt-2">
+                                                        <button type="button" class="btn btn-outline-warning btn_bg" th:onclick="moveChange([[${resModel.teamId}]]);">수정</button>
+                                                        <button type="button" class="btn btn-outline-danger btn_bg" data-bs-toggle="modal" data-bs-target="#delete-modal" onclick="delTeacher(0);">삭제</button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grayLine"></div>
+
+                                <div class="card-body">
+                                    <label class="form-label form_title">일정</label>
+
+                                    <div class="scheduleBox">
+                                        <div class="row">
+                                            <div class="col-md-10 align-items-center scheduleWrap">
+                                                <div class="calenderDay">
+                                                    <i class="ri-calendar-check-line calenderIcon"></i>
+                                                    <p class="mb-0" th:text="${nearLecture?.startDt}"></p>
+                                                </div>
+
+                                                <div class="calenderData position-relative">
+                                                    <div th:if="${nearLecture?.homework == 1}">
+                                                        <span class="badge badge-soft-danger rounded-pill homeworkBadge">과제제출수업</span>
+                                                    </div>
+                                                    <p th:text="|${resModel?.programName}-${resModel?.teamName}|"></p>
+                                                    <p th:text="|${#lists.size(teamMemberList)}명|"></p>
+                                                    <p >
+                                                        <span th:text="|${resModel?.totalLecture}회 중|"></span>
+                                                        <span th:text="${nearLecture?.chapter} eq null ? '완료':${nearLecture?.chapter}"></span>
+                                                    </p>
+                                                    <p th:text="${nearLecture?.startTime}"></p>
+                                                    <p th:text="${nearLecture?.zoomLink}"></p>
+<!--                                                    <div class="lectureLink position-relative" th:if="${nearLecture?.startDt}">-->
+<!--                                                        <a href="javascript:void(0);" class="btn btn-primary waves-effect waves-light">링크 전송</a>-->
+<!--                                                    </div>-->
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- 두번째 카드 (달력) -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div id="calendar"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 세번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label form_title">회차 </label>
+
+                                        <div class="table-responsive-xl">
+                                            <table id="table" class="table dt-responsive nowrap w-100">
+                                                <thead>
+                                                <tr class="text-center">
+                                                    <th class="col-1">#</th>
+                                                    <th class="col-3">수업날짜/시간</th>
+                                                    <th>줌링크</th>
+                                                    <th class="col-2">과제제출 필요</th>
+                                                </tr>
+                                                </thead>
+
+
+                                                <tbody id="divChapter">
+
+                                                <tr th:each='_ : ${resList}' class="rowChapter text-center">
+                                                    <td th:text='${_?.chapter}'></td>
+                                                    <td th:text='|${_?.startDt} ${_?.startTime}|'></td><!--2021.08.02 (월) 오후 17:00-->
+                                                    <td th:text='${_?.zoomLink}'></td>
+                                                    <td>
+                                                        <input class="form-check-input" type="checkbox"
+                                                               th:checked="${_?.homework eq '1'}" disabled>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div>
+                                            <div class="d-inline-block float-end">
+                                                <button type="button" class="btn btn-outline-warning btn_bg" onclick="moveUpdate();">일정 수정</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 네번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <label class="form-label mb-3 form_title">학생</label>
+                                    <div class="titleTopBtn">
+                                        <button type="button" class="btn btn-outline-primary align-bottom" onclick="moveStudentList()">학생 목록</button>
+                                    </div>
+
+                                    <div class="clean"></div>
+
+                                    <div class="row">
+                                        <th:block th:each='_,num : ${teamMemberList}'>
+                                            <div class="studentBox col-xl-4 col-md-6" th:id="${_?.userId}">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div class="studentMbti float-start rounded">
+                                                            <th:block th:switch="${_.studentMbti}">
+                                                                <img th:case="''" th:src="@{/assets/images/users/avatar-1.jpg}" class="img-fluid">
+                                                                <img th:case="1" th:src="@{/images/team_mbti_type1.png}" class="img-fluid">
+                                                                <img th:case="2" th:src="@{/images/team_mbti_type2.png}" class="img-fluid">
+                                                                <img th:case="3" th:src="@{/images/team_mbti_type3.png}" class="img-fluid">
+                                                                <img th:case="4" th:src="@{/images/team_mbti_type4.png}" class="img-fluid">
+                                                                <img th:case="5" th:src="@{/images/team_mbti_type5.png}" class="img-fluid">
+                                                                <img th:case="6" th:src="@{/images/team_mbti_type6.png}" class="img-fluid">
+                                                                <img th:case="7" th:src="@{/images/team_mbti_type7.png}" class="img-fluid">
+                                                                <img th:case="8" th:src="@{/images/team_mbti_type8.png}" class="img-fluid">
+                                                            </th:block>
+                                                        </div>
+                                                        <div class="studentInfo float-start">
+                                                            <th:block th:switch="${_.studentMbti}">
+                                                                <b th:case="''" class="studentInfo_txt01" >미등록</b>
+                                                                <b th:case="1" class="studentInfo_txt01" th:text="${'펭귄'}"></b>
+                                                                <b th:case="2" class="studentInfo_txt01" th:text="${'판다'}"></b>
+                                                                <b th:case="3" class="studentInfo_txt01" th:text="${'토끼'}"></b>
+                                                                <b th:case="4" class="studentInfo_txt01" th:text="${'다람쥐'}"></b>
+                                                                <b th:case="5" class="studentInfo_txt01" th:text="${'라쿤'}"></b>
+                                                                <b th:case="6" class="studentInfo_txt01" th:text="${'여우'}"></b>
+                                                                <b th:case="7" class="studentInfo_txt01" th:text="${'돌고래'}"></b>
+                                                                <b th:case="8" class="studentInfo_txt01" th:text="${'사자'}"></b>
+                                                            </th:block>
+                                                            <p class="studentInfo_txt01"><span th:text='${_?.userName}'></span><span th:text='|(${_?.studentBirth})|'></span></p>
+                                                            <p><span th:text='|[${_.userSnsType ne null ? _.userSnsType : "" }]${_.email ne null ? _.email : "" }|'></span></p>
+                                                        </div>
+                                                        <div class="studentDle cursor">
+                                                            <a data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                               th:onclick="delStudent([[${_?.userId}]],this);"><i class="mdi mdi-close"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </th:block>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </form>
+
+
+                        <!-- 하단 버튼 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-start">
+                                    <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">강의 목록</button>
+                                </div>
+                                <div class="float-end button-list">
+<!--                                    <button type="button" class="btn btn-outline-primary btn_bg" data-bs-toggle="modal" data-bs-target="#delete-modal" onclick="delTeacher(0);">삭제-->
+<!--                                    </button>-->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+<script type="text/javascript" th:src="@{/assets/libs/calendar.js}"></script>
+<script type="text/javaScript">
+
+    /*<![CDATA[*/
+    let teamId = [[${resModel.teamId}]];
+    let fkProgramId = "[[${resModel.fkProgramId}]]";
+    let memberDiv ;
+    /*]]>*/
+
+    let table;
+    let cntChapter = 0;
+    let startDt = new Date();
+
+    $(function () {
+        $('.menu03').addClass('menuitem-active');
+        $('.menu03-menu').addClass('show');
+        $('.menu03-1').addClass('active');
+
+        let year = ''; // 년도
+        let month = '';  // 월
+
+        getSchedule(year,month,teamId,startDt);
+    });
+
+    //알림
+    function delTeacher(params) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '삭제 알림',
+            html: '팀를 삭제 하시겠습니까? <br/> ' + '삭제시 복구가 불가능합니다.',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '삭제', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                deleteTeam(teamId);
+                Swal.fire('삭제가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
+
+    //팀 멤버 삭제 (알림)
+    function delStudent(userId,argument) {
+        Swal.fire({
+            title: '탈퇴 알림',
+            html: '팀원을 탈퇴 시키시겠습니까?',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '탈퇴', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                deleteTeamMember(teamId,userId,argument);
+                Swal.fire('삭제가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
+
+    //팀 삭제
+    function deleteTeam(id) {
+        location.href = conPath+"team/delete?id=" + id;
+    }
+
+    //학생목록
+    function moveStudentList() {
+        location.href = conPath+"teamMember/list?teamId="+teamId+"&fkProgramId="+fkProgramId;
+    }
+
+    //뒤로
+    function moveBack() {
+        location.href = conPath+"team/list";
+    }
+
+    //일정 수정
+    function moveUpdate() {
+        location.href = conPath+"team/detail?type=edit&id="+teamId;
+        // swal.fire("조치중입니다 !");
+    }
+
+    //팀수정
+    function moveChange(id) {
+        location.href = conPath+"team/register?type=edit&id=" + id;
+    }
+
+   //팀원 삭제
+    const deleteTeamMember = function (teamId, userId,argument) {
+
+        let sFormData = new FormData();
+        sFormData.append('fkTeamId', teamId);
+        sFormData.append('fkSuserId', userId );
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'teamMember/deleteTeamMember', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+
+                if(result.data.status == 200){
+                    //TODO : 해당 학생 지우기
+                    // $("#"+userId).remove();
+                    $(argument).parents("div.studentBox").remove();
+                }else{
+                    alert(result.data.message);
+                }
+
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+
+    //일정 캘린더 가져오기 (해당 팀의 스케줄만 가져옴)
+    function getSchedule(year,month,teamId,startDt){
+        console.log("startDt =============> ",startDt);
+        let sFormData = new FormData();
+        sFormData.append('teamId', teamId);
+        sFormData.append('searchMonth', month);
+        sFormData.append('searchYear', year);
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'lecture/getTeamSchedule', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+                console.log("result",result);
+                console.log("result.data",result.data);
+                console.log("result.data.status",result.data.status);
+                console.log("result.data.data",result.data.data);
+                console.log("result.data.message",result.data.message);
+
+                if(result.data.status == 200){
+
+                    let events = new Array();
+
+                    for(let i =0; i<result.data.data.length; i++){
+
+                        let setDt = result.data.data[i].startDt;
+                        if(result.data.data[i].programName!=null){
+                            strCat = result.data.data[i].programName;
+                        }else{
+                            strCat = result.data.data[i].categoryName;
+                        }
+                        let strTitle = '['+ strCat+']'+result.data.data[i].teamName;
+                        let arrSetDt = setDt.split("-");
+                        events[i] = {
+                            'Date': new Date(arrSetDt[0],parseInt(arrSetDt[1])-1,arrSetDt[2]),
+                            'Title':'',
+                            'Link':'',
+                            'Schedule':[
+                                {
+                                    time:result.data.data[i].startTime,
+                                    title:strTitle,
+                                    type:'type2',
+                                    link:'javascript:openZoomLink("'+result.data.data[i].zoomLink+'","'+strTitle+'","'+result.data.data[i].startTime+'","'+result.data.data[i].userName+'","'+result.data.data[i].lectureId+'","'+result.data.data[i].startDt+'");'
+                                }, //함수
+                            ]
+                        };
+                    }
+
+                    console.log(events);
+
+                    //예시 예제(일정 비동기로 데이터 가져올 시)
+                    async function eventsChange(date){
+                        console.log('다음 이벤트 스케줄로 변경');
+                        console.log(new Date(date).getMonth());
+
+                        const delay = time => new Promise(res=>setTimeout(()=>res(),time));
+
+                        let tmpData = [];
+                        for(let i =0; i<12; i++){
+                            if(new Date(date).getMonth()==i){
+                                // await delay(1000);
+                                tmpData = events;
+                            }
+                        }
+
+                        console.log('데이터 업로드 완료');
+
+                        return tmpData;
+                    }
+
+                    let settings = {
+                        ModelChange:eventsChange    // n월 이동 시 표기할 데이터 전달(결과깂은 반드시 위 예제[events]와 같은 구조로 배열 작성)
+                    };
+                    //초기화 및 선언
+                    $("#calendar").empty();
+                    const element = document.getElementById('calendar');
+                    if(startDt){
+                        calendarSel(element, events, settings,new Date(startDt));//전달 받은 값이 있을경우
+                    }else{
+                        calendar(element, events, settings);
+                    }
+
+                }else{
+                    if(result.data.status != 200){
+                        alert(result.data.message);
+                    }
+                }
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+</script>
+
+</body>
+
+</html>

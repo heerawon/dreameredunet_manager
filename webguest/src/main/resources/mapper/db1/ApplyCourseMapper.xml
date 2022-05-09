@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.ApplyCourseMapper">
+
+    <!-- 특별활동 신청 회원 목록 (1) : 팀 구성시 -->
+    <select id="getApplyCourceListWithoutMyTeam" resultType="ApplyCourseModel" >
+        <![CDATA[
+        SELECT apply_course_id, ACS.fk_category_id, fk_team_id, ACS.fk_suser_id,  allow_dt,
+               DATE_FORMAT(ACS.reg_dt,'%Y-%m-%d %H:%i') reg_dt,
+               category_name, team_name, user_name, student_birth, student_mbti, student_gender,
+               user_name, user_id, user_sns_type, email,
+               ROUND((TO_DAYS(NOW()) - (TO_DAYS(student_birth))) / 365) AS student_age
+        FROM dreamer.apply_course ACS
+                 JOIN dreamer.view_student_user VSU on ACS.fk_suser_id = VSU.fk_suser_id
+                 JOIN dreamer.team_category TCY on ACS.fk_category_id = TCY.team_category_id
+                 LEFT JOIN dreamer.team TEA on ACS.fk_team_id = TEA.team_id
+        WHERE ACS.fk_team_id = -1 AND ACS.fk_category_id = #{categoryId}
+        ORDER BY ACS.reg_dt DESC
+        ]]>
+    </select>
+
+    <!-- 특별활동 신청 회원 목록 (2) : 신청 대기 회원 진입시 -->
+    <select id="getApplyCourceList" resultType="ApplyCourseModel" >
+        <![CDATA[
+            SELECT apply_course_id, ACS.fk_category_id, fk_team_id, ACS.fk_suser_id, allow_dt,
+                   DATE_FORMAT(ACS.reg_dt,'%Y-%m-%d %H:%i') reg_dt, team_category_id,
+                   category_name, team_name, user_name, student_birth, student_mbti, student_gender,
+                   user_name, user_id, user_sns_type, email,
+                   ROUND((TO_DAYS(NOW()) - (TO_DAYS(student_birth))) / 365) AS student_age,
+                   DATEDIFF(NOW(),ACS.reg_dt) waiting_dt
+            FROM dreamer.apply_course ACS
+                     JOIN dreamer.view_student_user VSU on ACS.fk_suser_id = VSU.fk_suser_id
+                     JOIN dreamer.team_category TCY on ACS.fk_category_id = TCY.team_category_id
+                     LEFT JOIN dreamer.team TEA on ACS.fk_team_id = TEA.team_id
+            WHERE ACS.fk_team_id = -1
+        ]]>
+        <if test="categoryId != -1 ">
+            AND ACS.fk_category_id = #{categoryId}
+        </if>
+        <if test="userName != '' ">
+            AND VSU.user_name LIKE CONCAT('%',#{userName},'%')
+        </if>
+        <if test="studentGender != '' ">
+            AND VSU.student_gender = #{studentGender}
+        </if>
+        <if test="birthStartDt != '' and birthEndDt != ''">
+            AND DATE_FORMAT(VSU.student_birth,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{birthStartDt},'%Y-%m-%d') AND DATE_FORMAT(#{birthEndDt},'%Y-%m-%d')
+        </if>
+        <if test="searchStartDt != '' and searchEndDt != ''">
+            AND DATE_FORMAT(ACS.reg_dt,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchStartDt},'%Y-%m-%d') AND DATE_FORMAT(#{searchEndDt},'%Y-%m-%d')
+        </if>
+        ORDER BY ACS.reg_dt DESC
+    </select>
+
+    <!-- 특별활동 신청 승인상태 변경 -->
+    <update id="updateCourseStatus"  parameterType="ApplyCourseModel">
+        <![CDATA[
+            UPDATE  dreamer.apply_course
+            SET fk_team_id = #{fkTeamId}
+            WHERE apply_course_id = #{applyCourseId}
+        ]]>
+    </update>
+
+
+    <!-- 특별활동 신청 승인상태 변경 2 -->
+    <update id="updateCourseStatusByList"  parameterType="HashMap">
+        <foreach item="item" index="index" collection="teamMemberModel" separator=";">
+            UPDATE  dreamer.apply_course
+            SET fk_team_id = #{item.fkTeamId},
+                allow_dt = NOW()
+            WHERE apply_course_id = #{item.applyCourseId}
+        </foreach>
+    </update>
+
+
+</mapper>

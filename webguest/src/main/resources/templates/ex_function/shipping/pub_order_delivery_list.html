@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!--custom Css -->
+    <link rel="stylesheet" th:href="@{/assets/css/order.css}" type="text/css"/>
+    <!-- end custom css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Order-02-01 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">배송 목록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">배송 목록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="searchTable mb-3">
+
+                                    <div class="articleWrap row">
+                                        <div class="col-md-6 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>학생명</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input name="studentName" type="text" class="form-control" id="order" th:value='${order}'>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>배송상태</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <div class="form-check float-start">
+                                                    <input class="form-check-input" type="radio" name="status" id="status1" value="" checked>
+                                                    <label class="form-check-label" for="status1">전체</label>
+                                                </div>
+                                                <div class="form-check float-start ms-2">
+                                                    <input class="form-check-input" type="radio" name="status" id="status2" value="0"
+                                                           th:checked="${status} eq 0">
+                                                    <label class="form-check-label" for="status2">발송전</label>
+                                                </div>
+                                                <div class="form-check float-start ms-2">
+                                                    <input class="form-check-input" type="radio" name="status" id="status3" value="1"
+                                                           th:checked="${status} eq 1">
+                                                    <label class="form-check-label" for="status3">발송완료</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="articleWrap">
+                                        <!--검색 날짜 articleWrap -->
+                                        <th:block th:include="ex_function/init/init_pub_filter_bar.html"></th:block>
+                                    </div>
+                                </div>
+
+                                <div class="button-list text-center mb-3">
+                                    <button type="button" class="btn btn-primary btn_bg btn90" id="btn_serch">검색</button>
+                                    <button type="button" class="btn btn-outline-success float-end" onclick="excelDownload()">검색결과 엑셀다운로드</button>
+                                </div>
+
+                                <div class="button-list">
+
+                                </div>
+
+
+                                <table id="table" class="table nowrap w-100">
+                                    <thead>
+                                    <tr class="text-center">
+                                        <th>dataID</th>
+                                        <th>등록일시</th>
+                                        <th>학생명</th>
+                                        <th>주문상품</th>
+                                        <th>상태</th>
+                                        <th>수령인</th>
+                                        <th>배송정보</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="text-center" th:each="_,num : ${resList}" style="cursor: pointer;">
+                                        <td>[[ ${_?.shippingId} ]]</td>
+                                        <td th:text="${#dates.format(_?.regDt, 'yyyy-MM-dd HH:mm')}"></td>
+                                        <td>
+                                            <a href="#" th:onclick="moveUserDetails([[${_?.userId}]])">
+                                                <ins>[[ ${_?.userName} ]]</ins>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span th:if="${_?.subscribeName ne null}">[[ ${_?.subscribeName} ]]  </br>[[ ${_?.subscribeTerm} ]]일</span>
+                                            <span th:if="${_?.itemsName ne null}">[[ ${_?.itemsName} ]]</span>
+                                        </td>
+                                        <td>
+                                            <th:block th:if="${_?.shippingStatus eq '0'}">
+                                                발송전
+                                                <div><button type="button" class="btn btn-sm btn-outline-primary" onclick="moveSend()">발송</button></div>
+                                            </th:block>
+                                            <th:block th:if="${_?.shippingStatus eq '1'}">
+                                                발송완료<br/> [[ ${_?.shippingServiceName} ]] <br/><ins>[[ ${_?.shippingInvoice} ]]</ins>
+                                            </th:block>
+                                        </td>
+                                        <td>[[ ${_?.receiverName} ]]<br/>[[ ${_?.receiverCell} ]]</td>
+                                        <td class="text-start">
+                                            [[ ${_?.receiverAddress} ]]<br/>
+                                            고객메모 : [[ ${_?.memo} ]]<br/>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<!-- custom date setting  -->
+<script th:src="@{/assets/js/date_setting.js}"></script>
+
+<script type="text/javaScript">
+    let table;
+
+    $(function () {
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "searching": false, //검색 삭제
+            "info": false, //하단 정보 삭제 (Showing 1 to 8 of 8 entries)
+            "lengthChange": false, //테이블의 페이징 표시
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+
+        //조건 검색 동작
+        $("#btn_serch").on( "click", function() {
+            const userName = $("#order").val();
+            const searchStartDt = $("#searchStart").val();
+            const searchEndDt = $("#searchEnd").val();
+            const status = $("input[name='status']:checked").val();
+            location.href =  "?status="+status+"&order="+userName+"&startDt="+searchStartDt+"&endDt="+searchEndDt;
+        });
+
+        //날짜 세팅 버튼 동작
+        $(".btn_func_date").on("click", function() {
+            setStartEnd($(this));
+        });
+
+        //날짜 초기화 버튼 동작
+        $("#btn_set_no_date").on( "click", function() {
+            $("#searchStart").val("");
+            $("#searchEnd").val("");
+        });
+    });
+
+
+    $('#table tbody').on('click', 'td', function () {
+        let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+        let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+        let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+        let totalColumnCount = table.columns().count(); //전체 열 갯수
+        let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+        let indexUserLink = table.row(this).data()[2]; //감춰진 0번째 dataID 값
+
+        if (indexColumn < totalColumnCount) {
+            location.href = conPath+ "shipping/detail?id=" + indexData;
+        }
+    });
+
+    //학생 상세로 이동
+    const moveUserDetails = function (id) {
+        window.open(conPath + "student/detail?id="+encodeURI(id));
+    }
+
+    //엑셀 다운로드
+    const excelDownload = function() {
+        const userName = $("#order").val();
+        const searchStartDt = $("#searchStart").val();
+        const searchEndDt = $("#searchEnd").val();
+        const status = $("input[name='status']:checked").val();
+
+        location.href = conPath+ "excelDown/shippingList?status="+status+"&order="+userName+"&startDt="+searchStartDt+"&endDt="+searchEndDt;
+    }
+
+    //input date 세팅부
+    const setStartEnd = function (argument) {
+        let type = String($(argument).attr("id")).trim();
+        const getDates =  getFormatDate(type);
+
+        $("#searchStart").val("");
+        $("#searchEnd").val("");
+        $("#searchStart").val(getDates.startDt);
+        $("#searchEnd").val(getDates.endDt);
+    }
+
+</script>
+
+</body>
+
+</html>

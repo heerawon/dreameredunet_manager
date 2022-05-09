@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Setting-02-01-->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">활동사진 관리</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">활동사진 관리</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div id="divChapter">
+                                        <div class="mb-2 row">
+                                            <div class="col-md-4">
+                                                <input name="subscribe" class="form-control" value="활동사진 1">
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-dark " onclick="delSubscribe()">삭제</button>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2 row">
+                                            <div class="col-md-4">
+                                                <input name="subscribe" class="form-control" value="활동사진 2">
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-dark " onclick="delSubscribe()">삭제</button>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2 row">
+                                            <div class="col-md-4">
+                                                <input name="subscribe" class="form-control" value="교재 상품[주니어 B반]">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input name="subscribe" class="form-control subscribeInput" value="550,000">원
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-dark " onclick="delSubscribe()">삭제</button>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2 row">
+                                            <div class="col-md-4">
+                                                <input name="subscribe" class="form-control" value="교재 상품[주니어 A반]">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input name="subscribe" class="form-control subscribeInput" value="1,000,000">원
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-dark " onclick="delSubscribe()">삭제</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- 처음에는 입력란이 없게 하려면 어뜩해 하나요...? -->
+
+                                    </div>
+
+                                    <button type="button" class="btn btn-primary waves-effect waves-light btn80" onclick="addChapter()">추가</button>
+                                </div>
+                            </div>
+
+
+                            <!-- 하단 버튼 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="float-end button-list">
+                                        <button type="button" class="btn btn-outline-primary btn_bg"
+                                                data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                onclick="save(0);">저장
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+<script th:src="@{/assets/js/summernote.min.js}"></script>
+
+<!-- Init js 에디터-->
+
+
+<script type="text/javaScript">
+    let cntChapter = 0;
+
+
+    $(document).ready(function () {
+        // addChapter();
+    });
+
+    // 추가
+    function addChapter() {
+        let ele = '<div class="mb-2 row rowChapter">\n' +
+            '                                            <div class="col-md-4">\n' +
+            '                                                <input name="subscribe" class="form-control">\n' +
+            '                                            </div>\n' +
+            '                                            <div class="col-md-5">\n' +
+            '                                                <input name="subscribe" class="form-control subscribeInput">원\n' +
+            '                                            </div>\n' +
+            '                                            <div class="col-md-1">\n' +
+            '                                                <button type="button" class="btn btn-dark " onclick="delSubscribe()">삭제</button>\n' +
+            '                                            </div>\n' +
+            '                                        </div>';
+
+        if (cntChapter == 0) {
+            $('div.rowChapter').remove();
+        }
+        $('#divChapter').append(ele);
+
+        cntChapter++;
+    }
+
+    //알림
+    function delSubscribe(params) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '삭제 알림',
+            html: '삭제 하시겠습니까?',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '삭제', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                Swal.fire('삭제가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+
+    }
+
+    //알림
+    function save(params) {
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: '구독료 관리이 저장 되었습니다.',
+            showConfirmButton: false,
+            timer: 1500
+        })
+
+    }
+
+</script>
+
+</body>
+
+</html>

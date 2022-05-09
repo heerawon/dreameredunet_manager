@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/lecture.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+    <!-- AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.serializeObject/2.0.3/jquery.serializeObject.min.js"></script>
+
+    <style>
+        th, td {
+            white-space: nowrap;
+        }
+
+        div.dataTables_wrapper {
+            margin: 0 auto;
+        }
+
+        div.container {
+            width: 80%;
+        }
+
+        .disabledBadges2 {
+            position: absolute;
+            background: #ff385e;
+            color: #fff;
+            left: 100px;
+            padding: 2px 10px;
+            border-radius: 25px;
+            display: inline-block;
+            font-size: 12px;
+            top: auto;
+            transform: initial;
+        }
+        .bg-grey-student{
+            background-color: rgba(152, 152, 152, 0.96);
+        }
+    </style>
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-05-01 -->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">출석현황</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <!-- TODO : 이동 -->
+                                    <li class="breadcrumb-item"><a th:href="@{/pub2/lecture/dashboard/total}">전체 대시보드</a></li>
+                                    <li class="breadcrumb-item"><a th:href="@{/pub2/lecture/dashboard/team}">팀 대시보드</a></li>
+                                    <li class="breadcrumb-item active">출석현황</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="button-list">
+                                        <th:block th:each='_,num : ${myTeamList}'>
+                                            <button type="button" th:class="${_.division eq 0 ?'btn btn-outline-primary btn_bg':'btn btn-outline-danger btn_bg'}"
+                                                    th:classappend="${myTeam?.teamId eq _.teamId?'active':''}"
+                                                    th:text="|[${_.programName != null ? _.programName: _.categoryName}]${_.teamName}|"
+                                                    th:onclick="moveTeamAttendance([[${_.teamId}]])">
+                                            </button>
+                                        </th:block>
+                                    </div>
+
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <button type="button" class="btn btn-success btn-sm me-2" onclick="moveDashboard()"> < 팀 대시보드</button>
+                                            <p class="lecture_txt01 d-inline-block"
+                                               th:text='|[${myTeam.programName !=null ? myTeam.programName :myTeam.categoryName }]${myTeam.teamName}|'></p>
+                                            <p class="lecture_txt01 d-inline-block" th:text="|총 학생수 : ${countMember} 명|"></p>
+                                            <p class="lecture_txt01 d-inline-block"
+                                               th:text="|강의 기간 : ${myTeam?.startDt}${myTeam?.startDt != null ? '~' : '-'}${myTeam?.endDt}|"></p>
+                                            <p class="lecture_txt01 d-inline-block" th:text="|총 강의 수 :${countLecture}회|"></p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="mb-1 col-md-3">
+                                                <select id="lectureList" name="lectureList" class="form-select" >
+                                                    <option value="">All</option>
+                                                    <option th:each="_:${lectureList}" th:value="${_.startDt}"
+                                                            th:text="|${_.startDt} (${_.chapter} 회)|"
+                                                            th:selected="${_.startDt} eq ${fkStartDt}"></option>
+                                                </select>
+                                            </div>
+                                            <div class="scheduleBox">
+                                                <div class="row">
+                                                    <div class="col-md-12 align-items-center scheduleWrap" id="scheduleOfDate">
+                                                        <div class="calenderDay">
+                                                            <i class="ri-calendar-check-line calenderIcon"></i>
+                                                            <p class="mb-0" th:text="${attendDt}"></p>
+                                                        </div>
+
+                                                        <div class="ps-3 todayAttendance float-start">
+                                                            <!-- TODO) th:if 오늘의 ~ , 오늘 강의가 없을 경우 앞으로중 가장 가까운 -->
+                                                            <p class="todayAttendanceTxt mb-1">출석현황</p>
+                                                            <div class="progress mb-0 todayAttendanceBar">
+                                                                <input type="hidden" id="attendPercent" th:value="${attendPercent}">
+                                                                <div class="progress-bar" role="progressbar"
+                                                                     th:style="${attendPercent ne null ? 'width:'+attendPercent+'%':'width:0'}"
+                                                                     th:text="|${attendPercent}%|"
+                                                                     th:aria-valuenow="${attendPercent}" aria-valuemin="0" aria-valuemax="100">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="totalAttendance">
+                                                            <p class="todayAttendanceTxt mb-1 text-center">출석완료</p>
+                                                            <p class="totalAttendanceNum mb-0"><span th:text="|${attendCount ne null ? attendCount:'0'}/${countMember}명|"></span></p>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> <!-- end card body-->
+                                    </div>
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <table id="table" class="table stripe  order-column attendanceTable" style="width:100%">
+                                                <thead>
+                                                <tr class="text-center">
+                                                    <th>학생정보</th>
+                                                    <th:block th:each='lectureList,num : ${lectureList}'>
+                                                        <th th:classappend="${lectureList.startDt eq attendDt ? 'active':''}"
+                                                            th:text="${lectureList.startDt}"><span th:text="|${lectureList.chapter} 회|"></span></th>
+                                                    </th:block>
+                                                </tr>
+                                                </thead>
+
+
+                                                <tbody>
+                                                <th:block th:each="studentList,num : ${studentList}">
+                                                    <tr class="align-middle" th:classappend="${studentList.userRole ne 'MEMBER'? 'bg-grey-student':''}">
+                                                        <td class="cursor" data-bs-toggle="modal" data-bs-target="#delete-modal" onclick="moveInfo(this);">
+                                                            <input type="hidden" th:value="${studentList.userName}">
+                                                            <input type="hidden" th:value="${studentList.studentBirth}">
+                                                            <input type="hidden" th:value="${studentList.studentGender eq 'F'? '여성':'남성'}">
+                                                            <input type="hidden" th:value="${studentList.attendDt}">
+                                                            <input type="hidden" th:value="${studentList.percentAttend}">
+                                                            <input type="hidden" th:value="|${studentList.countAttend}/${studentList.countLecture}회|">
+                                                            <input type="hidden" th:value="|${studentList.parentName ne null ? studentList.parentName: ''} ${studentList.parentCell ne null ? studentList.parentCell:''}|">
+                                                            <div th:if="${studentList.userRole ne 'MEMBER'}" class="disabledBadges2">구독기간 만료</div>
+                                                            <div>
+                                                                <th:block th:switch="${studentList.studentMbti}">
+                                                                    <img th:case="''" th:src="@{/assets/images/users/avatar-1.jpg}" class="img-fluid avatar-sm rounded-circle">
+                                                                    <img th:case="1" th:src="@{/images/team_mbti_type1.png}" class="img-fluid avatar-sm rounded-circle">
+                                                                    <img th:case="2" th:src="@{/images/team_mbti_type2.png}" class="img-fluid avatar-sm rounded-circle">
+                                                                    <img th:case="3" th:src="@{/images/team_mbti_type3.png}" class="img-fluid avatar-sm rounded-circle">
+                                                                    <img th:case="4" th:src="@{/images/team_mbti_type4.png}" class="img-fluid avatar-sm rounded-circle">
+                                                                    <img th:case="5" th:src="@{/images/team_mbti_type5.png}" class="img-fluid avatar-sm rounded-circle">
+                                                                    <img th:case="6" th:src="@{/images/team_mbti_type6.png}" class="img-fluid avatar-sm rounded-circle">
+                                                                    <img th:case="7" th:src="@{/images/team_mbti_type7.png}" class="img-fluid avatar-sm rounded-circle">
+                                                                    <img th:case="8" th:src="@{/images/team_mbti_type8.png}" class="img-fluid avatar-sm rounded-circle">
+                                                                </th:block>
+                                                            </div>
+                                                            <th:block th:switch="${studentList.studentMbti}">
+                                                                <span th:case="''" class="text-primary" >미등록</span>
+                                                                <span th:case="1" class="text-primary" th:text="${'펭귄'}"></span>
+                                                                <span th:case="2" class="text-primary" th:text="${'판다'}"></span>
+                                                                <span th:case="3" class="text-primary" th:text="${'토끼'}"></span>
+                                                                <span th:case="4" class="text-primary" th:text="${'다람쥐'}"></span>
+                                                                <span th:case="5" class="text-primary" th:text="${'라쿤'}"></span>
+                                                                <span th:case="6" class="text-primary" th:text="${'여우'}"></span>
+                                                                <span th:case="7" class="text-primary" th:text="${'돌고래'}"></span>
+                                                                <span th:case="8" class="text-primary" th:text="${'사자'}"></span>
+                                                            </th:block>
+                                                            <span th:text="|${studentList.userName}(${studentList.studentBirth})|"></span>
+                                                            <div class="mt-1" >
+                                                                <!-- TODO: 구독기간 만료 -> 구독하고 다시 확인 -->
+                                                                <span th:if="${isDel eq 1 or subscribeStatus eq 0}"
+                                                                      class="badge bg-danger rounded-pill solution_badge w-auto m-0">팀 탈퇴</span>
+                                                            </div>
+                                                        </td>
+                                                        <th:block th:each='lectureList,num : ${lectureList}'>
+                                                            <th:block th:each="resList,num : ${resList}">
+                                                                <th:block th:if="${studentList.userId eq resList.fkSuserId and lectureList.startDt eq resList.startDt}">
+                                                                    <!-- TODO: 구독기간 만료 -> 구독하고 다시 확인 : td 배경색 회색 -->
+                                                                    <td id="attend_memo_area">
+                                                                        <div class="btn_area">
+                                                                            <button type="button" class="btn btn-outline-primary btn-xs"
+                                                                                    th:classappend="${resList.isAttend eq 1 ? 'active':''}"
+                                                                                    th:text="${resList.isAttend eq 1 ? '출석':'미출석'}"
+                                                                                    th:onclick="setAttend([[${resList.lectureId}]],[[${resList.fkSuserId}]],[[${resList.startDt}]],[[${resList.attendanceId}]],[[${resList.isAttend}]],[[${resList?.memo}]],this)"></button>
+                                                                            <button type="button" class="btn btn-outline-danger btn-xs"
+                                                                                    data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                                                    th:classappend="${resList.memo ne null && resList.memo ne ''? 'active':''}"
+                                                                                    th:onclick="moveMemo([[${resList?.lectureId}]],[[${resList?.fkSuserId}]],[[${resList.startDt}]],[[${resList?.attendanceId}]],[[${resList.isAttend}]],[[${resList?.memo}]],[[${resList?.chapter}]],[[${resList?.studentBirth}]],[[${resList?.userName}]],this);">메모
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="mt-1" th:if="${resList.homeworkId}">
+                                                                            <span class="badge bg-primary rounded-pill solution_badge w-auto m-0">과제제출완료</span>
+                                                                        </div>
+                                                                    </td>
+                                                                </th:block>
+                                                            </th:block>
+                                                        </th:block>
+                                                    </tr>
+                                                </th:block>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div><!-- end col-->
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<script type="text/javaScript" th:inline="javascript">
+    /*<![CDATA[*/
+    let fkTeamId = [[${myTeam?.teamId}]];
+    /*]]>*/
+
+    let theButton ;
+
+    let table;
+
+    $(function () {
+
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02 a').addClass('active');
+
+        let table = $('#table').removeAttr('width').DataTable({
+            scrollY: "600px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: false,
+            ordering: false,
+            searching: false, //검색 삭제
+            info: false, //하단 정보 삭제 (Showing 1 to 8 of 8 entries)
+            lengthChange: false, //테이블의 페이징 표시
+            columnDefs: [
+                {width: 200, targets: 0}
+            ],
+            fixedColumns: false
+        });
+
+        // table.on('click', 'th', function() {
+        //     const info = table.fnSettings().aaSorting;
+        //     const idx = info[0][0];
+        //     alert(idx);
+        // });
+
+        $("#lectureList").on("change", function () {
+            getScheduleByDate($(this).val());
+        });
+    });
+
+    //알림
+    const moveInfo = function (argument) {
+        let studentName = $(argument).children().eq(0).val();
+        let studentBirth = $(argument).children().eq(1).val();
+        let studentGender = $(argument).children().eq(2).val();
+        let attendDt = $(argument).children().eq(3).val();
+        let percentAttend = $(argument).children().eq(4).val();
+        let countAttend = $(argument).children().eq(5).val();
+        let parentInfo = $(argument).children().eq(6).val();
+
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '<p>'+studentName+'  ('+studentBirth+')  ('+studentGender+')</p>',
+            html: '<div class="studentMpdal text-start">\n' +
+                '                                <div class="studentInfo">\n' +
+                '                                    <p><span class="fw-bold">최종 수강일시</span> : '+attendDt+'</p>\n' +
+                '                                </div>\n' +
+                '                                <div class="grayLine"></div>\n' +
+                '                                <div class="attendanceInfo mt-2 mb-3">\n' +
+                '                                    <p class="float-start mb-1 fw-bold">출석율</p>\n' +
+                '                                    <p class="float-end mb-1 attendanceNum">'+countAttend+'</p>\n' +
+                '                                    <div class="progress mb-0 w-100 studentAttendanceBar">\n' +
+                '                                        <div class="progress-bar" role="progressbar" style="width: '+percentAttend+'%;" aria-valuenow="'+percentAttend+'" aria-valuemin="0"\n' +
+                '                                             aria-valuemax="100">'+percentAttend+'%\n' +
+                '                                        </div>\n' +
+                '                                    </div>\n' +
+                '                                </div>\n' +
+                '                                <div class="grayLine"></div>\n' +
+                '                                <div class="parentsInfo mt-2">\n' +
+                '                                    <p class="fw-bold">부모님 정보</p>\n' +
+                '                                    <p>'+parentInfo+'</p>\n' +
+                '                                </div>\n' +
+                '                            </div>'
+        })
+
+    }
+
+    //메모 등록
+    const moveMemo = function (lectureId, suserId, attendDt, attendId,isAttend, memo,chapter, studentBirth,suserName,argument) {
+
+        let title = '<div class="text-start font-14"><span class="font-20 me-2 fw-bold">'+chapter+'회</span>'+attendDt+suserName+'('+studentBirth+')</div>';
+        // console.log(title);
+        if(isAttend == null) isAttend=0;
+        if(memo == null) memo = '';
+        theButton = arguments;
+
+        (async () => {
+            const {value: text} = await Swal.fire({
+                title: '메모',
+                html: title + '<input id="popupMemo" type="textarea" style="width: 100%;" value="'+memo+'"/> ',
+                inputPlaceholder: '메모를 입력하세요.',
+                inputAttributes: {
+                    'aria-label': '메모를 입력하세요.'
+                },
+                showCancelButton: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log("변경 메모 내용 >>>>",$("#popupMemo").val());
+                    let memoStr = $("#popupMemo").val();
+                    changeAttendStatus(lectureId,suserId,attendDt,isAttend,memoStr,attendId,true);
+                    location.reload();
+                }
+            })
+
+            if (text) {
+                Swal.fire(text)
+            }
+
+        })()
+
+        }
+
+    //출석 체크 (알림)
+    const setAttend = function (lectureId,suserId,attendDt,attendId,isAttend,memo,arguments) {
+        theButton = arguments;
+        if(memo == null){
+            memo= '';
+        }
+
+        let today = new Date();
+        let attendDate = new Date(attendDt);
+
+        if(today<attendDate){
+            swal.fire("진행되지 않은 수업은 출석할 수 없습니다.");
+        }else{
+            if(isAttend == 1) {
+                Swal.fire({
+                    title: '출석현황 변경',
+                    html: '미출석으로 변경 하시겠습니까',
+                    showDenyButton: true,
+                    showCloseButton: true,
+                    focusConfirm: false,
+                    confirmButtonText: '변경',
+                    denyButtonText: `취소`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        isAttend = 0;
+                        changeAttendStatus(lectureId,suserId,attendDt,isAttend,memo,attendId,false);
+                        Swal.fire('미출석으로 변경 완료 되었습니다.')
+                    } else if (result.isDenied) {
+                        //
+                    }
+                });
+
+            }else{
+                isAttend = 1;
+                changeAttendStatus(lectureId,suserId,attendDt,isAttend,memo,attendId,false);
+                Swal.fire('출석으로 변경 완료 되었습니다.');
+            }
+        }
+
+    }
+
+    //메모, 출석 업데이트 부
+    const changeAttendStatus = function (lectureId,suserId,attendDt,isAttend,memo,attendId,isMemo){
+        let sFormData = new FormData();
+
+        if(attendId != null){
+            sFormData.append('attendanceId', attendId);
+        }
+        sFormData.append('fkLectureId', lectureId);
+        sFormData.append('fkSuserId', suserId);
+        sFormData.append('attendDt', attendDt);
+        sFormData.append('isAttend', isAttend);
+        sFormData.append('memo', memo);
+
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'attendance/insert', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+                console.log("result",result);
+                console.log("result.data",result.data);
+                console.log("result.data.status",result.data.status);
+                console.log("result.data.data",result.data.data);
+                console.log("result.data.message",result.data.message);
+
+
+                if(result.data.status == 200){
+
+                    if(isMemo){
+
+                        let chapter = $(theButton).get(6).toString();
+                        let studentBirth = $(theButton).get(7).toString();
+                        let suserName = $(theButton).get(8).toString();
+
+                        $(theButton).addClass("active");
+
+                        $(theButton).removeAttr("onclick");
+                        $(theButton).attr({
+                            onclick : "moveMemo('"+ lectureId +"','"+ suserId +"','"+ attendDt +"','"+ attendId +"','"+ isAttend +"','"+ memo +"','"+ chapter +"','"+ studentBirth +"','"+ suserName +"',"+ "this);",
+                        });
+
+                        $(theButton).siblings().removeAttr("onclick");
+                        $(theButton).siblings().attr({
+                            onclick : "setAttend('"+ lectureId +"','"+ suserId +"','"+ attendDt +"','"+ attendId +"','"+ isAttend +"','"+ memo +"',"+ " this);",
+                        });
+
+                    }else{
+
+                        if(isAttend == 1){
+                            $(theButton).text("출석");
+                            $(theButton).addClass("active");
+                        }else {
+                            $(theButton).text("미출석");
+                            $(theButton).removeClass("active");
+                        }
+
+                        let exMemoBtn = $(theButton).next();
+                        let exMemoBtnOnclick = $(exMemoBtn).attr("onclick")
+                        // exMemoBtnOnclick.replace('"','');
+                        let exBtnArgs = exMemoBtnOnclick.split(",");
+                        let chapter = exBtnArgs[6];
+                        let studentBirth = exBtnArgs[7];
+                        let suserName = exBtnArgs[8];
+
+
+                        $(theButton).removeAttr("onclick");
+                        $(theButton).attr({
+                            onclick : "setAttend('"+ lectureId +"','"+ suserId +"','"+ attendDt +"','"+ attendId +"','"+ isAttend +"','"+ memo +"',"+ " this);",
+                        });
+
+                        $(theButton).siblings().removeAttr("onclick");
+                        $(theButton).siblings().attr({
+                            onclick : "moveMemo('"+ lectureId +"','"+ suserId +"','"+ attendDt +"','"+ attendId +"','"+ isAttend +"','"+ memo +"','"+ chapter +"','"+ studentBirth +"','"+ suserName +"',"+ "this);",
+                        });
+
+                        $("#lectureList").val(attendDt);
+                        getScheduleByDate(attendDt);
+
+                    }
+
+                }else{
+                    if(result.data.status != 200){
+                        alert(result.data.message);
+                    }
+                }
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+
+    //팀 대시보드
+    const moveDashboard = function () {
+        location.href = conPath + "myLecture/teamDashboard?teamId="+fkTeamId;
+    }
+
+    //다른 팀 출석현황으로 이동
+    const moveTeamAttendance = function (teamId) {
+        console.log(teamId);
+        location.href = conPath+"attendance/lectureInfo?teamId="+teamId;
+    }
+
+    //날짜별 출석현황 조회
+    const getScheduleByDate = function (strDate) {
+        let sFormData = new FormData();
+        sFormData.append('resStrDate', strDate);
+        sFormData.append('teamId', fkTeamId);
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'attendance/getScheduleByDate', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+
+                if(result.data.status == 200){
+                    $("#scheduleOfDate").empty();
+
+                    let ele = '<div class="calenderDay">\n' +
+                        '                                                            <i class="ri-calendar-check-line calenderIcon"></i>\n' +
+                        '                                                            <p class="mb-0">'+result.data.data.attendDt+'</p>\n' +
+                        '                                                        </div>\n' +
+                        '                                                        <div class="ps-3 todayAttendance float-start">\n' +
+                        '                                                            <p class="todayAttendanceTxt mb-1">출석현황</p>\n' +
+                        '                                                            <div class="progress mb-0 todayAttendanceBar">\n' +
+                        '                                                                <div class="progress-bar" role="progressbar"\n' +
+                        '                                                                     style="width:'+result.data.data.attendPercent+'%"\n' +
+                        '                                                                     aria-valuenow="'+result.data.data.attendPercent+'" aria-valuemin="0" aria-valuemax="100">'+result.data.data.attendPercent+'%\n'+
+                        '                                                                </div>\n' +
+                        '                                                            </div>\n' +
+                        '                                                        </div>\n' +
+                        '                                                        <div class="totalAttendance">\n' +
+                        '                                                            <p class="todayAttendanceTxt mb-1 text-center">출석완료</p>\n';
+                    if(result.data.data.allLectureCount>0){
+                        ele += '                                                            <p class="totalAttendanceNum mb-0"><span>'+result.data.data.attendCount+'/'+(result.data.data.allLectureCount*result.data.data.countMember)+'회</span></p>\n' +
+                            '                                                        </div>';
+                    }else {
+                        ele += '                                                            <p class="totalAttendanceNum mb-0"><span>'+result.data.data.attendCount+'/'+result.data.data.countMember+'명</span></p>\n' +
+                            '                                                        </div>';
+                    }
+
+
+                    $("#scheduleOfDate").append(ele);
+                }else{
+                    if(result.data.status != 200){
+                        alert(result.data.message);
+                    }
+                }
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+
+    }
+
+</script>
+
+</body>
+
+</html>

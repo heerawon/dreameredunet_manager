@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.TeamMapper">
+    <!-- 프로그램 목록 -->
+    <select id="getProgramList" resultType="ProgramModel" parameterType="String">
+        <![CDATA[
+            SELECT p.program_id, p.program_name, p.program_start_age, p.program_end_age
+            FROM dreamer.program as p
+        ]]>
+    </select>
+
+    <!-- 프로그램 수강 연령 구하기 -->
+    <select id="getProgramAge" resultType="ProgramModel" parameterType="Integer">
+        <![CDATA[
+            SELECT p.program_id, p.program_name, p.program_start_age, p.program_end_age,
+                   t.team_id
+            FROM dreamer.team as t
+                     LEFT JOIN dreamer.program as p ON t.fk_program_id = p.program_id
+            WHERE team_id = #{teamId}
+        ]]>
+    </select>
+
+    <!-- 프로그램 수강 연령 구하기 2 -->
+    <select id="getProgramAgeByProgramId" resultType="ProgramModel" parameterType="Integer">
+        <![CDATA[
+        SELECT program_id, program_name, program_start_age, program_end_age
+        FROM dreamer.program
+        WHERE program_id = #{programId}
+        ]]>
+    </select>
+
+    <!-- 팀 카테고리 목록 -->
+    <select id="getTeamCategoryList" resultType="TeamCategoryModel" parameterType="String">
+        <![CDATA[
+            SELECT team_category_id, category_name
+            FROM dreamer.team_category
+        ]]>
+    </select>
+
+    <!-- 팀 목록 -->
+    <select id="getTeamList" resultType="TeamModel" parameterType="HashMap">
+        <![CDATA[
+            SELECT team_id, team_name, total_lecture, team_name, VTU.user_name,
+                   DATE_FORMAT(TEA.reg_dt,'%Y-%m-%d %H:%i') reg_dt,
+                   DATE_FORMAT(start_dt,'%Y-%m-%d') start_dt,
+                   DATE_FORMAT(end_dt,'%Y-%m-%d') end_dt,
+                   COUNT(TM.fk_suser_id) count_member
+            FROM dreamer.view_use_team TEA
+                 LEFT JOIN dreamer.view_teacher_user VTU on TEA.fk_tuser_id = VTU.fk_tuser_id
+                 LEFT JOIN dreamer.team_member TM on TEA.team_id = TM.fk_team_id AND TM.is_del != 1
+            WHERE TEA.division= #{division}
+        ]]>
+        <if test=" programId != -1 ">
+            AND TEA.fk_program_id =  #{programId}
+        </if>
+        <if test=" categoryId != -1 ">
+            AND TEA.fk_category_id =  #{categoryId}
+        </if>
+        <if test="userName != '' ">
+            AND VTU.user_name LIKE CONCAT('%',#{userName},'%')
+        </if>
+        <if test="teamName != '' ">
+            AND team_name LIKE CONCAT('%',#{teamName},'%')
+        </if>
+        <if test="searchStartDt != ''">
+            AND start_dt != NULL
+            OR DATE_FORMAT(start_dt,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchStartDt},'%Y-%m-%d') AND DATE_FORMAT(#{searchEndDt},'%Y-%m-%d')
+        </if>
+        <if test="searchEndDt != ''">
+            AND end_dt != NULL
+            OR DATE_FORMAT(end_dt,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchStartDt},'%Y-%m-%d') AND DATE_FORMAT(#{searchEndDt},'%Y-%m-%d')
+        </if>
+        GROUP BY TEA.team_id
+        ORDER BY TEA.reg_dt desc
+    </select>
+
+    <!-- 팀 등록 -->
+    <insert id="insertTeam"  parameterType="TeamModel" useGeneratedKeys="true" keyProperty="teamId">
+        <![CDATA[
+            INSERT INTO dreamer.team (
+                fk_program_id,
+                fk_category_id,
+                team_id,
+                team_name,
+                fk_tuser_id,
+                total_lecture,
+                start_dt,
+                end_dt,
+                team_status,
+                division,
+                introduce,
+                link
+            )
+            VALUES (
+                #{fkProgramId},
+                #{fkCategoryId},
+                #{teamId},
+                #{teamName},
+                #{fkTUserId},
+                #{totalLecture},
+                #{startDt},
+                #{endDt},
+                #{teamStatus},
+                #{division},
+                #{introduce},
+                #{link}
+            );
+        ]]>
+    </insert>
+
+    <!-- 팀의 강의일정 개수 -->
+    <select id="getCountLecture" resultType="Integer" parameterType="Integer">
+        <![CDATA[
+            SELECT COUNT(L.lecture_id) as countLecture
+            FROM dreamer.team AS T
+                     LEFT JOIN dreamer.lecture AS L ON L.fk_team_id = T.team_id
+            WHERE T.team_status = 1
+              AND T.team_id = #{teamId}
+        ]]>
+    </select>
+
+    <!-- 팀의 수강생 수 -->
+    <select id="getCountTeamMember" resultType="Integer" parameterType="Integer">
+        <![CDATA[
+            SELECT COUNT(TM.fk_suser_id) as countTeamMember
+            FROM dreamer.team AS T
+                     LEFT JOIN dreamer.team_member TM on T.team_id = TM.fk_team_id
+            WHERE T.team_status = 1
+              AND T.team_id = #{teamId}
+        ]]>
+    </select>
+
+    <!-- 팀 상세 -->
+    <select id="getTeamDetail" resultType="TeamModel" parameterType="Integer">
+        <![CDATA[
+            SELECT t.team_id, t.fk_program_id, t.team_name, t.reg_dt, t.fk_tuser_id, t.total_lecture,
+                   t.team_status, t.division, t.introduce, t.link, t.reg_dt,
+                   DATE_FORMAT(t.start_dt,'%Y-%m-%d') start_dt,
+                   DATE_FORMAT(t.end_dt,'%Y-%m-%d') end_dt,
+                   p.program_id, p.program_name, p.program_start_age, p.program_end_age,
+                   tcy.team_category_id, tcy.category_name,
+                   tc.fk_tuser_id user_id,tc.user_name , tc.teacher_profile
+            FROM dreamer.view_use_team as t
+                 LEFT JOIN dreamer.program as p
+                    ON t.fk_program_id = p.program_id
+                 LEFT JOIN dreamer.team_category as tcy
+                    ON t.fk_category_id = tcy.team_category_id
+                 LEFT JOIN dreamer.view_teacher_user as tc
+                    ON t.fk_tuser_id = tc.fk_tuser_id
+            WHERE t.team_id = #{teamId}
+        ]]>
+    </select>
+
+    <!-- 팀 수정 -->
+    <update id="updateTeam" parameterType="TeamModel">
+            UPDATE  dreamer.team
+            <trim prefix="SET" suffixOverrides=",">
+            <if test="fkProgramId != null">fk_program_id = #{fkProgramId},</if>
+            <if test="fkCategoryId != null">fk_category_id = #{fkCategoryId},</if>
+            <if test="teamName != null">team_name = #{teamName},</if>
+            <if test="fkTUserId != null">fk_tuser_id = #{fkTUserId},</if>
+            <if test="totalLecture != null">total_lecture = #{totalLecture},</if>
+            <if test="startDt != null">start_dt = #{startDt},</if>
+            <if test="endDt != null">end_dt = #{endDt},</if>
+            <if test="introduce != null">introduce = #{introduce},</if>
+            <if test="link != null">link = #{link},</if>
+            </trim>
+            WHERE team_id = #{teamId}
+    </update>
+
+    <!-- 팀 강의수, 시작일 업데이트 (강의 등록시 실행) -->
+    <update id="updateTeamSchedule" parameterType="TeamModel">
+        UPDATE  dreamer.team
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="totalLecture != null">total_lecture = #{totalLecture},</if>
+            <if test="startDt != null">start_dt = #{startDt},</if>
+            <if test="endDt != null">end_dt = #{endDt},</if>
+        </trim>
+        WHERE team_id = #{teamId}
+    </update>
+
+    <!-- 팀 삭제 -->
+    <update id="deleteTeam" parameterType="Integer">
+        <![CDATA[
+            UPDATE  dreamer.team
+            SET team_status = 0
+            WHERE team_id = #{teamId}
+        ]]>
+    </update>
+
+    <!-- 강사의 강의 팀 목록 -->
+    <select id="getTeacherTeam" resultType="TeamModel" parameterType="String">
+        <![CDATA[
+            SELECT team_id, team_name, division, program_name, category_name
+            FROM dreamer.view_teacher_user VTU
+                 JOIN dreamer.view_use_team VUT ON VTU.user_id = VUT.fk_tuser_id
+                 LEFT JOIN dreamer.program PRG ON VUT.fk_program_id = PRG.program_id
+                 LEFT JOIN dreamer.team_category TCY ON VUT.fk_category_id = TCY.team_category_id
+            WHERE user_id = #{fkUserId}
+            ORDER BY VUT.reg_dt DESC
+        ]]>
+    </select>
+
+    <!-- 팀의 강의 시작,종료,횟수 -->
+    <select id="getTeamLectureSchedule" resultType="TeamModel" parameterType="Integer">
+        <![CDATA[
+            SELECT team_id, start_dt, end_dt, total_lecture
+            FROM dreamer.view_use_team
+            WHERE team_id = #{teamId}
+        ]]>
+    </select>
+
+    <!-- 팀의 강의 시작,종료,횟수 업데이트 -->
+    <update id="updateTeamLectureSchedule" parameterType="TeamModel">
+        UPDATE  dreamer.team
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="startDt != null">start_dt = #{startDt},</if>
+            <if test="endDt != null">end_dt = #{endDt},</if>
+            <if test="totalLecture != null">total_lecture = #{totalLecture}</if>
+        </trim>
+        WHERE team_id = #{teamId}
+    </update>
+
+</mapper>

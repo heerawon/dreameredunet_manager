@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+<body>
+<form th:action='@{/student/{pathParam}(pathParam=${urlType})}' th:object='${reqModel}' method="post">
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <input type="hidden" name="edit" th:value="${edit}">
+            <input type="hidden" th:field='*{fkUserId}' th:value="${reqModel?.fkUserId}">
+            <label for="userName" class="form-label">이름</label>
+            <input type="text" class="form-control" id="userName" th:value='${reqModel?.userName}' readonly>
+        </div>
+        <div class="mb-3 col-md-6">
+            <label class="form-label">성별</label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio"
+                       th:field='*{studentGender}'
+                       th:value="F"
+                       th:checked="${reqModel?.studentGender eq 'F' ? 'checked' : ''}"
+                       name="inlineRadioOptions" id="inlineRadio1" checked>
+                <label class="form-check-label" for="inlineRadio1">여자</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio"
+                       th:field='*{studentGender}'
+                       th:value="M"
+                       th:checked="${reqModel?.studentGender eq 'M' ? 'checked' : ''}"
+                       name="inlineRadioOptions" id="inlineRadio2">
+                <label class="form-check-label" for="inlineRadio2">남자</label>
+            </div>
+        </div>
+        <div class="mb-3 col-md-6">
+            <label for="teacherBirth" class="form-label">생년월일</label>
+            <input type="text" class="form-control" id="teacherBirth"
+                   th:field='*{studentBirth}'
+                   th:value='${reqModel?.studentBirth}'
+                   th:readonly="${edit eq 0 ? 'readonly': false}">
+        </div>
+    </div>
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label for="teacherCell" class="form-label">휴대전화</label>
+            <input type="text" class="form-control" id="teacherCell"
+                   th:field='*{studentCell}'
+                   th:value='${reqModel?.studentCell}'
+                   th:readonly="${edit eq 0 ? 'readonly': false}">
+        </div>
+        <div class="mb-3 col-md-6">
+            <label for="teacherCell" class="form-label">가입일</label>
+            <input type="text" class="form-control" id="teacherEmail" th:value='${reqModel?.userRegDt}' readonly>
+        </div>
+    </div>
+    <div class="mb-3 col-md-6">
+        <label for="teacherAddr" class="form-label">특별활동중인 팀</label>
+        <input type="text" class="form-control" id="teacherAddr" value='독서활동 2팀' readonly>
+    </div>
+    <div class="row">
+        <label >주문내역</label>
+        <div >
+            개발예정
+        </div>
+    </div>
+    <div class="row">
+        <label >배송내역</label>
+        <div>
+            개발예정
+        </div>
+    </div>
+
+    <div class="float-end">
+<!--        <button type="button"  th:onclick="moveChange([[${reqModel?.fkUserId}]]);">수정</button>-->
+        <button type="submit" th:text="${edit eq 1 ? '수정완료' : '등록'}"></button>
+        <button type="button"  onclick="moveList();">뒤로</button>
+    </div>
+</form>
+<script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script type="text/javaScript">
+
+    function moveList(){
+        location.href =  conPath + "student/list";
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/lecture.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-05-01 -->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">출석현황</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub2/lecture/dashboard/total}">전체 대시보드</a></li>
+                                    <li class="breadcrumb-item"><a th:href="@{/pub2/lecture/dashboard/team}">팀 대시보드</a></li>
+                                    <li class="breadcrumb-item active">팀원목록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="button-list">
+                                        <button type="button" class="btn btn-outline-primary btn_bg active">[주니어] 기초</button>
+                                        <button type="button" class="btn btn-outline-primary btn_bg">[주니어] 기초 +</button>
+                                        <button type="button" class="btn btn-outline-danger btn_bg">[주니어] 기초 +</button>
+                                    </div>
+
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <button type="button" class="btn btn-success btn-sm me-2" onclick="moveDashboard()"> < 팀 대시보드</button>
+                                            <p class="lecture_txt01 d-inline-block">[주니어] 기초</p>
+                                            <p class="lecture_txt01 d-inline-block">총 학생 수 : 43명</p>
+                                            <p class="lecture_txt01 d-inline-block">강의 기간 : 2021.08.01 ~2021.09.21</p>
+                                            <p class="lecture_txt01 d-inline-block">총 강의 수 : 25회</p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <p class="form_title">총 팀원수 : 43명</p>
+                                            <table id="table" class="table nowrap w-100">
+                                                <thead>
+                                                <tr class="text-center">
+                                                    <th>dataID</th>
+                                                    <th>팀원이름</th>
+                                                    <th>캐릭터</th>
+                                                    <th>생년월일</th>
+                                                    <th>성별</th>
+                                                    <th>수강일시</th>
+                                                    <th>출석율</th>
+                                                    <th>부모님정보</th>
+                                                </tr>
+                                                </thead>
+
+
+                                                <tbody>
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td>원빈</td>
+                                                    <td>
+                                                        <div class="d-inline-block">
+                                                            <img th:src="@{/images/teacher01.png}" alt="teacher-image" class="img-fluid avatar-xs rounded-circle">
+                                                        </div>
+                                                        <p class="d-inline-block m-0">JINS</p>
+                                                    </td>
+                                                    <td>1998.08.08</td>
+                                                    <td>남성</td>
+                                                    <td>2021.10.10</td>
+                                                    <td>
+                                                        <div class="progress mb-0 memberAttendanceBar d-inline-block">
+                                                            <div class="progress-bar h-100" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
+                                                                 aria-valuemax="100">25%
+                                                            </div>
+                                                        </div>
+                                                        <p class="d-inline-block m-0 ms-2 memberAttendanceNum"><span class="text-primary">20</span>/25회</p>
+                                                    </td>
+                                                    <td>김선산 010.0000.0000</td>
+                                                </tr>
+
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td>원빈</td>
+                                                    <td>
+                                                        <div class="d-inline-block">
+                                                            <img th:src="@{/images/teacher01.png}" alt="teacher-image" class="img-fluid avatar-xs rounded-circle">
+                                                        </div>
+                                                        <p class="d-inline-block m-0">JINS</p>
+                                                    </td>
+                                                    <td>1998.08.08</td>
+                                                    <td>남성</td>
+                                                    <td>2021.10.10</td>
+                                                    <td>
+                                                        <div class="progress mb-0 memberAttendanceBar d-inline-block">
+                                                            <div class="progress-bar h-100" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
+                                                                 aria-valuemax="100">25%
+                                                            </div>
+                                                        </div>
+                                                        <p class="d-inline-block m-0 ms-2 memberAttendanceNum"><span class="text-primary">20</span>/25회</p>
+                                                    </td>
+                                                    <td>김선산 010.0000.0000</td>
+                                                </tr>
+
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td>원빈</td>
+                                                    <td>
+                                                        <p class="d-inline-block m-0">미검사</p>
+                                                    </td>
+                                                    <td>1998.08.08</td>
+                                                    <td>남성</td>
+                                                    <td>2021.10.10</td>
+                                                    <td>
+                                                        <div class="progress mb-0 memberAttendanceBar d-inline-block">
+                                                            <div class="progress-bar h-100" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
+                                                                 aria-valuemax="100">25%
+                                                            </div>
+                                                        </div>
+                                                        <p class="d-inline-block m-0 ms-2 memberAttendanceNum"><span class="text-primary">20</span>/25회</p>
+                                                    </td>
+                                                    <td>김선산 010.0000.0000</td>
+                                                </tr>
+
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td>원빈</td>
+                                                    <td>
+                                                        <div class="d-inline-block">
+                                                            <img th:src="@{/images/teacher01.png}" alt="teacher-image" class="img-fluid avatar-xs rounded-circle">
+                                                        </div>
+                                                        <p class="d-inline-block m-0">JINS</p>
+                                                    </td>
+                                                    <td>1998.08.08</td>
+                                                    <td>남성</td>
+                                                    <td>2021.10.10</td>
+                                                    <td>
+                                                        <div class="progress mb-0 memberAttendanceBar d-inline-block">
+                                                            <div class="progress-bar h-100" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
+                                                                 aria-valuemax="100">25%
+                                                            </div>
+                                                        </div>
+                                                        <p class="d-inline-block m-0 ms-2 memberAttendanceNum"><span class="text-primary">20</span>/25회</p>
+                                                    </td>
+                                                    <td>김선산 010.0000.0000</td>
+                                                </tr>
+
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td>원빈</td>
+                                                    <td>
+                                                        <div class="d-inline-block">
+                                                            <img th:src="@{/images/teacher01.png}" alt="teacher-image" class="img-fluid avatar-xs rounded-circle">
+                                                        </div>
+                                                        <p class="d-inline-block m-0">JINS</p>
+                                                    </td>
+                                                    <td>1998.08.08</td>
+                                                    <td>남성</td>
+                                                    <td>2021.10.10</td>
+                                                    <td>
+                                                        <div class="progress mb-0 memberAttendanceBar d-inline-block">
+                                                            <div class="progress-bar h-100" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
+                                                                 aria-valuemax="100">25%
+                                                            </div>
+                                                        </div>
+                                                        <p class="d-inline-block m-0 ms-2 memberAttendanceNum"><span class="text-primary">20</span>/25회</p>
+                                                    </td>
+                                                    <td>김선산 010.0000.0000</td>
+                                                </tr>
+
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td>원빈</td>
+                                                    <td>
+                                                        <div class="d-inline-block">
+                                                            <img th:src="@{/images/teacher01.png}" alt="teacher-image" class="img-fluid avatar-xs rounded-circle">
+                                                        </div>
+                                                        <p class="d-inline-block m-0">JINS</p>
+                                                    </td>
+                                                    <td>1998.08.08</td>
+                                                    <td>남성</td>
+                                                    <td>2021.10.10</td>
+                                                    <td>
+                                                        <div class="progress mb-0 memberAttendanceBar d-inline-block">
+                                                            <div class="progress-bar h-100" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
+                                                                 aria-valuemax="100">25%
+                                                            </div>
+                                                        </div>
+                                                        <p class="d-inline-block m-0 ms-2 memberAttendanceNum"><span class="text-primary">20</span>/25회</p>
+                                                    </td>
+                                                    <td>김선산 010.0000.0000</td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+
+                                        </div> <!-- end card body-->
+                                    </div>
+
+                                </div><!-- end col-->
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<script type="text/javaScript">
+    let table;
+
+    $(document).ready(function () {
+
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02 a').addClass('active');
+
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+                {"width": "100px", "targets": 3}
+            ],
+            "searching": true, //검색 삭제
+            "ordering": false,
+            "scrollX": true,
+            "info": false, //하단 정보 삭제 (Showing 1 to 8 of 8 entries)
+            "lengthChange": false, //테이블의 페이징 표시
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+
+    });
+
+
+
+    //팀 대시보드
+    function moveDashboard() {
+        location.href = conPath + "pub2/lecture/dashboard/team";
+    }
+
+
+</script>
+
+</body>
+
+</html>

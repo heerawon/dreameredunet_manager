@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <table id="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>팀이름</th>
+                <th>강의기간</th>
+                <th>전체강의횟수</th>
+                <th>강사이름</th>
+                <th>팀구성원 수</th>
+                <th>등록일시</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each='_,num : ${resList}' class="cursor" th:onclick="moveDetails([[${_.teamId}]]);">
+                <td th:text='${num.count}'></td>
+                <td th:text='${_.teamName}'></td>
+                <td th:text='|${_.startDt}~${_.endDt}|'></td>
+                <td th:text='${_.totalLecture}'></td>
+                <td th:text='${_.userName}'></td>
+                <td th:text='${memberCount}'></td>
+                <td th:text='${_.regDt}'></td>
+            </tr>
+            </tbody>
+        </table>
+        <div>
+            <button type="submit" onclick="moveRegister()">등록</button>
+        </div>
+    </div>
+
+
+    <script type="text/javaScript">
+
+        let table;
+
+        $(document).ready(function(){
+            table = $('#table').DataTable({
+                "language": {
+                    "paginate": {
+                        "previous": "<i class='mdi mdi-chevron-left'>",
+                        "next": "<i class='mdi mdi-chevron-right'>"
+                    }
+                },
+                "drawCallback": function () {
+                    $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+                },
+            });
+        });
+
+        $('#table tbody').on( 'click', 'tr', function () {
+            console.log( table.row( this ).data() );
+        } );
+
+        function moveDetails(id){
+            location.href =  conPath + "specialActivity/detail?id="+id;
+        }
+
+        function moveRegister(){
+            location.href =  conPath + "specialActivity/register?type=register";
+        }
+    </script>
+</body>
+</html>

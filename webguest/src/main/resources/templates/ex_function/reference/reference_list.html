@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Setting-02-01-->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">강의자료 관리</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">강의자료 관리</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <table id="table" class="table table-hover nowrap w-100">
+                                        <thead>
+                                        <tr class="text-center">
+                                            <!--                                        <th>dataID</th>-->
+                                            <th>#</th>
+                                            <th class="text-start">강의자료</th>
+                                            <th>등록 일시</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each='_,num : ${lsData}' class="">
+                                            <td class="text-center" th:text='${num.count}'></td>
+                                            <td class="text-start"><a th:onclick="moveDetail([[${_.id}]])" style="cursor:pointer">[[ ${_.title} ]]</a></td>
+                                            <td class="text-center" th:text="${#dates.format(_.regDt,'yyyy.MM.dd')}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="col-lg-12 text-end">
+                                        <button class="btn btn-primary mt-1" onclick="btnAddReference()">강의자료 추가</button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        <!-- pdf 첨부 버전 -->
+                        <!--
+                        <div class="card" id="insertCard">
+                            <div class="card-body">
+                                <h5 class="card-title">PDF 추가</h5>
+                                <p class="card-text">파일 선택버튼을 눌러 PDF 선택 하면 PDF 파일이 등록됩니다.</p>
+                                <form th:action='@{/reference/add}' method="post">
+                                    <div class="mb-3 col-md-6 pt-1">
+                                        <input id="fileUrl" name="fileUrl" type="hidden" >
+                                        <input id="fileName" name="fileName" type="hidden" >
+                                        <input name="pdfFile" id="pdfFile" type="file"
+                                               class="form-control mb-3" placeholder="파일첨부" accept=".pdf" required>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card" id="updateCard">
+                            <div class="card-body">
+                                <h5 class="card-title">첨부파일 수정</h5>
+                                <p class="card-text">파일 선택버튼을 눌러 PDF 선택 하면 PDF 파일이 등록됩니다.</p>
+                                <form th:action='@{/reference/edit}' method="post">
+                                    <div class="mb-3 col-md-6 pt-1">
+                                        <input id="editId"  name="id" type="hidden" >
+                                        <input id="imgSrcEdit" name="imgSrc" type="hidden" >
+                                        <input name="artImage" id="artImageEdit" type="file"
+                                               class="form-control mb-3" placeholder="파일첨부" accept=".pdf" required>
+                                        <button type="button"  class="btn btn-sm btn-secondary m-1"  th:onclick="cancelEdit();">취소</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        -->
+                    </div>
+                </div>
+
+                <!-- end col -->
+            </div> <!-- container -->
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+
+
+<!-- Init js 에디터-->
+
+
+<script type="text/javaScript" th:inline="javascript">
+
+    /*<![CDATA[*/
+    let urlType = "[[ ${type} ]]";
+    let editImgId = -1;
+    /*]]*/
+
+    let table;
+    $(document).ready(function(){
+        // $('#updateCard').hide();
+        table = $('#table').DataTable({
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": true,
+                    "searchable": false,
+                },
+                {"width": "3%", "targets": 0},
+            ],
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+
+        });
+
+
+
+    });
+
+    function btnAddReference(){
+        location.href = conPath + "reference/register";
+    }
+
+    function moveDetail(id) {
+        location.href = conPath + "reference/"+id;
+    }
+
+    function delSlider(id){
+        Swal.fire({
+            title: '삭제 알림',
+            html: '강의자료를 삭제 하시겠습니까?<br/> 삭제시 강의자료가 더 이상 노출되지 않습니다.',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '삭제', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                location.href = conPath + "reference/delete?id=" + id;
+            } else if (result.isDenied) {
+            }
+        })
+    }
+    function editSlider(sliderId,imgSrc){
+        $('#updateCard').show();
+        $('#insertCard').hide();
+        editImgId = sliderId;
+
+        $('#editId').val(sliderId);
+        $('#imgEdit').attr("src",imgSrc);
+
+    }
+    function cancelEdit(){
+        $('#updateCard').hide();
+        $('#insertCard').show();
+    }
+
+    $("#pdfFile").on("change", handlePdfFileSelect);
+    $("#artImageEdit").on("change", handleImgFileSelectEdit);
+
+    //사진 선택
+    function handlePdfFileSelect(e) {
+        var files = e.target.files;
+        var filesArr = Array.prototype.slice.call(files);
+
+        var reg = /(.*?)\/(pdf|PDF)$/;
+
+        filesArr.forEach(function(f) {
+            // 파일 확장자 Not Match
+            if (!f.type.match(reg)) {
+                if ($.browser.msie) {
+                    // ie 일때 input[type=file] init.
+                    $("#pdfFile").replaceWith( $("#pdfFile").clone(true) );
+                } else {
+                    // other browser 일때 input[type=file] init.
+                    $("#pdfFile").val("");
+                }
+                $("#fileUrl").val("");
+                alert("pdf 파일만 첨부 가능합니다.");
+                return;
+            }else{
+                let sel_file = f;
+
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    // $("#img").attr("src", e.target.result);
+
+                    //서버에 업로드
+                    let formData = new FormData();
+                    formData.append("files", sel_file);
+                    $.ajax({
+                        data : formData,
+                        type : "POST",
+                        url : conPath + "reference/add",
+                        contentType : false,
+                        processData : false,
+                        success : function(data) {
+                            alert('pdf업로드 성공');
+                            location.href= conPath + "reference";
+                        },
+
+                    }).fail(function(data, textStatus, errorThrown){
+                        // callback(data);
+                        alert('재등록해주세요.');
+                    });;
+                }
+                reader.readAsDataURL(f);
+            }
+        });
+    }
+
+    //사진 선택
+    function handleImgFileSelectEdit(e) {
+        var files = e.target.files;
+        var filesArr = Array.prototype.slice.call(files);
+
+        var reg = /(.*?)\/(jpg|jpeg|png|bmp)$/;
+
+        filesArr.forEach(function(f) {
+            // 파일 확장자 Not Match
+            if (!f.type.match(reg)) {
+                if ($.browser.msie) {
+                    // ie 일때 input[type=file] init.
+                    $("#artImageEdit").replaceWith( $("#artImageEdit").clone(true) );
+                } else {
+                    // other browser 일때 input[type=file] init.
+                    $("#artImageEdit").val("");
+                }
+                $("#imgEdit").attr("src", "https://via.placeholder.com/150"); //이미지 초기화
+                $("#imgSrcEdit").val("");
+
+                alert("확장자는 이미지 확장자만 가능합니다.");
+                return;
+            }else{
+                let sel_file = f;
+
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    // $("#img").attr("src", e.target.result);
+
+                    //서버에 업로드
+                    let formData = new FormData();
+                    formData.append("images", sel_file);
+                    $.ajax({
+                        data : formData,
+                        type : "POST",
+                        url : conPath + "images",
+                        contentType : false,
+                        processData : false,
+                        success : function(data) {
+                            //항상 업로드된 파일의 url이 있어야 한다.
+                            $("#imgSrcEdit").removeAttr();
+                            $("#imgSrcEdit").val(data);
+                            $("#imgEdit").attr("src", data); //이미지 초기화
+                            console.log('img',data);
+                            console.log('techerProfileValue ::::: ',$("#imgEdit").val());
+
+                            // $("#teacherProfile").val(data);
+                        },
+
+                    }).fail(function(data, textStatus, errorThrown){
+                        // callback(data);
+                        alert('재등록해주세요.');
+                    });;
+                }
+                reader.readAsDataURL(f);
+            }
+        });
+    }
+
+
+
+
+
+
+</script>
+
+</body>
+
+</html>

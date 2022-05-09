@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.CelebrityLectureMapper">
+
+    <!-- 명사특강 목록 -->
+    <select id="getCelebLectureList" resultType="CelebrityLectureModel" >
+        <![CDATA[
+            SELECT celeb_lecture_id, CLT.fk_suser_id, celeb_lecture_status,
+                   DATE_FORMAT(reg_dt,'%Y-%m-%d') reg_dt,
+                   DATE_FORMAT(allow_dt,'%Y-%m-%d') allow_dt,
+                   DATE_FORMAT(student_birth,'%Y-%m-%d') student_birth,
+                   user_name
+            FROM dreamer.celebrity_lecture CLT
+                JOIN dreamer.view_student_user VSU on CLT.fk_suser_id = VSU.fk_suser_id
+            WHERE celeb_lecture_id != ''
+        ]]>
+        <if test="userName != '' ">
+            AND VSU.user_name LIKE CONCAT('%',#{userName},'%')
+        </if>
+        <if test="studentGender != '' ">
+            AND VSU.student_gender = #{studentGender}
+        </if>
+        <if test="birthStartDt != '' and birthEndDt != ''">
+            AND DATE_FORMAT(VSU.student_birth,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{birthStartDt},'%Y-%m-%d') AND DATE_FORMAT(#{birthEndDt},'%Y-%m-%d')
+        </if>
+        <if test="searchStartDt != '' and searchEndDt != ''">
+            AND DATE_FORMAT(CLT.reg_dt,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{searchStartDt},'%Y-%m-%d') AND DATE_FORMAT(#{searchEndDt},'%Y-%m-%d')
+        </if>
+        ORDER BY CLT.reg_dt DESC
+    </select>
+
+    <!-- 명사특강 승인 -->
+    <update id="updateStatus"  parameterType="CelebrityLectureModel">
+        <![CDATA[
+            UPDATE  dreamer.celebrity_lecture
+            SET celeb_lecture_status = #{celebLectureStatus},
+                allow_dt = NOW()
+            WHERE celeb_lecture_id = #{celebLectureId}
+        ]]>
+    </update>
+
+</mapper>

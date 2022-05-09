@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/user.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Teacher-01-02 -->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">강사 상세</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/teacher/list}">강사관리</a></li>
+                                    <li class="breadcrumb-item active">강사 상세</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="mb-3 col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <label class="form-label">ID</label>
+                                                    <input name="teacherID" type="text" class="form-control"
+                                                           style="display: inline-block" th:value='${resModel?.userId}'
+                                                           disabled>
+                                                </div>
+                                                <div class="col-md-4" style="margin: auto auto 0 0;">
+                                                    <button class="btn btn-primary" type="button" onclick="password(0);">비밀번호 변경</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">강사이름</label>
+                                            <input name="teacherName" type="text" class="form-control " th:value='${resModel?.userName}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">성별</label>
+                                            <input name="gender" type="text" class="form-control"
+                                                   th:value='${resModel?.teacherGender eq "F" ? "여성" : "남성"}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">생년월일</label>
+                                            <input name="teacherBirthDate" type="text" class="form-control" th:value='${resModel?.teacherBirth}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">휴대전화</label>
+                                            <input name="teacherPhoneNumber" type="text" class="form-control" th:value='${resModel?.teacherCell}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">이메일</label>
+                                            <input name="teacherEmail" type="text" class="form-control" th:value='${resModel?.teacherEmail}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">주소</label>
+                                            <input name="teacherAddress" type="text" class="form-control" th:value='|${resModel?.teacherAddr}  ${resModel?.teacherAddrDetail}|' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">프로필 사진</label>
+                                            <div class="">
+                                                <a class="me-2 mb-2 d-inline-block" id="profileImage">
+                                                    <img th:src='${resModel?.teacherProfile}' class="img-fluid rounded" width="200"/>
+<!--                                                    <input name="file" type="file" th:text='${resModel?.teacherProfile}'-->
+<!--                                                           id="profile" required placeholder="파일첨부" disabled>-->
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">분야</label>
+                                            <div>
+                                                <textarea class="form-control" id="area" rows="10" th:text='${resModel?.teacherCategory}' disabled></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">이력</label>
+                                            <div>
+                                                <textarea class="form-control" id="speck" rows="10" th:text='${resModel?.teacherHistory}' disabled></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">소개말</label>
+                                            <div>
+                                                <textarea class="form-control" id="introduction" rows="10" th:text='${resModel?.teacherIntroduce}' disabled></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">배정된 팀</label>
+                                            <!-- 팀목록 따로가져옴  -->
+                                            <!-- #teacher-01-02 : 기획서에 상세 설명이 없음 -->
+                                            <!-- 요소를 버튼등으로 가져오고 횡으로 배치하는게 더 나을지 , 클릭등을 해서 관리 페이지로 넘어갈 수도 있는지?  -->
+                                            <div>
+                                                <input name="team" type="text" class="form-control mb-1" th:each='_,num : ${resList}' th:value="${_.teamName}" disabled>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+
+
+                        <!-- 하단 버튼 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-start">
+                                    <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">강사 목록</button>
+                                </div>
+                                <div class="float-end button-list">
+                                    <button type="button" class="btn btn-outline-danger btn_bg" th:onclick="delTeacher([[${resModel.fkUserId}]]);">삭제</button>
+                                    <button type="button" class="btn btn-outline-warning btn_bg" th:onclick="moveChange([[${resModel.fkUserId}]]);">수정</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<script type="text/javaScript">
+    /*<![CDATA[*/
+    let userId = "[[${resModel?.fkUserId}]]";
+    /*]]>*/
+
+    console.log("userId",userId);
+
+    let table;
+    let cntChapter = 0;
+
+    $(document).ready(function () {
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02-menu').addClass('show');
+        $('.menu02-1').addClass('active');
+    });
+
+
+    //알림
+    function delTeacher(params) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '삭제 알림',
+            html: '강사를 삭제 하시겠습니까? <br/> ' + '삭제시 복구가 불가능합니다.',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '삭제', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                location.href =  conPath + "teacher/delete?id="+params;
+                Swal.fire('삭제가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+
+    }
+
+    //뒤로
+    function moveBack() {
+        location.href =  conPath + "teacher/list";
+    }
+
+    //수정
+    function moveChange(id) {
+        location.href =  conPath + "teacher/register?type=edit&id="+id;
+    }
+
+
+    //알림
+    function password(params) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '비밀번호 변경',
+            html: '' +
+                '                            \n' +
+                '                              ' +
+                '                               <div class="row mb-1 mt-3">\n' +
+                '                                    <label class="col-sm-3 col-form-label passwordTxt">변경할 비밀번호</label>\n' +
+                '                                    <div class="col-sm-9">\n' +
+                '                                        <input type="password" id="newPw1" class="form-control" placeholder="" minlength="5" maxlength="20">\n' +
+                '                                    </div>\n' +
+                '                                </div>\n' +
+                '                                <div class="row mb-2"  ><label id="tooShortNewPw" class="col-12 text-danger text-sm-end" style="display: none;">공백 없이 8자 이상 입력하세요.</label></div>' +
+                '                                <div class="row mb-1">\n' +
+                '                                    <label class="col-sm-3 col-form-label passwordTxt">비밀번호 재입력</label>\n' +
+                '                                    <div class="col-sm-9">\n' +
+                '                                        <input type="password" id="newPw2" class="form-control" placeholder="" minlength="5" maxlength="20">\n' +
+                '                                    </div>\n' +
+                '                                </div>' +
+                '                                <div class="row mb-3"  ><label id="unMatchNewPw" class="col-12 text-danger text-sm-end" style="display: none;">재입력 값이 일치하지 않습니다.</label></div>' +
+                '                                <div class="row mb-4">' +
+                '                                   <button class="btn btn-secondary btn-sm mb-1" onclick="myPageInfoChgPwDismiss()">취소</button>      ' +
+                '                                   <button class="btn btn-primary btn-sm mb-2" onclick="myPageInfoChgPwDo()">변경</button>                          ' +
+                '                               </div>' +
+                '                             ',
+            showDenyButton: false, //거절버튼
+            showCancelButton: false, //취소버튼
+            showConfirmButton: false, //승인 버튼
+        });
+    }
+
+    function myPageInfoChgPwDismiss() {
+        swal.close();
+    }
+    function myPageInfoChgPwDo() {
+        let isOkflag = true;
+
+        if($.trim($("#newPw1").val()).length < 8){
+            isOkflag = false;
+            $('#tooShortNewPw').css('display','inline');
+        }else{
+            $('#tooShortNewPw').css('display','none');
+        }
+
+        if($('#newPw1').val()!=$('#newPw2').val()){
+            isOkflag = false;
+            $('#unMatchNewPw').css('display','inline');
+            $('#newPw1').val('');
+            $('#newPw2').val('');
+            $('#newPw1').focus();
+        }else{
+            $('#unMatchNewPw').css('display','none');
+        }
+        if(isOkflag){
+            $.post(conPath + "teacher/changeTeacherPw", {
+                newPwd:$.trim($("#newPw1").val()),
+                teacherId : userId,
+            },function (data) {
+                console.log(data);
+                if(data == 'true'){
+                    swal.fire('비밀번호 변경 성공');
+                }else{
+                    swal.fire('비밀번호 변경 실패');
+                }
+            });
+        }
+    }
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/lecture.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-01-01 -->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">대시보드</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item active">전체 대시보드</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 팀 카드 -->
+                            <div class="row mb-5">
+                                <div class="col-12 mb-1">
+                                    <p class="lecture_txt01 d-inline-block">관리중인 팀 : 4</p>
+                                    <p class="lecture_txt01 d-inline-block">학생 수 : 112</p>
+                                </div>
+
+                                <!-- 수업, 진행여부 검색 -->
+                                <div class="col-12 mb-3">
+                                    <div class="searchTable lectureSearch">
+                                        <div class="articleWrap row">
+                                            <div class="col-lg-6 searchList">
+                                                <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                    <p>수업</p>
+                                                </div>
+                                                <div class="d-table-cell align-middle articleChoice">
+                                                    <div class="form-check float-start">
+                                                        <input class="form-check-input" type="radio" name="lecture" id="lecture1" checked>
+                                                        <label class="form-check-label" for="lecture1">
+                                                            전체
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check float-start ms-2">
+                                                        <input class="form-check-input" type="radio" name="lecture" id="lecture2">
+                                                        <label class="form-check-label" for="lecture2">
+                                                            정규수업
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check float-start ms-2">
+                                                        <input class="form-check-input" type="radio" name="lecture" id="lecture3">
+                                                        <label class="form-check-label" for="lecture3">
+                                                            특별활동 수업
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                    <p>진행여부</p>
+                                                </div>
+                                                <div class="d-table-cell align-middle articleChoice">
+                                                    <div class="form-check float-start">
+                                                        <input class="form-check-input" type="radio" name="progress" id="progress1" checked>
+                                                        <label class="form-check-label" for="progress1">
+                                                            전체
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check float-start ms-2">
+                                                        <input class="form-check-input" type="radio" name="progress" id="progress2">
+                                                        <label class="form-check-label" for="progress2">
+                                                            진행중
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check float-start ms-2">
+                                                        <input class="form-check-input" type="radio" name="progress" id="progress3">
+                                                        <label class="form-check-label" for="progress3">
+                                                            진행완료
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <!-- 1 -->
+                                <div class="col-lg-6 col-md-12">
+                                    <a th:href="@{/pub2/lecture/dashboard/team}">
+                                        <div class="card border border-primary mb-3">
+                                            <div class="card-header">
+                                                <h5 class="text-primary">[주니어] 기초</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <ul class="teamInfo row">
+                                                    <li class="col-4">총 학생 수<br/>43명</li>
+                                                    <li class="col-4">강의 기간<br/>2021.08.01 ~ 2021.09.20</li>
+                                                    <li class="col-4">총 강의 수 <br/>25회</li>
+                                                </ul>
+
+                                                <ul class="lectureInfo row">
+                                                    <li class="col-4">수업 회차<br/>4명</li>
+                                                    <li class="col-4">수업날짜/시간<br/>2021.08.01 15:00</li>
+                                                    <li class="col-4">줌 링크 <br/>https://zoom.us/j/556563CX34</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <!-- 2 -->
+                                <div class="col-lg-6 col-md-12">
+                                    <a th:href="@{/pub2/lecture/dashboard/team}">
+                                        <div class="card border border-primary mb-3">
+                                            <div class="card-header">
+                                                <h5 class="text-primary">[주니어] 기초</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <ul class="teamInfo row">
+                                                    <li class="col-4">총 학생 수<br/>43명</li>
+                                                    <li class="col-4">강의 기간<br/>2021.08.01 ~ 2021.09.20</li>
+                                                    <li class="col-4">총 강의 수 <br/>25회</li>
+                                                </ul>
+
+                                                <ul class="lectureInfo row">
+                                                    <li class="col-4">수업 회차<br/>4명</li>
+                                                    <li class="col-4">수업날짜/시간<br/>2021.08.01 15:00</li>
+                                                    <li class="col-4">줌 링크 <br/>https://zoom.us/j/556563CX34</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <!-- 3 -->
+                                <div class="col-lg-6 col-md-12">
+                                    <a th:href="@{/pub2/lecture/dashboard/team}">
+                                        <div class="card border border-danger mb-3">
+                                            <div class="card-header">
+                                                <h5 class="text-danger">[독서클럽] 소설</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <ul class="teamInfo row">
+                                                    <li class="col-4">총 학생 수<br/>43명</li>
+                                                    <li class="col-4">강의 기간<br/>2021.08.01 ~ 2021.09.20</li>
+                                                    <li class="col-4">총 강의 수 <br/>25회</li>
+                                                </ul>
+
+                                                <ul class="lectureInfo row">
+                                                    <li class="col-4">수업 회차<br/>4명</li>
+                                                    <li class="col-4">수업날짜/시간<br/>2021.08.01 15:00</li>
+                                                    <li class="col-4">줌 링크 <br/>https://zoom.us/j/556563CX34</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <!-- 4 -->
+                                <div class="col-lg-6 col-md-12">
+                                    <a th:href="@{/pub2/lecture/dashboard/team}">
+                                        <div class="card border border-primary teamComplete mb-3">
+                                            <div class="card-header">
+                                                <h5 class="text-primary">[주니어] 기초</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <ul class="teamInfo row">
+                                                    <li class="col-4">총 학생 수<br/>43명</li>
+                                                    <li class="col-4">강의 기간<br/>2021.08.01 ~ 2021.09.20</li>
+                                                    <li class="col-4">총 강의 수 <br/>25회</li>
+                                                </ul>
+
+                                                <ul class="lectureInfo row">
+                                                    <li class="col-4">수업 회차<br/>4명</li>
+                                                    <li class="col-4">수업날짜/시간<br/>2021.08.01 15:00</li>
+                                                    <li class="col-4">줌 링크 <br/>https://zoom.us/j/556563CX34</li>
+                                                </ul>
+                                            </div>
+                                            <p class="teamCompleteTxt">진행완료</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+
+                            <!-- 하단 목록 부분-->
+                            <div class="row">
+                                <!-- Q&A -->
+                                <div class="col-lg-6">
+                                    <div class="card card-body">
+                                        <h5 class="text-break mb-3">Q&A</h5>
+                                        <div class="boardBtn">
+                                            <button type="button" class="btn btn-primary" onclick="moveQa();">전체보기</button>
+                                        </div>
+
+                                        <ul class="boardList">
+                                            <li>
+                                                <a href="">
+                                                    <p class="board_txt01">강의내용중에--라는 부분에 강의내용중에--라는 부분에강의내용중에--라는 부분에</p>
+                                                    <p class="board_txt02">원빈</p>
+                                                    <p class="board_txt03">[주니어]-기초</p>
+                                                    <p class="board_txt04">2021.08.01</p>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a href="">
+                                                    <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                    <p class="board_txt02">원빈</p>
+                                                    <p class="board_txt03">[주니어]-기초</p>
+                                                    <p class="board_txt04">2021.08.01</p>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a href="">
+                                                    <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                    <p class="board_txt02">원빈</p>
+                                                    <p class="board_txt03">[주니어]-기초</p>
+                                                    <p class="board_txt04">2021.08.01</p>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a href="">
+                                                    <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                    <p class="board_txt02">원빈</p>
+                                                    <p class="board_txt03">[주니어]-기초</p>
+                                                    <p class="board_txt04">2021.08.01</p>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a href="">
+                                                    <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                    <p class="board_txt02">원빈</p>
+                                                    <p class="board_txt03">[주니어]-기초</p>
+                                                    <p class="board_txt04">2021.08.01</p>
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- 과제 -->
+                                <div class="col-lg-6">
+                                    <div class="card card-body">
+                                        <h5 class="text-break mb-3">과제</h5>
+                                        <div class="boardBtn">
+                                            <button type="button" class="btn btn-primary" onclick="moveHomework();">전체보기</button>
+                                        </div>
+
+                                        <ul class="boardList">
+                                            <li>
+                                                <a href="">
+                                                    <p class="board_txt01">강의내용중에--라는 부분에 강의내용중에--라는 부분에강의내용중에--라는 부분에</p>
+                                                    <p class="board_txt02">원빈</p>
+                                                    <p class="board_txt03">[주니어]-기초</p>
+                                                    <p class="board_txt04">2021.08.01</p>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a href="">
+                                                    <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                    <p class="board_txt02">원빈</p>
+                                                    <p class="board_txt03">[주니어]-기초</p>
+                                                    <p class="board_txt04">2021.08.01</p>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a href="">
+                                                    <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                    <p class="board_txt02">원빈</p>
+                                                    <p class="board_txt03">[주니어]-기초</p>
+                                                    <p class="board_txt04">2021.08.01</p>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a href="">
+                                                    <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                    <p class="board_txt02">원빈</p>
+                                                    <p class="board_txt03">[주니어]-기초</p>
+                                                    <p class="board_txt04">2021.08.01</p>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a href="">
+                                                    <p class="board_txt01">강의내용중에--라는 부분에</p>
+                                                    <p class="board_txt02">원빈</p>
+                                                    <p class="board_txt03">[주니어]-기초</p>
+                                                    <p class="board_txt04">2021.08.01</p>
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- 학생목록 -->
+                                <div class="col-lg-12">
+                                    <div class="card card-body">
+                                        <h5 class="text-break mb-3">학생목록 <span>112명</span></h5>
+
+                                        <table id="table" class="table nowrap w-100 studentListWrap">
+                                            <thead>
+                                            <tr class="text-center">
+                                                <th>dataID</th>
+                                                <th>학생 MBTI</th>
+                                                <th>이름(생년월일)</th>
+                                                <th>성별</th>
+                                                <th>수강중인 팀</th>
+                                            </tr>
+                                            </thead>
+
+
+                                            <tbody>
+                                            <tr class="text-center">
+                                                <td>1</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="studentMbti float-start rounded">
+                                                            <img src="/images/teacher01.png" class="img-fluid">
+                                                        </div>
+                                                        <p class="studentMbtiTxt">NTJS</p>
+                                                    </div>
+                                                </td>
+                                                <td>원빈(999.10.23)</td>
+                                                <td>남성</td>
+                                                <td>[주니어]-기초</td>
+                                            </tr>
+
+                                            <tr class="text-center">
+                                                <td>1</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="studentMbti float-start rounded">
+                                                            <img src="/images/teacher01.png" class="img-fluid">
+                                                        </div>
+                                                        <p class="studentMbtiTxt">NTJS</p>
+                                                    </div>
+                                                </td>
+                                                <td>원빈(999.10.23)</td>
+                                                <td>남성</td>
+                                                <td>[주니어]-기초</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td>1</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="studentMbti float-start rounded">
+                                                            <img src="/images/teacher01.png" class="img-fluid">
+                                                        </div>
+                                                        <p class="studentMbtiTxt">NTJS</p>
+                                                    </div>
+                                                </td>
+                                                <td>원빈(999.10.23)</td>
+                                                <td>남성</td>
+                                                <td>[주니어]-기초</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td>1</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="studentMbti float-start rounded">
+                                                            <img src="/images/teacher01.png" class="img-fluid">
+                                                        </div>
+                                                        <p class="studentMbtiTxt">NTJS</p>
+                                                    </div>
+                                                </td>
+                                                <td>원빈(999.10.23)</td>
+                                                <td>남성</td>
+                                                <td>[주니어]-기초</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td>1</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="studentMbti float-start rounded">
+                                                            <img src="/images/teacher01.png" class="img-fluid">
+                                                        </div>
+                                                        <p class="studentMbtiTxt">NTJS</p>
+                                                    </div>
+                                                </td>
+                                                <td>원빈(999.10.23)</td>
+                                                <td>남성</td>
+                                                <td>[주니어]-기초</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td>1</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="studentMbti float-start rounded">
+                                                            <img src="/images/teacher01.png" class="img-fluid">
+                                                        </div>
+                                                        <p class="studentMbtiTxt">NTJS</p>
+                                                    </div>
+                                                </td>
+                                                <td>원빈(999.10.23)</td>
+                                                <td>남성</td>
+                                                <td>[주니어]-기초</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td>1</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="studentMbti float-start rounded">
+                                                            <img src="/images/teacher01.png" class="img-fluid">
+                                                        </div>
+                                                        <p class="studentMbtiTxt">NTJS</p>
+                                                    </div>
+                                                </td>
+                                                <td>원빈(999.10.23)</td>
+                                                <td>남성</td>
+                                                <td>[주니어]-기초</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td>1</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="studentMbti float-start rounded">
+                                                            <img src="/images/teacher01.png" class="img-fluid">
+                                                        </div>
+                                                        <p class="studentMbtiTxt">NTJS</p>
+                                                    </div>
+                                                </td>
+                                                <td>원빈(999.10.23)</td>
+                                                <td>남성</td>
+                                                <td>[주니어]-기초</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td>1</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="studentMbti float-start rounded">
+                                                            <img src="/images/teacher01.png" class="img-fluid">
+                                                        </div>
+                                                        <p class="studentMbtiTxt">NTJS</p>
+                                                    </div>
+                                                </td>
+                                                <td>원빈(999.10.23)</td>
+                                                <td>남성</td>
+                                                <td>[주니어]-기초</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td>1</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="studentMbti float-start rounded">
+                                                            <img src="/images/teacher01.png" class="img-fluid">
+                                                        </div>
+                                                        <p class="studentMbtiTxt">NTJS</p>
+                                                    </div>
+                                                </td>
+                                                <td>원빈(999.10.23)</td>
+                                                <td>남성</td>
+                                                <td>[주니어]-기초</td>
+                                            </tr>
+                                            <tr class="text-center">
+                                                <td>1</td>
+                                                <td>
+                                                    <div>
+                                                        <div class="studentMbti float-start rounded">
+                                                            <img src="/images/teacher01.png" class="img-fluid">
+                                                        </div>
+                                                        <p class="studentMbtiTxt">NTJS</p>
+                                                    </div>
+                                                </td>
+                                                <td>원빈(999.10.23)</td>
+                                                <td>남성</td>
+                                                <td>[주니어]-기초</td>
+                                            </tr>
+
+
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </form>
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<script type="text/javaScript">
+    let table;
+
+    $(document).ready(function () {
+
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "searching": false, //검색 삭제
+            "info": false, //하단 정보 삭제 (Showing 1 to 8 of 8 entries)
+            "lengthChange": false, //테이블의 페이징 표시
+            "paging": false,
+            scrollY: 600,
+            scrollCollapse: true,
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+
+    });
+
+
+    //Q&A 전체보기
+    function moveQa() {
+        location.href = conPath+"pub2/community/qa/list";
+    }
+
+    //과제 전체보기
+    function moveHomework() {
+        location.href = conPath+"pub2/community/homework/list";
+    }
+
+
+</script>
+
+</body>
+
+</html>

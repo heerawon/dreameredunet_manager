@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/lecture.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-03-02 상세-->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">예습 상세</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub2/lecture/dashboard/total}">전체 대시보드</a></li>
+                                    <li class="breadcrumb-item"><a th:href="@{/pub2/lecture/dashboard/team}">팀 대시보드</a></li>
+                                    <li class="breadcrumb-item"><a th:href="@{/pub2/lecture/preview}">예습</a></li>
+                                    <li class="breadcrumb-item active">예습 상세</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="button-list">
+                                        <button type="button" class="btn btn-outline-primary btn_bg active">[주니어] 기초</button>
+                                        <button type="button" class="btn btn-outline-primary btn_bg">[주니어] 기초 +</button>
+                                        <button type="button" class="btn btn-outline-danger btn_bg">[주니어] 기초 +</button>
+                                    </div>
+
+
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <button type="button" class="btn btn-success btn-sm me-2" onclick="moveDashboard()"> < 팀 대시보드</button>
+                                            <p class="lecture_txt01 d-inline-block">[주니어] 기초</p>
+                                            <p class="lecture_txt01 d-inline-block">총 학생 수 : 43명</p>
+                                            <p class="lecture_txt01 d-inline-block">강의 기간 : 2021.08.01 ~2021.09.21</p>
+                                            <p class="lecture_txt01 d-inline-block">총 강의 수 : 25회</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 첫번째 카드 -->
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div>
+                                                    <h3 class="form_title mb-3 d-inline-block">예습</h3>
+                                                    <div class="form-check d-inline-block text-primary ps-2">[노출중 입니다.]</div>
+                                                </div>
+
+                                                <div class="grayLine"></div>
+
+                                                <div class="mb-3 mt-3 col-md-12">
+                                                    <p class="reviewTxt">
+                                                        서비스를 이용해 주시는 이용자 여러분께 감사드립니다.<br/>
+                                                        서비스를 이용해 주시는 이용자 여러분께 감사드립니다.<br/>
+                                                        서비스를 이용해 주시는 이용자 여러분께 감사드립니다.<br/>
+                                                        서비스를 이용해 주시는 이용자 여러분께 감사드립니다.
+                                                    </p>
+                                                </div>
+
+                                                <div class="grayLine"></div>
+
+                                                <div class="mb-3 mt-3 col-md-12">
+                                                    <div class="ratio ratio-16x9">
+                                                        <iframe src="https://www.youtube.com/embed/PrUxWZiQfy4?ecver=1"></iframe>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 첫번째 카드 -->
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div>
+                                                <p class="form_title">댓글</p>
+                                                <!-- 학생이 남긴 댓글 -->
+                                                <div class="cmntsWrap mb-2">
+                                                    <div class="cmntsMbti d-inline-block">
+                                                        <img th:src="@{/images/teacher01.png}" alt="teacher-image" class="img-fluid avatar-sm rounded-circle">
+                                                    </div>
+                                                    <div class="cmntsTxtWrap d-inline-block ms-1">
+                                                        <p class="cmntsStudent fw-bolder mb-1">NTJS 원빈
+                                                            <span class="ms-1 fw-normal font-13 text-secondary">2021.70.70 10:30</span>
+                                                        </p>
+                                                        <p class="cmntsTxt mb-0">
+                                                            결과 보고서와 함께 과정 중에 발생한 모든 자료들을 모아와야 하나요?결과 보고서와 함께 과정 중에 발생한 모든 자료들을 모아와야 하나요?결과 보고서와 함께 과정 중에 발생한 모든 자료들을 모아와야 하나요?결과
+                                                            보고서와 함께 과정 중에 발생한 모든 자료들을 모아와야 하나요?결과 보고서와 함께 과정 중에 발생한 모든 자료들을 모아와야 하나요?
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 선생이 남긴 댓글 -->
+                                                <div class="cmntsWrap mb-2 text-end">
+                                                    <div class="cmntsTxtWrap d-inline-block ms-1">
+                                                        <p class="cmntsStudent fw-bolder mb-1">
+                                                            <span class="me-1 fw-normal font-13 text-secondary">2021.70.70 10:30</span>
+                                                        </p>
+                                                        <p class="cmntsTxt mb-0 text-start teacherCmnts">
+                                                            결과 보고서와 함께 과정 중에 발생한 모든 자료들을 모아와야 하나요?결과 보고서와 함께 과정 중에 발생한 모든 자료들을 모아와야 하나요?결과 보고서와 함께 과정 중에 발생한 모든 자료들을 모아와야 하나요?결과
+                                                            보고서와 함께 과정 중에 발생한 모든 자료들을 모아와야 하나요?결과 보고서와 함께 과정 중에 발생한 모든 자료들을 모아와야 하나요?
+                                                        </p>
+                                                    </div>
+                                                    <div class="cmntsMbti d-inline-block">
+                                                        <img th:src="@{/images/teacher01.png}" alt="teacher-image" class="img-fluid avatar-sm rounded-circle">
+                                                    </div>
+                                                    <div class="cmntsBtn font-13">
+                                                        <a type="button" class="" data-bs-toggle="modal" data-bs-target="#delete-modal" onclick="delCmnts(0)">삭제</a>
+                                                        <a type="button" class="ms-1">수정</a>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 더보기 클릭할 깨 마다 10개씩 노출 -->
+                                                <div class="text-center mt-4 mb-3">
+                                                    <button type="button" class="btn btn-primary btn-rounded">더보기</button>
+                                                </div>
+
+
+                                                <!-- 댓글 달기 -->
+                                                <div>
+                                                    <textarea required="" class="form-control" rows="3" placeholder="댓글을 남겨보세요."></textarea>
+                                                    <div class="text-end mt-2">
+                                                        <button type="button" class="btn btn-warning">등록</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- 하단 버튼 -->
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="float-start">
+                                                <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">목록</button>
+                                            </div>
+                                            <div class="float-end button-list">
+                                                <button type="button" class="btn btn-outline-primary btn_bg" data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                        onclick="delReview(0);">삭제
+                                                </button>
+                                                <button type="button" class="btn btn-primary btn_bg" onclick="moveUpdate();">수정</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<script type="text/javaScript">
+    $(document).ready(function () {
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02 a').addClass('active');
+    });
+
+    //알림
+    function delCmnts(params) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '삭제 알림',
+            html: '댓글을 삭제 하시겠습니까? <br/> ' + '삭제시 복구가 불가능합니다.',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '삭제', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                Swal.fire('삭제가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
+
+    //알림
+    function delReview(params) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '삭제 알림',
+            html: '복습내용을 삭제 하시겠습니까? <br/> ' + '삭제시 복구가 불가능합니다.',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '삭제', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                Swal.fire('삭제가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
+
+    //목록으로
+    function moveBack() {
+        location.href = conPath + "pub2/lecture/preview";
+    }
+
+    //수정
+    function moveUpdate() {
+        location.href = conPath + "pub2/lecture/preview/register";
+    }
+
+    //팀 대시보드
+    function moveDashboard() {
+        location.href = conPath + "pub2/lecture/dashboard/team";
+    }
+
+
+</script>
+
+</body>
+
+</html>

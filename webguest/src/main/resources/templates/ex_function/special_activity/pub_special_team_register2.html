@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/team.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+    <!-- AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.serializeObject/2.0.3/jquery.serializeObject.min.js"></script>
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-01-03-03 / Lecture-01-04 등록 & 수정-->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">특별활동 팀등록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/class/list}">특별활동 팀목록</a></li>
+                                    <li class="breadcrumb-item active">특별활동 팀등록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="mb-3 col-lg-2">
+                                            <label class="form-label">프로그램</label>
+                                            <input name="program" type="text" class="form-control" th:value='${resModel?.categoryName}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-lg-3">
+                                            <label class="form-label">팀명 <span class="text-danger">*</span></label>
+                                            <input name="teamName" type="text" class="form-control" th:value='${resModel?.teamName}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-lg-3" th:if="${resList != null}" >
+                                            <label class="form-label">전체강의횟수</label>
+                                            <input name="classCount" type="text" th:value="${resList.size()}" class="form-control" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-lg-4" th:if="${resList != null}">
+                                            <label class="form-label">강의기간</label>
+                                            <div class="classPeriod">
+                                                <input name="classPeriod" class="form-control" type="date" th:value="${resList.get(0).startDt}" disabled>
+                                                ~
+                                                <input name="classPeriod" class="form-control float-right" type="date" th:value="${resList.get(resList.size()-1).startDt}" disabled>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="grayLine"></div>
+
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="form-label form_title">강사</label>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <div class="mb-2 pt-1">
+                                                        <img th:src='${resModel?.teacherProfile}' class="img-fluid rounded" width="200"/>
+                                                    </div>
+                                                    <input name="lectureMtrls" type="text" class="form-control" th:value='${resModel?.userName}' disabled>
+                                                </div>
+
+                                                <div class="col-md-10">
+                                                    <div class="mb-2">
+                                                        <label class="form-label">강의 소개</label>
+                                                        <div>
+                                                            <textarea class="form-control" id="lectureIntroduction" rows="5" th:text='${resModel?.introduce}' disabled></textarea>
+                                                        </div>
+                                                    </div>
+<!--                                                    <div>-->
+<!--                                                        <label class="form-label">강의자료 YouTube 링크</label>-->
+<!--                                                        <input name="lectureMtrls" type="text" class="form-control" th:value='${resModel?.link}' disabled>-->
+<!--                                                    </div>-->
+                                                </div>
+
+                                                <div class="text-end mt-2">
+                                                    <button type="button" class="btn btn-outline-warning btn_bg" th:onclick="moveChange([[${resModel?.teamId}]]);">팀 수정</button>
+                                                    <button type="button" class="btn btn-outline-danger btn_bg" th:onclick="delTeacher([[${resModel?.teamId}]]);">팀 삭제</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grayLine"></div>
+
+                            </div>
+
+                            <!-- 두번째 카드 -->
+                            <div class="card" th:if="${edit == 0}">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">수업요일 <span class="text-danger">*</span></label>
+                                            <div class="pt-1 pb-1">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="dayweek" value="mon">
+                                                    <label class="form-check-label">월</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="dayweek" value="tue">
+                                                    <label class="form-check-label">화</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="dayweek" value="wed">
+                                                    <label class="form-check-label">수</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="dayweek" value="thu">
+                                                    <label class="form-check-label">목</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="dayweek" value="fri">
+                                                    <label class="form-check-label">금</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="dayweek" value="sat">
+                                                    <label class="form-check-label">토</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" name="dayweek" value="sun">
+                                                    <label class="form-check-label">일</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label class="form-label">개강일 <span class="text-danger">*</span></label>
+                                            <input name="classDate" class="form-control" type="date" required>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">수업시간 <span class="text-danger">*</span></label>
+                                            <input name="classTime" class="form-control" type="time" required>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">수업일수 <span class="text-danger">*</span></label>
+                                            <input name="dayNumber" type="text"
+                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                                   class="form-control" required>
+                                        </div>
+
+                                        <div class="mt-3" th:if="${edit == 0}">
+                                            <button type="button" class="btn btn-primary waves-effect waves-light btn_bg me-2" onclick="createChapter()">생성</button>
+                                            <p class="d-inline-block input_title_sm">*수업 요일과 개강일, 수업 일수 작성 후 생성 버튼을 누르면 수업 회차가 자동으로 생성됩니다.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <form th:action='@{/lecture/{pathParam}(pathParam=${urlType})}' method="post">
+                            <input type="hidden" name="edit" th:value="${edit}">
+                            <input type="hidden" name="fkTeamId" th:value="${fkTeamId}">
+                            <!-- 세번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">회차 <span class="text-danger">*</span></label>
+
+                                        <div class="table-responsive-xl">
+                                            <table id="table" class="table dt-responsive nowrap w-100">
+                                                <thead>
+                                                <tr class="text-center">
+                                                    <th class="col-1">#</th>
+                                                    <th class="col-4">수업날짜/시간</th>
+                                                    <th class="col-5">줌링크</th>
+                                                    <th class="col-1">과제제출 필요</th>
+                                                    <th th:if="${edit eq 1}" class="col-1">수정</th>
+                                                    <th class="col-1">삭제</th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody id="divChapter">
+                                                <!-- update : resList 값 출력 -->
+                                                <div th:if="${edit == 1}">
+                                                    <input type="hidden" id="exChapterSize" th:if="${resList != null}" th:value="${resList.size()}">
+                                                    <tr th:each='_ : ${resList}' class="rowChapter text-center">
+                                                        <td th:text='${_?.chapter}'></td>
+                                                        <td>
+                                                            <input type="hidden" th:name="${'lectures['+ _?.chapter +'].lectureId'}" th:value="${_?.lectureId}">
+                                                            <input type="hidden" th:name="${'lectures['+ _?.chapter +'].chapter'}" th:value="${_?.chapter}">
+                                                            <input type="hidden" th:name="${'lectures['+ _?.chapter +'].fkTeamId'}" th:value="${fkTeamId}">
+                                                            <div class="d-inline-block float-left dayTime" >
+                                                                <input class="form-control" type="date" th:name="${'lectures['+ _?.chapter +'].startDt'}" th:value="${_?.startDt}" disabled>
+                                                            </div>
+                                                            <div class="d-inline-block float-left dayTime" >
+                                                                <input class="form-control" type="time" th:name="${'lectures['+ _?.chapter +'].startTime'}" th:value="${_?.startTime}" disabled>
+                                                            </div>
+                                                        </td>
+                                                        <td >
+                                                            <input type="text" class="form-control" th:name="${'lectures['+ _?.chapter +'].zoomLink'}" th:value="${_?.zoomLink}" disabled>
+                                                        </td>
+                                                        <td >
+                                                            <input class="form-check-input" type="checkbox" value="1"
+                                                                   th:name="${'lectures['+ _?.chapter +'].homework'}" th:checked="${_?.homework eq '1'}" disabled>
+                                                        </td>
+                                                        <td >
+                                                            <button type="button" class="btn btn-dark waves-effect waves-light btn80"
+                                                                    onclick="editChapter(this)">수정</button>
+                                                        </td>
+                                                        <td >
+                                                            <button type="button" class="btn btn-dark waves-effect waves-light btn80"
+                                                                    th:onclick="deleteChapter([[${_?.lectureId}]])">삭제</button>
+                                                        </td>
+                                                    </tr>
+                                                </div>
+
+                                                <!-- insert : addChapter()로 동적 생성-->
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+                                        <div>
+                                            <p class="d-inline-block input_title_sm">*직접 날짜를 입력해서 회차를 추가할 수 있습니다.</p>
+
+                                            <div class="d-inline-block float-end">
+                                                <div class="mt-2">
+                                                    <button type="button" th:if="${edit eq 0}" class="btn btn-primary waves-effect waves-light " onclick="addChapter()">회차 추가</button>
+                                                    <button type="button" th:if="${edit eq 1}" class="btn btn-primary waves-effect waves-light " onclick="addMoreChapter()">회차 추가</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        <!-- 하단 버튼 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-start">
+                                    <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveList();">목록으로</button>
+                                    <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">뒤로</button>
+                                </div>
+                                <div class="float-end button-list">
+                                    <button type="submit" th:if="${edit eq 0}" class="btn btn-primary waves-effect waves-light " >일정 등록</button>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<script type="text/javaScript">
+
+    /*<![CDATA[*/
+    let teamId = [[${resModel?.teamId}]];
+    /*]]>*/
+
+    function deleteTeam(id) {
+        location.href =  conPath + "specialActivity/delete?id=" + id;
+    }
+
+    function moveChange(id) {
+        location.href =  conPath + "specialActivity/register?type=edit&id=" + id;
+    }
+
+    function moveList() {
+        location.href =  conPath + "specialActivity/list";
+    }
+
+    let table;
+    let cntChapter = 0;
+    let cntNewChapter = 0;
+    let appendItem = new Array();
+    let cntMoreChapter = parseInt($("#exChapterSize").val());
+
+    $(function () {
+        $('.menu04').addClass('menuitem-active');
+        $('.menu04-menu').addClass('show');
+        $('.menu04-1').addClass('active');
+
+        // addChapter();
+
+    });
+
+    //회차 추가 (일정 등록 후 추가로 등록하는 경우)
+    const addMoreChapter = function(){
+        console.log("cntMoreChapter >>",cntMoreChapter);
+
+        let ele = ' <tr class="rowChapter text-center">\n' +
+            '                                                <td style="color: white">' + ( cntMoreChapter + 1) + '</td>\n' +
+            '                                                <td>\n' +
+            '                                                    <div class="d-inline-block float-left dayTime">\n' +
+            '                                                        <input type="hidden" name="lectures['+ ( cntMoreChapter + 1) +'].chapter" value="' + (( cntMoreChapter + 1) + 1) + '">\n' +
+            '                                                        <input type="hidden" name="lectures['+ ( cntMoreChapter + 1) +'].fkTeamId" value="' + teamId  + '">\n' +
+            '                                                        <input class="form-control" type="date" name="lectures['+ ( cntMoreChapter + 1) +'].startDt" >\n' +
+            '                                                    </div>\n' +
+            '                                                    <div class="d-inline-block float-left dayTime">\n' +
+            '                                                        <input class="form-control" type="time" name="lectures['+ ( cntMoreChapter + 1) +'].startTime" >\n' +
+            '                                                    </div>\n' +
+            '                                                </td>\n' +
+            '                                                <td class="text-center"><input type="text" class="form-control" name="lectures['+ ( cntMoreChapter + 1) +'].zoomLink" placeholder="줌 링크 입력"></td>\n' +
+            '                                                <td>\n' +
+            '                                                   <input type="checkbox" class="form-check-input" name="lectures['+ ( cntMoreChapter + 1) +'].homework" value="1">\n' +
+            '                                                </td>\n' +
+            '                                                <td>\n' +
+            '                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn80" onclick="insertMoreLecture(this)">저장</button>\n' +
+            '                                                </td>\n' +
+            '                                                <td>\n' +
+            '                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn80" onclick="delChapter(this)">삭제</button>\n' +
+            '                                                </td>\n' +
+            '                                            </tr>';
+
+        $('#divChapter').append(ele);
+
+        cntMoreChapter++;
+    }
+
+    //회차 추가 (다건 추가)
+    function createChapter() {
+        // 선택된 목록 가져오기
+        const query = 'input[name="dayweek"]:checked';
+        const selectedEls = document.querySelectorAll(query);
+
+        // 선택된 목록에서 value 찾기
+        let result = '';
+        selectedEls.forEach((el) => {
+            result += el.value + ' ';
+        });
+
+        const dayweekCnt = selectedEls.length; // 주n회 개수
+        const classDate = $("input[name='classDate']").val(); //강의시작일
+        const classTime = $("input[name='classTime']").val(); //강의시간
+        const dayNumber = $("input[name='dayNumber']").val(); //총 회차
+
+        const weekLength = parseInt(dayNumber) / parseInt(dayweekCnt); //몇주인지 = 총 회차/주 횟수
+
+        const setday = classDate.split('-'); //형식 yyyy-mm-dd 에서 date 형으로 바꾸기 위해 split
+
+        let firstweek = [];
+
+        for (let i = 0; i < 7; i++) {
+            const startDt = new Date(setday[0], parseInt(setday[1]) - 1, setday[2]); //날짜 계산을 위하여 최초 강의 시작일을 date로 생성
+            startDt.setDate(startDt.getDate() + i); //강의 시작일로부터 1-7일 계산
+            selectedEls.forEach((el) => {
+                if (getTodayLabel(startDt.getDay()) === el.value) { //1-7일 동안의 요일중 사용자가 지정한 요일이 있는지 확인
+                    // console.log(i, ">", startDt.toLocaleString());
+                    firstweek.push(startDt); //첫주 데이터 생성 (기준으로 삼기 위해)
+                }
+            });
+        }
+
+        let totalweek = []; //빈 객체 생성
+        let cntNow = 0; //수업일수 초과하여 생기지 않도록 현재 몇번째 생성중인지 확인 하기 위한 변수
+        for (let i = 0; i < weekLength; i++) {  //주 2회 10회기 이면 강의 주수 5개 이므로 주 2회 5개의 행을 반환 하면 됨
+            //첫주에 + 7*i 해서 날짜 출력하기
+            firstweek.forEach((el) => {
+                // console.log("cntNow >>", cntNow);
+                // console.log("if i<dayNumber",cntNow<dayNumber);
+                if(cntNow<dayNumber){
+                    let timenum = i * 7;
+                    totalweek.push(getAfterDt(el, timenum).toLocaleString()); //n차 주에 따른 날짜 반환
+                    const addSchedule = {
+                        classDate: toStringByFormatting(getAfterDt(el, timenum)), // 강의 날짜 세팅
+                        classTime: classTime, // 시작 시간 (해당 버튼에서는 동일 적용)
+                    }
+                    addChapter(addSchedule);
+                }
+                cntNow++;
+            });
+        }
+
+    }
+
+    // 요일 반환
+    function getTodayLabel(today) {
+        var week = new Array('sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat');
+        var todayLabel = week[today];
+        return todayLabel;
+    }
+
+    // n일 후
+    function getAfterDt(s, i) {
+        var newDt = new Date(s);
+        newDt.setDate(newDt.getDate() + i);
+        return newDt;
+    }
+
+    //yyyy-mm-dd 로 형식 변경 (태그에 넣기 위함)
+    function leftPad(value) {
+        if (value >= 10) {
+            return value;
+        }
+        return `0${value}`;
+    }
+
+    //날짜 세팅
+    function toStringByFormatting(source, delimiter = '-') {
+        const year = source.getFullYear();
+        const month = leftPad(source.getMonth() + 1);
+        const day = leftPad(source.getDate());
+        return [year, month, day].join(delimiter);
+    }
+
+    //회차 추가
+    function addChapter(addSchedule) {
+
+        let ele;
+
+        if (addSchedule) {
+            ele = ' <tr class="rowChapter">\n' +
+                '                                                <td>' + (cntChapter + 1) + '</td>\n' +
+                '                                                <td>\n' +
+                '                                                    <div class="d-inline-block float-left dayTime">\n' +
+                '                                                        <input type="hidden" name="lectures['+ cntChapter +'].chapter" value="' + (cntChapter + 1) + '">\n' +
+                '                                                        <input type="hidden" name="lectures['+ cntChapter +'].fkTeamId" value="' + teamId  + '">\n' +
+                '                                                        <input class="form-control" type="date" name="lectures['+ cntChapter +'].startDt" value="' + addSchedule.classDate + '">\n' +
+                '                                                    </div>\n' +
+                '                                                    <div class="d-inline-block float-left dayTime">\n' +
+                '                                                        <input class="form-control" type="time" name="lectures['+ cntChapter +'].startTime" value="' + addSchedule.classTime + '">\n' +
+                '                                                    </div>\n' +
+                '                                                </td>\n' +
+                '                                                <td class="text-center"><input type="text" class="form-control" name="lectures['+ cntChapter +'].zoomLink" placeholder="줌 링크 입력"></td>\n' +
+                '                                                <td>\n' +
+                '                                                   <input type="checkbox" class="form-check-input" name="lectures['+ cntChapter +'].homework" value="1" id="input_check'+ cntChapter +'">\n' +
+                '                                                </td>\n' +
+                '                                                <td>\n' +
+                '                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn80" onclick="delChapter(this)">삭제</button>\n' +
+                '                                                </td>\n' +
+                '                                            </tr>';
+        } else {
+            ele = ' <tr class="rowChapter">\n' +
+                '                                                <td>' + (cntChapter + 1) + '</td>\n' +
+                '                                                <td>\n' +
+                '                                                    <div class="d-inline-block float-left dayTime">\n' +
+                '                                                        <input type="hidden" name="lectures['+ cntChapter +'].chapter" value="' + (cntChapter + 1) + '">\n' +
+                '                                                        <input type="hidden" name="lectures['+ cntChapter +'].fkTeamId" value="' + teamId  + '">\n' +
+                '                                                        <input class="form-control" type="date" name="lectures['+ cntChapter +'].startDt" >\n' +
+                '                                                    </div>\n' +
+                '                                                    <div class="d-inline-block float-left dayTime">\n' +
+                '                                                        <input class="form-control" type="time" name="lectures['+ cntChapter +'].startTime" >\n' +
+                '                                                    </div>\n' +
+                '                                                </td>\n' +
+                '                                                <td class="text-center"><input type="text" class="form-control" name="lectures['+ cntChapter +'].zoomLink" placeholder="줌 링크 입력"></td>\n' +
+                '                                                <td>\n' +
+                '                                                   <input type="checkbox" class="form-check-input" name="lectures['+ cntChapter +'].homework" value="1">\n' +
+                '                                                </td>\n' +
+                '                                                <td>\n' +
+                '                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn80" onclick="delChapter(this)">삭제</button>\n' +
+                '                                                </td>\n' +
+                '                                            </tr>';
+        }
+
+        if (cntChapter == 0) {
+            $('tr.rowChapter').remove();
+        }
+        $('#divChapter').append(ele);
+
+        cntChapter++;
+    }
+
+    //회차 삭제, 회차 없을 시
+    function delChapter(arguments) {
+        let ele = '<tr class="rowChapter">' +
+            '<td class="position-relative text-center pt-4 pb-4" colspan="5">회차를 추가 해주세요.' +
+            '</td>' +
+            '</tr>';
+
+        // console.log($(arguments).parents('tr.rowChapter').children("td:first").text());
+        const deleteItemNum = $(arguments).parents('tr.rowChapter').children("td:first").text();
+        // const deleteItem = document.getElementsByName("lectures["+parseInt(deleteItemNum)-1+"].chapter").item(0);
+        // console.log(deleteItem);
+        const delItem = parseInt(deleteItemNum)-1;
+
+        $(arguments).parents('tr.rowChapter').children("td").remove();
+        $(arguments).parents('tr.rowChapter').children().remove();
+        $(arguments).parents('tr.rowChapter').remove();
+        console.log($(arguments).parents('tr.rowChapter').children());
+
+        cntChapter--;
+
+        if (cntChapter == 0) {
+            console.log('cn000000');
+            $('#divChapter').append(ele);
+        }else{
+            getLectures(delItem);
+        }
+
+    }
+
+    //삭제 후 회차 추가
+    function addChapteByData(data) {
+
+        let ele;
+
+        ele = ' <tr class="rowChapter">\n' +
+            '                                                <td>' + (cntNewChapter + 1) + '</td>\n' +
+            '                                                <td>\n' +
+            '                                                    <div class="d-inline-block float-left dayTime">\n' +
+            '                                                        <input type="hidden" name="lectures['+ cntNewChapter +'].chapter" value="' + (cntNewChapter + 1) + '">\n' +
+            '                                                        <input type="hidden" name="lectures['+ cntNewChapter +'].fkTeamId" value="' + teamId  + '">\n' +
+            '                                                        <input class="form-control" type="date" name="lectures['+ cntNewChapter +'].startDt" value="' + data.startDt + '">\n' +
+            '                                                    </div>\n' +
+            '                                                    <div class="d-inline-block float-left dayTime">\n' +
+            '                                                        <input class="form-control" type="time" name="lectures['+ cntNewChapter +'].startTime" value="' + data.startTime + '">\n' +
+            '                                                    </div>\n' +
+            '                                                </td>\n' +
+            '                                                <td class="text-center"><input type="text" class="form-control" name="lectures['+ cntNewChapter +'].zoomLink" value="' + data.zoomLink + '"></td>\n' +
+            '                                                <td>\n' +
+            '                                                   <input type="checkbox" class="form-check-input" name="lectures['+ cntNewChapter +'].homework" value="1" id="input_check'+ cntNewChapter +'" ' + data.homework + '>\n' +
+            '                                                </td>\n' +
+            '                                                <td>\n' +
+            '                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn80" onclick="delChapter(this)">삭제</button>\n' +
+            '                                                </td>\n' +
+            '                                            </tr>';
+
+        // $('#divChapter').append(ele);
+
+        appendItem.push(ele);
+
+        cntNewChapter++;
+    }
+
+    function getLectures(delItem){
+        let obj = $("input[name='lectures']");
+        console.log('obs length : ',obj.length);
+        for(let i = 0 ; i < obj.length ; i++){
+            console.log('obj[' + i +' ]',obj[i]);
+        }
+
+        const count = $('#divChapter tr').length;
+
+        for(let i =0; i< count ; i++){
+            // console.log("첫번쨰!루프!",i);
+            if(i!=delItem){
+                console.log(i, document.getElementsByName("lectures["+i+"].startDt").item(0));
+                console.log(i, $("input[name='lectures["+i+"].startDt']").val());
+                let addSchedule = {
+                    startDt: $("input[name='lectures["+i+"].startDt']").val(),
+                    startTime: $("input[name='lectures["+i+"].startTime']").val(),
+                    zoomLink: $("input[name='lectures["+i+"].zoomLink']").val(),
+                    homework: $("input[name='lectures["+i+"].homework']").is(":checked")?"checked":""
+                }
+                addChapteByData(addSchedule);
+            }
+        }
+
+        $('tr.rowChapter').remove();
+        for(let i =0; i< count ; i++){
+            $('#divChapter').append(appendItem[i]);
+        }
+
+        appendItem = null;
+
+    }
+
+    //강의 수정 모드로 변환
+    function editChapter (arguments){
+        // const deleteItemNum = $(arguments).parents('tr.rowChapter').children("td:first").text();
+        $(arguments).hide();
+        let appendButton = '<button type="button" class="btn btn-dark waves-effect waves-light btn80"\n onclick="updateChapter(this)">저장</button>';
+        $(arguments).parent("td").append(appendButton);
+        const editItemNum = $(arguments).parents('tr.rowChapter').children("td:eq(0)").text();
+        const editItemId = $("input[name='lectures["+editItemNum+"].lectureId']").val();
+        console.log(editItemNum);
+        console.log(editItemId);
+
+        $("input[name='lectures["+editItemNum+"].startDt']").attr("disabled", false);
+        $("input[name='lectures["+editItemNum+"].startTime']").attr("disabled", false);
+        $("input[name='lectures["+editItemNum+"].zoomLink']").attr("disabled", false);
+        $("input[name='lectures["+editItemNum+"].homework']").attr("disabled", false);
+
+        // let _td = $(this).closest('tr').find('td');
+        // _td[1].innerHTML = "<input type='text' value='"+_td[1].innerText+"' size='10' />";
+        // _td[2].innerHTML = "<button class='editDo'>완료</button> "+ "<button class='cancle'>취소</button> ";
+    }
+
+    // 강의 수정
+    function updateChapter (arguments){
+        const selectArg = $(arguments);
+
+        const editItemNum = $(arguments).parents('tr.rowChapter').children("td:eq(0)").text();
+        const lectureId = $("input[name='lectures["+editItemNum+"].lectureId']").val();
+        const startDt = $("input[name='lectures["+editItemNum+"].startDt']").val();
+        const startTime = $("input[name='lectures["+editItemNum+"].startTime']").val();
+        const zoomLink = $("input[name='lectures["+editItemNum+"].zoomLink']").val();
+        const homework = $("input[name='lectures["+editItemNum+"].homework']").is(':checked') ? 1 : 0;
+
+        let sFormData = new FormData();
+        sFormData.append('fkTeamId', teamId);
+        sFormData.append('lectureId', lectureId);
+        sFormData.append('chapter', editItemNum);
+        sFormData.append('startDt', startDt);
+        sFormData.append('startTime', startTime);
+        sFormData.append('zoomLink', zoomLink);
+        sFormData.append('homework', homework);
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'lecture/updateLecture', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+
+                console.log("result",result);
+                console.log("result.data",result.data);
+                console.log("result.data.status",result.data.status);
+                console.log("result.data.data",result.data.data);
+                console.log("result.data.message",result.data.message);
+
+                if(result.data.status == 200){
+                    $("input[name='lectures["+editItemNum+"].startDt']").attr("disabled", true);
+                    $("input[name='lectures["+editItemNum+"].startTime']").attr("disabled", true);
+                    $("input[name='lectures["+editItemNum+"].zoomLink']").attr("disabled", true);
+                    $("input[name='lectures["+editItemNum+"].homework']").attr("disabled", true);
+
+                    selectArg.text("수정");
+
+                    location.reload();
+                }else{
+                    alert(result.data.message);
+                }
+
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+
+    //강의 추가 등록
+    const insertMoreLecture = function (arguments) {
+        const selectArg = $(arguments);
+        const editItemNum = $(arguments).parents('tr.rowChapter').children("td:eq(0)").text();
+        const startDt = $("input[name='lectures["+editItemNum+"].startDt']").val();
+        const startTime = $("input[name='lectures["+editItemNum+"].startTime']").val();
+        const zoomLink = $("input[name='lectures["+editItemNum+"].zoomLink']").val();
+        const homework = $("input[name='lectures["+editItemNum+"].homework']").is(':checked') ? 1 : 0;
+
+        let sFormData = new FormData();
+        sFormData.append('fkTeamId', teamId);
+        sFormData.append('chapter', editItemNum );
+        sFormData.append('startDt', startDt );
+        sFormData.append('startTime', startTime );
+        sFormData.append('zoomLink', zoomLink );
+        sFormData.append('homework', homework );
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'lecture/insertMoreLecture', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+
+                if(result.data.status == 200){
+                    $("input[name='lectures["+editItemNum+"].startDt']").attr("disabled", true);
+                    $("input[name='lectures["+editItemNum+"].startTime']").attr("disabled", true);
+                    $("input[name='lectures["+editItemNum+"].zoomLink']").attr("disabled", true);
+                    $("input[name='lectures["+editItemNum+"].homework']").attr("disabled", true);
+                    selectArg.text("수정");
+
+                    location.reload();
+                }else{
+                    alert(result.data.message);
+                }
+
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+
+    //강의 삭제
+    const deleteChapter = function (lectureId) {
+        Swal.fire({
+            title: '알림',
+            html: '등록된 강의를 삭제하시겠습니까?',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '삭제', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                location.href = conPath+"lecture/deleteOneLecture?fkTeamId="+teamId+"&lectureId=" + lectureId;
+                Swal.fire('삭제가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                // Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+
+    }
+
+    //테스트 (이후 삭제)
+    function setLectureInfo (){
+        $("input:checkbox[id='sun']").prop("checked", true);
+        $("input:checkbox[name='dayweek']").eq(5).prop("checked", true);
+        $("input[name='dayweek']").eq(4).prop("checked", true);
+
+        $("input[name='classDate']").val("2021-10-20"); //강의시작일
+        $("input[name='classTime']").val("17:00"); //강의시간
+        $("input[name='dayNumber']").val(8); //총 회차
+    }
+
+
+    //팀 삭제 알림
+    function delTeacher(params) {
+        Swal.fire({
+            title: '삭제 알림',
+            html: '팀를 삭제 하시겠습니까? <br/> ' + '삭제시 복구가 불가능합니다.',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '삭제', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                deleteTeam(teamId);
+                Swal.fire('삭제가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
+
+    //목록으로
+    function moveList() {
+        location.href = conPath+"specialActivity/list";
+    }
+
+    //뒤로
+    function moveBack() {
+        history.back();
+    }
+
+
+</script>
+
+</body>
+
+</html>

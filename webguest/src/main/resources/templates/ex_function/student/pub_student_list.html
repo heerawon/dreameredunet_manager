@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!--custom Css -->
+    <!-- end custom css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Member-01-01 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">사용자 목록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">사용자 목록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="searchTable mb-3">
+
+                                    <div class="articleWrap row">
+                                        <div class="col-lg-3 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>이름</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input type="text" class="form-control" name="userName" id="userName" th:value="${userName}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>성별</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <div class="form-check float-start">
+                                                    <input class="form-check-input" type="radio" name="studentGender" id="sex1" value="" checked>
+                                                    <label class="form-check-label" for="sex1">
+                                                        전체
+                                                    </label>
+                                                </div>
+                                                <div class="form-check float-start ms-2">
+                                                    <input class="form-check-input" type="radio" name="studentGender" id="sex2" value="M"
+                                                           th:checked="${studentGender} eq 'M'">
+                                                    <label class="form-check-label" for="sex2">
+                                                        남성
+                                                    </label>
+                                                </div>
+                                                <div class="form-check float-start ms-2">
+                                                    <input class="form-check-input" type="radio" name="studentGender" id="sex3" value="F"
+                                                           th:checked="${studentGender} eq 'F'">
+                                                    <label class="form-check-label" for="sex3">
+                                                        여성
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>생년월일</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input type="date" class="form-control dateInput" name="birthStartDt" id="birthStartDt" th:value="${birthStartDt}"> ~
+                                                <input type="date" class="form-control dateInput" name="birthEndDt" id="birthEndDt" th:value="${birthEndDt}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--검색 날짜 articleWrap -->
+                                    <!--<th:block th:include="ex_function/init/init_pub_filter_bar.html"></th:block>-->
+                                </div>
+
+                                <div class="button-list text-center mb-3">
+                                    <button type="button" class="btn btn-primary btn_bg btn90" id="btn_serch">검색</button>
+                                    <button type="button" class="btn btn-outline-success float-end" onclick="excelTest()">검색결과 엑셀다운로드</button>
+                                    <!--<button type="button" class="btn btn-outline-success float-end" onclick="excelTest()">엑셀다운로드 테스트</button>-->
+                                </div>
+
+                                <div class="button-list">
+
+                                </div>
+
+
+                                <table id="table" class="table table-hover nowrap w-100">
+                                    <thead>
+                                    <tr class="text-center">
+                                        <th>#</th>
+                                        <th>아이디</th>
+                                        <th>가입일시</th>
+                                        <th>이름</th>
+                                        <th>성별</th>
+                                        <th>생년월일</th>
+                                        <th>구독 횟수</th>
+                                        <th>결제금액</th>
+                                        <th>구독 상태</th>
+                                        <th>구독 만료</th>
+                                        <th>수강중인 팀</th>
+                                        <th>특별활동 팀</th>
+                                    </tr>
+                                    </thead>
+
+
+                                    <tbody>
+                                    <tr th:each='_,num : ${resList}' class="cursor text-center" th:onclick="moveDetails([[${_.userId}]]);">
+                                        <td th:text='${num.count}'></td>
+                                        <td th:text='|[${_.userSnsType ne null ? _.userSnsType : "" }]${_.email ne null ? _.email : "" }|'></td>
+                                        <td th:text='${_.userRegDt}'></td>
+                                        <td th:text='${_.userName}'></td>
+                                        <td th:text='${_.studentGender eq "F" ? "여" : "남"}'></td>
+                                        <td th:text='${_.studentBirth}'></td>
+                                        <td >[[${_.cntOrder}]]</td>
+                                        <td >[[${_.sumTotalPrice}]]</td>
+                                        <td>
+                                            <th:block th:switch="${_.userRole}">
+                                                <ys th:case="'MEMBER'">구독중</ys>
+                                                <ys th:case="'USER'">일반</ys>
+                                                <ys th:case="'GUEST'">미가입</ys>
+                                            </th:block>
+                                        </td>
+                                        <td th:text="|${_.cntExpiredDt ne null ? _.cntExpiredDt : '-'}일전|"></td>
+                                        <td th:text="${_.teamName}"></td>
+                                        <td th:text="${_.teamName2}"></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<!-- custom date setting  -->
+<script th:src="@{/assets/js/date_setting.js}"></script>
+<script type="text/javaScript">
+
+
+    let table;
+    $(function () {
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "searching": false, //검색 삭제
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+
+        //조건 검색 동작
+        $("#btn_serch").on( "click", function() {
+            const userName = $("#userName").val();
+            const studentGender = $("input[name = studentGender]:checked").val();
+            const birthStartDt = $("#birthStartDt").val();
+            const birthEndDt = $("#birthEndDt").val();
+            // const searchStartDt = $("#searchStart").val();
+            // const searchEndDt = $("#searchEnd").val();
+            location.href = conPath+"student/list?userName="+userName+"&studentGender="+studentGender+"&birthStartDt="+birthStartDt+"&birthEndDt="+birthEndDt;
+        });
+
+        //날짜 세팅 버튼 동작
+        $(".btn_func_date").on("click", function() {
+            setStartEnd($(this));
+        });
+
+        //날짜 초기화 버튼 동작
+        $("#btn_set_no_date").on( "click", function() {
+            $("#searchStart").val("");
+            $("#searchEnd").val("");
+        });
+    });
+
+    function moveDetails(id){
+        location.href = conPath + "student/detail?id="+encodeURI(id);
+    }
+
+    function excelTest(){
+        // location.href= conPath + "excelDown/sample";
+        location.href= conPath + "excelDown/studentList";
+    }
+
+    //input date 세팅부
+    const setStartEnd = function (argument) {
+        let type = String($(argument).attr("id")).trim();
+        const getDates =  getFormatDate(type);
+
+        $("#searchStart").val("");
+        $("#searchEnd").val("");
+        $("#searchStart").val(getDates.startDt);
+        $("#searchEnd").val(getDates.endDt);
+    }
+</script>
+
+</body>
+
+</html>

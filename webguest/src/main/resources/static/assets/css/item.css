@@ -1,0 +1,24 @@
+@charset "UTF-8";
+/* 상단에 패키지명 > 커리큘럼명 */
+.classTitle {
+  border-bottom: 1px solid #e4e4e4;
+}
+.classTitle h5 {
+  line-height: 1.5;
+}
+
+/* FAQ */
+.faqWrap{
+  border-top: 1px solid #e4e4e4;
+  border-bottom: 1px solid #e4e4e4;
+  padding: 30px 0 30px ;
+}
+
+.faq_delete {
+  transform: translateY(-50%);
+  background: #fff;
+}
+
+.dayTime {
+  width: 48%;
+}

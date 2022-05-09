@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!--custom Css -->
+    <link rel="stylesheet" th:href="@{/assets/css/order.css}" type="text/css"/>
+    <!-- end custom css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Order-01-01 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">주문 목록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">주문 목록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="searchTable mb-3">
+
+                                    <div class="articleWrap">
+                                        <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                            <p>주문상품</p>
+                                        </div>
+                                        <div class="d-table-cell align-middle articleChoice">
+                                            <div class="form-check float-start">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                <label class="form-check-label">1개월</label>
+                                            </div>
+                                            <div class="form-check float-start ms-2">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                <label class="form-check-label">3개월</label>
+                                            </div>
+                                            <div class="form-check float-start ms-2">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                <label class="form-check-label">6개월</label>
+                                            </div>
+                                            <div class="form-check float-start ms-2">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                <label class="form-check-label">12개월</label>
+                                            </div>
+                                            <div class="form-check float-start ms-2">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                <label class="form-check-label">특별활동</label>
+                                            </div>
+                                            <div class="form-check float-start ms-2">
+                                                <input class="form-check-input" type="checkbox" value="">
+                                                <label class="form-check-label">책만구매</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="articleWrap row">
+                                        <div class="col-md-6 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>결제방법</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <div class="form-check float-start">
+                                                    <input class="form-check-input" type="checkbox" value="">
+                                                    <label class="form-check-label">카드</label>
+                                                </div>
+                                                <div class="form-check float-start ms-2">
+                                                    <input class="form-check-input" type="checkbox" value="">
+                                                    <label class="form-check-label">가상계좌</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>주문자</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input name="orderName" type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="articleWrap">
+                                        <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                            <p>주문일</p>
+                                        </div>
+                                        <div class="d-table-cell align-middle articleChoice">
+                                            <div class="float-start searchDate me-2">
+                                                <input class="form-control dateInput" type="date" name="searchDate"> ~
+                                                <input class="form-control dateInput" type="date" name="searchDate">
+                                            </div>
+
+                                            <div class="button-list float-start">
+                                                <button type="button" class="btn btn-outline-primary">어제</button>
+                                                <button type="button" class="btn btn-outline-primary active">오늘</button>
+                                                <button type="button" class="btn btn-outline-primary">이번주</button>
+                                                <button type="button" class="btn btn-outline-primary">이번달</button>
+                                                <button type="button" class="btn btn-outline-primary">지난주</button>
+                                                <button type="button" class="btn btn-outline-primary">지난달</button>
+                                                <button type="button" class="btn btn-outline-primary">전체</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="button-list text-center mb-3">
+                                    <button type="button" class="btn btn-primary btn_bg btn90">검색</button>
+                                    <button type="button" class="btn btn-outline-success float-end">검색결과 엑셀다운로드</button>
+                                </div>
+
+                                <div class="button-list">
+
+                                </div>
+
+
+                                <table id="table" class="table table-hover nowrap w-100">
+                                    <thead>
+                                    <tr class="text-center">
+                                        <th>dataID</th>
+                                        <th><input class="form-check-input" type="checkbox" value=""></th>
+                                        <th>주문일시</th>
+                                        <th>주문번호</th>
+                                        <th>주문상품</th>
+                                        <th>결제</th>
+                                        <th>주문액</th>
+                                        <th>결제상태</th>
+                                        <th>주문자명</th>
+                                        <th>배송정보</th>
+                                    </tr>
+                                    </thead>
+
+
+                                    <tbody>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td><input class="form-check-input" type="checkbox" value=""></td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>82817081700202</td>
+                                        <td>1개월</td>
+                                        <td>가상계좌</td>
+                                        <td>246,000</td>
+                                        <td>입금대기</td>
+                                        <td>김연우<br/>010-2039-0960<br/>38nibnoW</td>
+                                        <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>고객메모 : 문앞(#1234#) 빠른배송<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                    </tr>
+
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td><input class="form-check-input" type="checkbox" value=""></td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>82817081700202</td>
+                                        <td>1개월</td>
+                                        <td>가상계좌</td>
+                                        <td>246,000</td>
+                                        <td>입금대기</td>
+                                        <td>김연우<br/>010-2039-0960<br/>38nibnoW</td>
+                                        <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>고객메모 : 문앞(#1234#) 빠른배송<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                    </tr>
+
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td><input class="form-check-input" type="checkbox" value=""></td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>82817081700202</td>
+                                        <td>1개월</td>
+                                        <td>가상계좌</td>
+                                        <td>246,000</td>
+                                        <td>입금대기</td>
+                                        <td>김연우<br/>010-2039-0960<br/>38nibnoW</td>
+                                        <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>고객메모 : 문앞(#1234#) 빠른배송<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                    </tr>
+
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td><input class="form-check-input" type="checkbox" value=""></td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>82817081700202</td>
+                                        <td>1개월</td>
+                                        <td>가상계좌</td>
+                                        <td>246,000</td>
+                                        <td>입금대기</td>
+                                        <td>김연우<br/>010-2039-0960<br/>38nibnoW</td>
+                                        <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>고객메모 : 문앞(#1234#) 빠른배송<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                    </tr>
+
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td><input class="form-check-input" type="checkbox" value=""></td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>82817081700202</td>
+                                        <td>1개월</td>
+                                        <td>가상계좌</td>
+                                        <td>246,000</td>
+                                        <td>입금대기</td>
+                                        <td>김연우<br/>010-2039-0960<br/>38nibnoW</td>
+                                        <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>고객메모 : 문앞(#1234#) 빠른배송<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                    </tr>
+
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td><input class="form-check-input" type="checkbox" value=""></td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>82817081700202</td>
+                                        <td>1개월</td>
+                                        <td>가상계좌</td>
+                                        <td>246,000</td>
+                                        <td>입금대기</td>
+                                        <td>김연우<br/>010-2039-0960<br/>38nibnoW</td>
+                                        <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>고객메모 : 문앞(#1234#) 빠른배송<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="completeCheck">
+                                    <button type="button" class="btn btn-outline-primary position_Btm_btn_left">
+                                        <span class="btn-label"><i class="fe-check"></i></span>결제완료처리
+                                    </button>
+                                </div>
+
+
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<script type="text/javaScript">
+    let table;
+
+    $(document).ready(function () {
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "searching": false, //검색 삭제
+            "info": false, //하단 정보 삭제 (Showing 1 to 8 of 8 entries)
+            "lengthChange": false, //테이블의 페이징 표시
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+    });
+
+
+    $('#table tbody').on('click', 'td', function () {
+        let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+        let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+        let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+        let totalColumnCount = table.columns().count(); //전체 열 갯수
+        let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+
+        if (indexColumn < totalColumnCount) {
+            location.href =  conPath + "pub/order/detail?id=" + indexData;
+        }
+    });
+
+</script>
+
+</body>
+
+</html>

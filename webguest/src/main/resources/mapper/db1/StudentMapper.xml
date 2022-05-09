@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.StudentMapper">
+    <!-- 학생 목록 -->
+    <!-- 211105 - 쿼리 변경 /팀, 특별활동 별 그룹명 가져오기 -->
+    <select id="getStudentList" resultType="StudentModel" parameterType="String">
+        <![CDATA[
+            SELECT VSU.user_id, user_name, VSU.fk_suser_id, student_gender, student_email, student_cell, expired_dt,
+                   student_subscribe, student_mbti, student_address,student_birth, student_over_fourteen,
+                   GROUP_CONCAT(VUT.team_name ) as team_name, GROUP_CONCAT(VUT2.team_name ) as team_name2,
+                   DATE_FORMAT(user_reg_dt,'%Y-%m-%d') user_reg_dt, user_role, user_sns_type, email,
+                   DATEDIFF(DATE_FORMAT(expired_dt,'%Y-%m-%d'), DATE_FORMAT(NOW(),'%Y-%m-%d')) cnt_expired_dt,
+                   POM.order_id as cnt_order, POM.total_price as sum_total_price
+            FROM dreamer.view_student_user VSU
+                 LEFT JOIN dreamer.team_member TMB ON TMB.fk_suser_id = VSU.fk_suser_id AND TMB.is_del != 1
+                 LEFT JOIN dreamer.view_use_team VUT ON TMB.fk_team_id = VUT.team_id AND VUT.division=0
+                 LEFT JOIN dreamer.view_use_team VUT2 ON TMB.fk_team_id = VUT2.team_id AND VUT2.division=1
+                 LEFT JOIN (select VSU.user_id, count(order_id)order_id , sum(total_price) total_price
+                            from dreamer.view_student_user VSU
+                                     LEFT JOIN dreamer.payment_order PMO ON VSU.fk_suser_id = PMO.fk_suser_id AND PMO.is_del =0
+                            GROUP BY VSU.fk_suser_id) POM ON VSU.user_id = POM.user_id
+            WHERE VSU.user_id != ''
+        ]]>
+        <if test="userName != '' ">
+            AND VSU.user_name LIKE CONCAT('%',#{userName},'%')
+        </if>
+        <if test="studentGender != '' ">
+            AND VSU.student_gender = #{studentGender}
+        </if>
+        <if test="birthStartDt != '' and birthEndDt != ''">
+            AND DATE_FORMAT(VSU.student_birth,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{birthStartDt},'%Y-%m-%d') AND DATE_FORMAT(#{birthEndDt},'%Y-%m-%d')
+        </if>
+        GROUP BY VSU.fk_suser_id
+        ORDER BY VSU.user_reg_dt DESC
+    </select>
+
+    <!-- 학생 등록 -->
+    <insert id="insertStudent"  parameterType="StudentModel" useGeneratedKeys="true" keyProperty="fkUserId">
+        <![CDATA[
+            INSERT INTO dreamer.student (
+                fk_suser_id,
+                student_gender,
+                student_birth,
+                student_email,
+                student_cell,
+                student_subscribe,
+                student_mbti,
+                student_address,
+                student_over_fourteen
+            )
+            VALUES (
+               #{fkSuserId},
+               #{studentGender},
+               #{studentBirth},
+               #{studentEmail},
+               #{studentCell},
+               #{studentSubscribe},
+               #{studentMbti},
+               #{studentAddress},
+               #{studentOverFourteen}
+            );
+        ]]>
+    </insert>
+
+    <!-- 학생 상세 -->
+    <select id="getStudentDetail" resultType="StudentModel" parameterType="String">
+        <![CDATA[
+            SELECT VSU.user_id, user_name, VSU.fk_suser_id, student_gender, student_email, student_cell,
+                   DATE_FORMAT(expired_dt,'%Y-%m-%d') expired_dt,
+                   student_subscribe, student_mbti, student_address,student_birth, student_over_fourteen,
+                   GROUP_CONCAT(VUT.team_name ) as team_name, GROUP_CONCAT(VUT2.team_name ) as team_name2,
+                   DATE_FORMAT(user_reg_dt,'%Y-%m-%d') user_reg_dt, user_role, user_sns_type, email,
+                   DATEDIFF(DATE_FORMAT(expired_dt,'%Y-%m-%d'), DATE_FORMAT(NOW(),'%Y-%m-%d')) cnt_expired_dt,
+                   POM.order_id as cnt_order, POM.total_price as sum_total_price
+            FROM dreamer.view_student_user VSU
+                    LEFT JOIN dreamer.team_member TMB ON TMB.fk_suser_id = VSU.fk_suser_id AND TMB.is_del != 1
+                    LEFT JOIN dreamer.view_use_team VUT ON TMB.fk_team_id = VUT.team_id AND VUT.division=0
+                    LEFT JOIN dreamer.view_use_team VUT2 ON TMB.fk_team_id = VUT2.team_id AND VUT2.division=1
+                    LEFT JOIN (select VSU.user_id, count(order_id)order_id , sum(total_price) total_price
+                                from dreamer.view_student_user VSU
+                                LEFT JOIN dreamer.payment_order PMO ON VSU.fk_suser_id = PMO.fk_suser_id AND PMO.is_del =0
+                                GROUP BY VSU.fk_suser_id) POM ON VSU.user_id = POM.user_id
+            WHERE VSU.user_id = #{fkUserId}
+        ]]>
+    </select>
+
+    <!-- 학생 수정 -->
+    <update id="updateStudent" parameterType="StudentModel">
+        <![CDATA[
+            UPDATE  dreamer.student
+            SET
+                student_gender = #{studentGender},
+                student_birth = #{studentBirth},
+                student_cell = #{studentCell},
+                expired_dt = #{expiredDt}
+            WHERE fk_user_id = #{userId}
+        ]]>
+    </update>
+
+    <!-- 이름 변경 -->
+    <update id="updateUserName" parameterType="HashMap">
+        <![CDATA[
+            UPDATE dreamer.user
+            SET user_name = #{userName}
+            WHERE user_id = #{userId}
+        ]]>
+    </update>
+
+    <!-- 신청대기 회원 목록 -->
+    <select id="getWaitTeamList" resultType="StudentModel" parameterType="HashMap">
+        <![CDATA[
+        SELECT user_id, user_name, student_birth, student_gender,
+               ROUND((TO_DAYS(NOW()) - (TO_DAYS(student_birth))) / 365) AS student_age
+        FROM dreamer.view_student_user STD
+        WHERE STD.user_role = 'MEMBER'
+          AND STD.user_id NOT IN (SELECT DISTINCT STD.user_id
+                                  FROM dreamer.view_student_user STD
+                                       JOIN dreamer.team_member TM ON STD.fk_suser_id = TM.fk_suser_id
+                                       JOIN dreamer.view_use_team VUT ON VUT.team_id = TM.fk_team_id
+                                  WHERE VUT.division=#{division})
+        ]]>
+        <if test="userName != '' ">
+            AND STD.user_name LIKE CONCAT('%',#{userName},'%')
+        </if>
+        <if test="studentGender != '' ">
+            AND STD.student_gender = #{studentGender}
+        </if>
+        <if test="birthStartDt != '' and birthEndDt != ''">
+            AND DATE_FORMAT(STD.student_birth,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{birthStartDt},'%Y-%m-%d') AND DATE_FORMAT(#{birthEndDt},'%Y-%m-%d')
+        </if>
+        ORDER BY user_name
+    </select>
+
+    <!-- 사용자 role 변경 -->
+    <update id="updateUserRole" parameterType="HashMap">
+        <![CDATA[
+        UPDATE dreamer.user
+        SET role = #{role}
+        WHERE user_id = #{userId}
+        ]]>
+    </update>
+
+    <!-- 사용자 탈퇴일 등록 -->
+    <update id="updateUserWithdrawal" parameterType="HashMap">
+        <![CDATA[
+        UPDATE dreamer.student
+        SET withdrawal_dt = #{withdrawalDt}
+        WHERE fk_user_id = #{userId}
+        ]]>
+    </update>
+
+</mapper>

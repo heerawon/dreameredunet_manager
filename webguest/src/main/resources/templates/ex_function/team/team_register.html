@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!-- 에디터 css -->
+    <link th:href="@{/assets/css/summernote.min.css}" rel="stylesheet" type="text/css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <form th:action='@{/team/{pathParam}(pathParam=${urlType})}' th:object='${reqModel}' method="post">
+            <input type="hidden" name="edit" th:value="${edit}">
+            <input type="hidden" th:field='*{teamId}' th:value="${teamId}">
+            <input type="hidden" th:field='*{division}' th:value="${0}">
+            <input type="hidden" id="fkUserId" th:field='*{fkUserId}' >
+            <div class="row" id="first_section">
+                <p>
+                    <span>*</span> 팀의 강사를 선택해주세요.
+                </p>
+                <table id="table">
+                    <thead>
+                    </thead>
+                    <tbody>
+                    <tr th:each='_,num : ${teacherList}' class="cursor">
+                        <td >
+                            <img src="/images/teacher01.png" alt="teacher-image" style="width: 70px; height: 100px;">
+                        </td>
+                        <td th:text='${_.userName}'></td>
+                        <td >
+                            <p>주니어 1팀 2021-10-20 ~ 2021-12-20</p>
+                            <p>주니어 2팀 2021-10-20 ~ 2021-12-20</p>
+                            <p>주니어 3팀 2021-10-20 ~ 2021-12-20</p>
+
+                            <p>특활 1팀 2021-10-20 ~ 2021-12-20</p>
+                            <p>특활 2팀 2021-10-20 ~ 2021-12-20</p>
+                        </td>
+                        <td >
+                            <button type="button" th:onclick="selectTeacher([[${_.userId}]]);">선택</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="second_section">
+                <p>
+                    <span>*</span> 표시는 필수 입니다.
+                </p>
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="field" class="form-label">프로그램<span class="text-danger">*</span></label>
+                        <select th:name='fkProgramId' id="field" class="form-select">
+                            <option disabled selected hidden>프로그램을 선택해주세요.</option>
+                            <option th:each='_ : ${programList}'
+                                    th:value='${_?.programId}'
+                                    th:utext='|${_?.programName}(${_?.programStartAge}~${_?.programEndAge})|'
+                                    th:selected="${programId eq fkProgramId}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="nameInput" class="form-label">팀 명<span>*</span></label>
+                        <input type="text" th:field='*{teamName}' th:text='${teamName}'
+                               id="nameInput" required >
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label for="totalLecture" class="form-label">전체 강의 횟수<span>*</span></label>
+                        <input type="text" th:field='*{totalLecture}' th:text='${totalLecture}'
+                               id="totalLecture" required >
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label for="startDt" class="form-label">강의기간<span>*</span></label>
+                        <input type="text" th:field='*{startDt}' th:text='${startDt}'
+                               id="startDt" required >
+                        ~
+                        <input type="text" th:field='*{endDt}' th:text='${endDt}'
+                               id="endDt" required >
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3  col-md-12">
+                        <label for="introduction" class="form-label">강의 소개<span class="text-danger">*</span></label>
+                        <div>
+                            <textarea th:field='*{introduce}' th:text='${introduce}'
+                                      id="introduction" rows="5" required></textarea>
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label for="link" class="form-label">강의자료 youtube 링크<span>*</span></label>
+                        <input type="text" th:field='*{link}' th:text='${link}'
+                               id="link" required >
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" th:text="${edit eq 1 ? '수정완료' : '팀생성 후 일정/학생 등록'}"></button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- third party js -->
+    <script src="../assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="../assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+
+    <!-- Datatables init -->
+    <script src="../assets/js/pages/datatables.init.js"></script>
+
+    <!-- App js -->
+    <script src="../assets/js/app.min.js"></script>
+
+    <script type="text/javaScript">
+
+        $(document).ready(function () {
+            $("#second_section").hide();
+        });
+
+        function selectTeacher (id){
+            console.log("id",id);
+            // $("#fkUserId").value(id);
+            document.getElementById("fkUserId").value=(id);
+            $("#first_section").hide();
+            $("#second_section").show();
+        }
+
+    </script>
+</body>
+</html>

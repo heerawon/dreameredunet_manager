@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Setting-02-01-->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">강의자료 관리</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">강의자료 관리</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <table id="table" class="table table-hover nowrap w-100">
+                                        <thead>
+                                        <tr class="text-center">
+                                            <!--                                        <th>dataID</th>-->
+                                            <th>#</th>
+                                            <th class="text-start">강의자료</th>
+                                            <th>등록 일</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each='_,num : ${lsData}' class="">
+                                            <td class="text-center" th:text='${num.count}'></td>
+                                            <td class="text-start"><a th:onclick="moveDetail([[${_.id}]])" style="cursor:pointer">[[ ${_.title} ]]</a></td>
+                                            <td class="text-center" th:text="${#dates.format(_.regDt,'yyyy.MM.dd')}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+                            </div>
+                        <!-- pdf 첨부 버전 -->
+                        <!--
+                        <div class="card" id="insertCard">
+                            <div class="card-body">
+                                <h5 class="card-title">PDF 추가</h5>
+                                <p class="card-text">파일 선택버튼을 눌러 PDF 선택 하면 PDF 파일이 등록됩니다.</p>
+                                <form th:action='@{/reference/add}' method="post">
+                                    <div class="mb-3 col-md-6 pt-1">
+                                        <input id="fileUrl" name="fileUrl" type="hidden" >
+                                        <input id="fileName" name="fileName" type="hidden" >
+                                        <input name="pdfFile" id="pdfFile" type="file"
+                                               class="form-control mb-3" placeholder="파일첨부" accept=".pdf" required>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card" id="updateCard">
+                            <div class="card-body">
+                                <h5 class="card-title">첨부파일 수정</h5>
+                                <p class="card-text">파일 선택버튼을 눌러 PDF 선택 하면 PDF 파일이 등록됩니다.</p>
+                                <form th:action='@{/reference/edit}' method="post">
+                                    <div class="mb-3 col-md-6 pt-1">
+                                        <input id="editId"  name="id" type="hidden" >
+                                        <input id="imgSrcEdit" name="imgSrc" type="hidden" >
+                                        <input name="artImage" id="artImageEdit" type="file"
+                                               class="form-control mb-3" placeholder="파일첨부" accept=".pdf" required>
+                                        <button type="button"  class="btn btn-sm btn-secondary m-1"  th:onclick="cancelEdit();">취소</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        -->
+                    </div>
+                </div>
+
+                <!-- end col -->
+            </div> <!-- container -->
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+
+
+<!-- Init js 에디터-->
+
+
+<script type="text/javaScript" th:inline="javascript">
+
+    /*<![CDATA[*/
+    let urlType = "[[ ${type} ]]";
+    let editImgId = -1;
+    /*]]*/
+
+    let table;
+    $(document).ready(function(){
+        // $('#updateCard').hide();
+        table = $('#table').DataTable({
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": true,
+                    "searchable": false,
+                },
+                {"width": "3%", "targets": 0},
+                {"width": "10%", "targets": 2},
+            ],
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+
+        });
+
+
+
+    });
+
+
+    function moveDetail(id) {
+        location.href = conPath + "t_reference/"+id;
+    }
+
+
+
+
+
+</script>
+
+</body>
+
+</html>

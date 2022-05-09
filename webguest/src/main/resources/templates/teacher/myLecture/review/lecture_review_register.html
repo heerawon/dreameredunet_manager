@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/lecture.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-02-03 등록 및 수정-->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">복습 등록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a href="#">전체 대시보드</a></li>
+                                    <li class="breadcrumb-item"><a href="#">팀 대시보드</a></li>
+                                    <li class="breadcrumb-item"><a href="#">복습</a></li>
+                                    <li class="breadcrumb-item active">복습 등록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="button-list">
+                                        <th:block th:each='_,num : ${myTeamList}'>
+                                            <button type="button" th:class="${_.division eq 0 ?'btn btn-outline-primary btn_bg':'btn btn-outline-danger btn_bg'}"
+                                                    th:classappend="${myTeam?.teamId eq _.teamId?'active':''}"
+                                                    th:text="|[${_.programName != null ? _.programName: _.categoryName}]${_.teamName}|"
+                                                    th:onclick="moveRegister([[${_.teamId}]])">
+                                            </button>
+                                        </th:block>
+                                    </div>
+
+
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <p class="lecture_txt01 d-inline-block"
+                                               th:text='|[${myTeam.programName !=null ? myTeam.programName :myTeam.categoryName }]${myTeam.teamName}|'></p>
+                                            <p class="lecture_txt01 d-inline-block" th:text="|총 학생수 : ${countMember} 명|"></p>
+                                            <p class="lecture_txt01 d-inline-block"
+                                               th:text="|강의 기간 : ${myTeam?.startDt}${myTeam?.startDt != null ? '~' : '-'}${myTeam?.endDt}|"></p>
+                                            <p class="lecture_txt01 d-inline-block" th:text="|총 강의 수 :${countLecture}회|"></p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 첫번째 카드 -->
+                                    <form th:action='@{/preparation/{pathParam}(pathParam=${urlType})}' th:object='${resModel}' method="post">
+                                        <input type="hidden" name="edit" th:value="${edit}">
+                                        <input type="hidden" th:field='*{preparationId}' th:value="${preparationId}">
+                                        <input type="hidden" th:field='*{fkTeamId}' th:value="${fkTeamId}">
+                                        <input type="hidden" th:field='*{division}' value="0">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div>
+                                                    <h3 class="form_title mb-3 d-inline-block">복습</h3>
+                                                    <div class="form-check ms-2 d-inline-block">
+<!--                                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>-->
+<!--                                                        <label class="form-check-label" for="flexCheckChecked">-->
+<!--                                                            노출하기-->
+<!--                                                        </label>-->
+                                                    </div>
+                                                </div>
+
+                                                <div class="grayLine"></div>
+
+                                                <div class="mb-3 mt-3 col-md-12">
+                                                    <label for="reviewContent" class="form-label">복습 내용</label>
+
+                                                    <div>
+                                                        <textarea class="form-control" id="reviewContent" rows="15"
+                                                                  th:field="*{content}" th:value="${content}"
+                                                                  placeholder="복습 내용을 작성해 주세요." required></textarea>
+                                                    </div>
+                                                </div>
+
+                                                <div class="mb-3 col-md-12">
+                                                    <label class="form-label">YouTube 링크</label>
+                                                    <input th:field="*{link}" th:value="${link}" type="text" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- 하단 버튼 -->
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="float-start">
+                                                <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">취소</button>
+                                            </div>
+                                            <div class="float-end button-list">
+                                                <button type="submit" class="btn btn-primary btn_bg" th:text="${edit eq 0 ? '등록 완료' : '수정 완료'}"></button>
+<!--                                                <button type="submit" class="btn btn-primary btn_bg" onclick="moveDetail();">수정 완료</button>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<script type="text/javaScript">
+    /*<![CDATA[*/
+    let preparationId = "[[${resModel?.preparationId}]]";
+    let fkTeamId = "[[${resModel?.fkTeamId}]]";
+    let division = "[[${resModel?.division}]]";
+    /*]]>*/
+
+    $(document).ready(function () {
+
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02 a').addClass('active');
+
+    });
+
+    //팀 대시보드
+    function moveDashboard() {
+        location.href = conPath + "myLecture/teamDashboard?teamId="+fkTeamId;
+    }
+
+    //복습 상세
+    function moveDetail() {
+        location.href = conPath + "pub2/lecture/preview/detail";
+    }
+
+    //취소
+    function moveBack() {
+        location.href = conPath + "preparation/list?teamId="+fkTeamId+"&division="+division;
+    }
+
+    //다른 팀 복습 등록으로 이동
+    function moveRegister(teamId) {
+        location.href = conPath + "preparation/register?teamId="+teamId+"&type=register";
+    }
+
+</script>
+
+</body>
+
+</html>

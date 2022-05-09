@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+    <!--custom Css -->
+    <link th:href="@{/assets/css/team.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Extra-01-03-06 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">특별활동 팀등록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/class/list}">특별활동 팀목록</a></li>
+                                    <li class="breadcrumb-item active">특별활동 팀등록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="form_title">학생목록</p>
+                                <p>학생을 선택하신 후 등록하시면 됩니다.</p>
+
+                                <div class="mb-3">
+                                    <label class="form-label float-start col-form-label me-2">특별 활동</label>
+                                    <input name="programName" type="text" class="form-control" value="독서클럽" disabled>
+                                </div>
+
+                                <div class="studentListWrap overflow-scroll">
+                                    <div class="row">
+                                        <div class="studentBox col-xl-4 col-md-6">
+                                            <div class="card active">
+                                                <div class="card-body">
+                                                    <div class="studentMbti float-start rounded">
+                                                        <img th:src='@{/images/teacher01.png}' class="img-fluid"/>
+                                                    </div>
+                                                    <div class="studentInfo float-start">
+                                                        <p class="studentInfo_txt01"><b>NTJS</b> 원빈 <span>(1984.01.12)</span></p>
+
+                                                    </div>
+                                                    <div class="studentDle">
+                                                        <input class="form-check-input" type="checkbox" value="" checked>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="studentBox col-xl-4 col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="studentMbti float-start rounded">
+                                                        <img th:src='@{/images/teacher01.png}' class="img-fluid"/>
+                                                    </div>
+                                                    <div class="studentInfo float-start">
+                                                        <p class="studentInfo_txt01"><b>NTJS</b> 원빈 <span>(1984.01.12)</span></p>
+                                                        <ul class="studentClass">
+                                                            <li>하이틴 3팀</li>
+                                                            <li>주니어 1팀</li>
+                                                            <li class="specialClass text-success">독서활동 1팀</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="studentDle">
+                                                        <input class="form-check-input" type="checkbox" value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="studentBox col-xl-4 col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="studentMbti float-start rounded">
+                                                        <img th:src='@{/images/teacher01.png}' class="img-fluid"/>
+                                                    </div>
+                                                    <div class="studentInfo float-start">
+                                                        <p class="studentInfo_txt01"><b>NTJS</b> 원빈 <span>(1984.01.12)</span></p>
+                                                        <ul class="studentClass">
+                                                            <li>하이틴 3팀</li>
+                                                            <li>주니어 1팀</li>
+                                                            <li class="specialClass text-success">독서활동 1팀</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="studentDle">
+                                                        <input class="form-check-input" type="checkbox" value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="studentBox col-xl-4 col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="studentMbti float-start rounded">
+                                                        <img th:src='@{/images/teacher01.png}' class="img-fluid"/>
+                                                    </div>
+                                                    <div class="studentInfo float-start">
+                                                        <p class="studentInfo_txt01"><b>NTJS</b> 원빈 <span>(1984.01.12)</span></p>
+                                                        <ul class="studentClass">
+                                                            <li>하이틴 3팀</li>
+                                                            <li>주니어 1팀</li>
+                                                            <li class="specialClass text-success">독서활동 1팀</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="studentDle">
+                                                        <input class="form-check-input" type="checkbox" value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="studentBox col-xl-4 col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="studentMbti float-start rounded">
+                                                        <img th:src='@{/images/teacher01.png}' class="img-fluid"/>
+                                                    </div>
+                                                    <div class="studentInfo float-start">
+                                                        <p class="studentInfo_txt01"><b>NTJS</b> 원빈 <span>(1984.01.12)</span></p>
+                                                        <ul class="studentClass">
+                                                            <li>하이틴 3팀</li>
+                                                            <li>주니어 1팀</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="studentDle">
+                                                        <input class="form-check-input" type="checkbox" value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+
+                        <!-- 하단 버튼 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-end button-list">
+                                    <button type="button" class="btn btn-primary btn_bg" onclick="moveRegister();">등록</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<script type="text/javaScript">
+
+    $(document).ready(function () {
+        $('.menu04').addClass('menuitem-active');
+        $('.menu04-menu').addClass('show');
+        $('.menu04-1').addClass('active');
+
+    });
+
+
+    //팀 등록
+    function moveRegister() {
+        location.href =  conPath + "pub/special/team/register2";
+    }
+</script>
+
+</body>
+
+</html>

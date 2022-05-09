@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/community.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Teacher-01-02 -->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">내 정보</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="row">
+                                                <div class="mb- col-md-12">
+                                                    <div class="text-center">
+                                                        <img th:src="${resModel?.teacherProfile}" class="img-fluid rounded" width="240px"/>
+                                                    </div>
+                                                    <p class="myName text-center" th:text='${resModel?.userName}'></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-9">
+                                            <div class="row">
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label">ID</label>
+                                                    <div class="input-group">
+                                                        <input name="teacherID" type="text" class="form-control" th:value='${resModel?.userId}' disabled>
+                                                        <button class="btn btn-primary" type="button"
+                                                                data-bs-toggle="modal" data-bs-target="#delete-modal" onclick="password(0);">비밀번호 변경</button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label">생년월일</label>
+                                                    <input name="teacherBirthDate" type="text" class="form-control" th:value='${resModel?.teacherBirth}' disabled>
+                                                </div>
+
+                                                <div class="mb-3 col-md-12">
+                                                    <label class="form-label">휴대전화</label>
+                                                    <input name="teacherPhoneNumber" type="text" class="form-control" th:value='${resModel?.teacherCell}' disabled>
+                                                </div>
+
+                                                <div class="mb-3 col-md-12">
+                                                    <label class="form-label">이메일</label>
+                                                    <input name="teacherEmail" type="text" class="form-control" th:value='${resModel?.teacherAddr}' disabled>
+                                                </div>
+
+                                                <div class="mb-3 col-md-12">
+                                                    <label class="form-label">주소</label>
+                                                    <input name="teacherAddress" type="text" class="form-control" th:value='${resModel?.teacherEmail}' disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="grayLine"></div>
+
+
+                                        <div class="mb-3 mt-3 col-md-12">
+                                            <label class="form-label">분야</label>
+                                            <div>
+                                                <textarea class="form-control" id="area" rows="10" th:text='${resModel?.categoryName}' disabled></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">이력</label>
+                                            <div>
+                                                <textarea class="form-control" id="speck" rows="10" th:text='${resModel?.teacherHistory}' disabled></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">소개말</label>
+                                            <div>
+                                                <textarea class="form-control" id="introduction" rows="10" th:text='${resModel?.teacherIntroduce}' disabled></textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </form>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<!-- 에러메시지 출력 -->
+<script type="text/javaScript">
+    /*<![CDATA[*/
+    let errMsg = "[[${errMsg}]]"; //에러
+    /*]]>*/
+    $(document).ready(function () {
+        if(errMsg.length>0){
+            Swal.fire('알림',errMsg, 'warning').then(function (result) {
+                if(result.isConfirmed){
+                    location.href= conPath + "mypage/info"; //에러 메시지 제거
+                }
+            });
+        }
+    });
+</script>
+<!-- 에러메시지 출력 끝 -->
+
+
+<script type="text/javaScript">
+
+    //알림
+    function password(params) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '비밀번호 변경',
+            html: '' +
+                // ' <div class="row mb-3">\n' +
+                // '                                <label class="col-sm-3 col-form-label passwordTxt">현재 비밀번호</label>\n' +
+                // '                                    <div class="col-sm-9">\n' +
+                // '                                        <input type="password" id="currPw" class="form-control" placeholder="">\n' +
+                // '                                    </div>\n' +
+                // '                                </div>\n' +
+                // '                                \n' +
+                // '                                <div class="grayLine"></div>\n' +
+                '                            \n' +
+                '                              ' +
+                '                               <div class="row mb-1 mt-3">\n' +
+                '                                    <label class="col-sm-3 col-form-label passwordTxt">변경할 비밀번호</label>\n' +
+                '                                    <div class="col-sm-9">\n' +
+                '                                        <input type="password" id="newPw1" class="form-control" placeholder="" minlength="5" maxlength="20">\n' +
+                '                                    </div>\n' +
+                '                                </div>\n' +
+                '                                <div class="row mb-2"  ><label id="tooShortNewPw" class="col-12 text-danger text-sm-end" style="display: none;">공백 없이 8자 이상 입력하세요.</label></div>' +
+                '                                <div class="row mb-1">\n' +
+                '                                    <label class="col-sm-3 col-form-label passwordTxt">비밀번호 재입력</label>\n' +
+                '                                    <div class="col-sm-9">\n' +
+                '                                        <input type="password" id="newPw2" class="form-control" placeholder="" minlength="5" maxlength="20">\n' +
+                '                                    </div>\n' +
+                '                                </div>' +
+                '                                <div class="row mb-3"  ><label id="unMatchNewPw" class="col-12 text-danger text-sm-end" style="display: none;">재입력 값이 일치하지 않습니다.</label></div>' +
+                '                                  <div class="row mb-2"><span class="text-danger">비밀번호 변경시 재로그인이 필요합니다.</span> </div>' +
+                '                                <div class="row mb-4">' +
+                '                                   <button class="btn btn-secondary btn-sm mb-1" onclick="myPageInfoChgPwDismiss()">취소</button>      ' +
+                '                                   <button class="btn btn-primary btn-sm mb-2" onclick="myPageInfoChgPwDo()">변경</button>                          ' +
+                '                               </div>' +
+                '                             ',
+            showDenyButton: false, //거절버튼
+            showCancelButton: false, //취소버튼
+            showConfirmButton: false, //승인 버튼
+        });
+    }
+    function myPageInfoChgPwDismiss() {
+        swal.close();
+    }
+    function myPageInfoChgPwDo() {
+        let isOkflag = true;
+
+        if($.trim($("#newPw1").val()).length < 8){
+            isOkflag = false;
+            $('#tooShortNewPw').css('display','inline');
+        }else{
+            $('#tooShortNewPw').css('display','none');
+        }
+
+        if($('#newPw1').val()!=$('#newPw2').val()){
+            isOkflag = false;
+            $('#unMatchNewPw').css('display','inline');
+            $('#newPw1').val('');
+            $('#newPw2').val('');
+            $('#newPw1').focus();
+        }else{
+            $('#unMatchNewPw').css('display','none');
+        }
+        if(isOkflag){
+            $.post(conPath + "mypage/changePw", {newPwd:$.trim($("#newPw1").val())},function (data) {
+                console.log(data);
+                if(data == 'true'){
+                    swal.fire('비밀번호 변경 성공');
+                    location.href= conPath + "auth/logout";
+                }else{
+                    swal.fire('비밀번호 변경 실패');
+                }
+            });
+        }
+    }
+
+
+</script>
+
+</body>
+
+</html>

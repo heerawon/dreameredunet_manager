@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.teacher.T_PreparationMapper">
+
+    <!-- 팀별 예습복습 개수(대시보드) -->
+    <select id="selectPreparationCount" resultType="Integer" parameterType="HashMap" >
+        <![CDATA[
+        SELECT COUNT(preparation_id)
+        FROM dreamer.preparation PRP
+                 JOIN dreamer.view_use_team VUT ON PRP.fk_team_id = VUT.team_id
+                 JOIN dreamer.view_teacher_user VTU ON VUT.fk_tuser_id = VTU.fk_tuser_id
+        WHERE PRP.is_del!= 1 AND VUT.team_id = #{fkTeamId} AND PRP.division = #{division}
+        ORDER BY PRP.reg_dt DESC
+        ]]>
+    </select>
+
+    <!-- 팀별 예습복습 리스트 -->
+    <select id="selectPreparationList" resultType="PreparationModel" parameterType="HashMap" >
+        <![CDATA[
+            SELECT preparation_id, fk_team_id, appearance, PRP.division, PRP.link, PRP.content, PRP.is_del,
+                   DATE_FORMAT(PRP.reg_dt,'%Y.%m.%d %H:%i') reg_dt, COUNT(RPY.reply_id) count_reply
+            FROM dreamer.preparation PRP
+                 JOIN dreamer.view_use_team VUT ON PRP.fk_team_id = VUT.team_id
+                 JOIN dreamer.view_teacher_user VTU ON VUT.fk_tuser_id = VTU.fk_tuser_id
+                 LEFT JOIN dreamer.reply RPY ON PRP.preparation_id = RPY.fk_preparation_id
+            WHERE PRP.is_del!= 1 AND VUT.team_id = #{fkTeamId} AND PRP.division = #{division}
+            GROUP BY PRP.preparation_id
+            ORDER BY PRP.reg_dt DESC
+        ]]>
+    </select>
+    
+    <!-- 예습복습 등록 -->
+    <insert id="insertPreparation"  parameterType="PreparationModel" useGeneratedKeys="true" keyProperty="preparationId">
+        <![CDATA[
+            INSERT INTO dreamer.preparation (
+                 fk_team_id,
+                 appearance,
+                 division,
+                 link,
+                 content,
+                 reg_dt
+            )
+            VALUES (
+                 #{fkTeamId},
+                 #{appearance},
+                 #{division},
+                 #{link},
+                 #{content},
+                 NOW()
+            );
+        ]]>
+    </insert>
+
+    <!-- 예습복습 상세 -->
+    <select id="selectPreparationDetail" resultType="PreparationModel" parameterType="Integer">
+        <![CDATA[
+            SELECT preparation_id, fk_team_id, appearance, PRP.division, PRP.link, content, PRP.is_del,
+                   DATE_FORMAT(PRP.reg_dt,'%Y.%m.%d %H:%i') reg_dt
+            FROM dreamer.preparation PRP
+                 JOIN dreamer.view_use_team VUT ON PRP.fk_team_id = VUT.team_id
+                 JOIN dreamer.view_teacher_user VTU ON VUT.fk_tuser_id = VTU.fk_tuser_id
+            WHERE preparation_id = #{preparationId}
+        ]]>
+    </select>
+
+    <!-- 예습복습 수정 -->
+    <update id="updatePreparation"  parameterType="PreparationModel">
+        <![CDATA[
+            UPDATE  dreamer.preparation
+            SET
+                fk_team_id = #{fkTeamId},
+                appearance = #{appearance},
+                division = #{division},
+                link = #{link},
+                content = #{content},
+                reg_dt = NOW()
+            WHERE preparation_id = #{preparationId}
+        ]]>
+    </update>
+
+    <!-- 예습복습 삭제 -->
+    <delete id="deletePreparation"  parameterType="Integer">
+        <![CDATA[
+            UPDATE  dreamer.preparation
+            SET is_del = 1
+            WHERE preparation_id = #{preparationId}
+        ]]>
+    </delete>
+
+    <!-- 예습복습 대시보드 노출 된것 가져오기 -->
+    <select id="getExposurePreparationId" resultType="PreparationModel" parameterType="PreparationModel">
+        <![CDATA[
+        SELECT preparation_id, fk_team_id, appearance, division, link, content, is_del,
+               DATE_FORMAT(reg_dt,'%Y.%m.%d %H:%i') reg_dt
+        FROM dreamer.preparation
+        WHERE is_del != 1 AND appearance = 1 AND fk_team_id= #{fkTeamId} AND division = #{division}
+        ]]>
+    </select>
+
+    <!-- 예습복습 대시보드 노출 / 노출 해제 -->
+    <update id="exposurePreparation"  parameterType="PreparationModel">
+        <![CDATA[
+        UPDATE  dreamer.preparation
+        SET appearance = #{appearance}
+        WHERE preparation_id = #{preparationId}
+        ]]>
+    </update>
+</mapper>

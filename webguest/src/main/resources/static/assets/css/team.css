@@ -1,0 +1,149 @@
+@charset "UTF-8";
+/* 팀 상세 */
+
+.scheduleBox .scheduleWrap {
+    display: flex;
+    align-items: flex-start;
+}
+.calenderDay {
+    flex-shrink: 0;
+}
+
+.calenderData {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 0 0 20px;
+    margin-bottom: 10px;
+}
+.scheduleBox .scheduleWrap2 {
+    display: flex;
+    align-items: flex-start;
+    padding: 1.5rem 1.5rem;
+}
+
+.calenderData .zoomLinkText {
+    width: 350px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.calenderData .homeworkBadge {
+    font-size: 13px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.calenderData p {
+    /*float: left;*/
+    margin-right: 25px;
+    flex-shrink: 0;
+}
+.calenderData .lectureLink {
+    /*float: left;*/
+    top: -10px;
+    flex-shrink: 0;
+}
+
+.studentBox .card {
+    border: 1px solid #e5e6e6;
+}
+.studentBox .card.active {
+    border: 1px solid #0061ce;
+}
+
+.studentBox .studentMbti {
+    overflow: hidden;
+    width: 80px;
+    height: 80px;
+}
+
+.studentBox .studentInfo{
+    padding-left: 15px;
+    width: calc(100% - 80px);
+}
+.studentBox .studentInfo .studentInfo_txt01 {
+    font-size: 18px;
+}
+.studentBox .studentInfo .studentClass {
+    margin: 0;
+    padding: 0;
+}
+.studentBox .studentInfo .studentClass li {
+    list-style: none;
+    float: left;
+    padding-right: 10px;
+}
+.studentDle {
+    position: absolute;
+    right: 24px;
+}
+.studentDle:hover {
+    color: #0056c1;
+}
+
+.scheduleText {
+    float: right;
+}
+
+/*강사 목록*/
+.teacherName {
+    font-size: 16px;
+    color: #000;
+    font-weight: 600;
+}
+
+/* 팀 등록 */
+.classPeriod input {
+    width: calc( (100% - 17px) / 2);
+    display: inline-block;
+}
+
+.dayTime {
+    width: 48%;
+}
+
+.studentListWrap {
+    height: 850px;
+    padding: 15px;
+    background: whitesmoke;
+}
+
+/* 강사 일정 부분 */
+.teamList {
+    float: left;
+}
+.zoomLink {
+    padding: 30px 0;
+    border-top: 1px solid #e5e6e6;
+    border-bottom: 1px solid #e5e6e6;
+}
+.zoomLink p {
+    margin-bottom: 0;
+    font-size: 16px;
+}
+
+
+
+
+
+
+@media screen and (max-width: 1283px) {
+    .calenderDay { float: none; padding-bottom:10px; }
+    /*.calenderData { float: none; padding: 10px 0 0 0; }*/
+}
+
+@media screen and (max-width: 767px) {
+    .scheduleClassCount { border-left: none; border-top: 1px solid #e5e6e6; }
+    .teamList {float: none; }
+    .scheduleText { float: none; }
+    .scheduleBox .scheduleWrap2 { display: flow-root; }
+    .calenderData { padding: 10px 0 0 0; }
+    .calenderData .zoomLinkText { width: 100%; white-space: initial; }
+
+    .scheduleBox .scheduleWrap { display: block; }
+
+
+}
+
+

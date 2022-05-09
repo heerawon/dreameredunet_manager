@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+    <!--custom Css -->
+    <link rel="stylesheet" th:href="@{/assets/css/teacher.css}" type="text/css"/>
+    <!-- end custom css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Teacher-01-01 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">강사관리</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">강사관리</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="button-list">
+                                    <button type="button" class="btn btn-outline-primary btn-rounded mb-0">최상단으로</button>
+                                    <button type="button" class="btn btn-outline-primary btn-rounded mb-0">최하단으로</button>
+                                </div>
+
+                                <table id="table" class="table nowrap w-100">
+                                    <thead>
+                                    <tr class="text-center">
+                                        <th>dataID</th>
+                                        <th> </th>
+                                        <th class="text-start">강사사진</th>
+                                        <th>강사ID</th>
+                                        <th class="text-start">강사 정보</th>
+                                        <th>메인노출</th>
+                                        <th>상세보기</th>
+                                        <th>순서변경</th>
+                                    </tr>
+                                    </thead>
+
+
+                                    <tbody>
+                                    <tr class="text-center">
+                                        <td>1</td>
+                                        <td><input class="form-check-input" type="checkbox" value=""></td>
+                                        <td>
+                                            <div class="teacherImg">
+                                                <img src="/images/teacher01.png" alt="teacher-image" class="img-fluid">
+                                            </div>
+                                        </td>
+                                        <td>dreamer</td>
+                                        <td class="text-start">
+                                            최현정(여) <span class="badge badge-soft-danger rounded-pill ceoBadge">대표이사</span><br/>
+                                            생년월일: 1999년10월10일 상세보기<br/>
+                                            010-0000-0000<br/>
+                                            서울시 강남구 역삼동 11-11 102호
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-success btn-rounded waves-effect waves-light">
+                                                <span class="btn-label"><i class="fe-check"></i></span>메인노출
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-primary" onclick="moveDetail()">상세보기</button>
+                                        </td>
+                                        <td>
+                                            <div class="orderChange cursor">
+                                                <i class="fe-chevron-down"></i>
+                                            </div>
+                                            <div class="orderChange cursor">
+                                                <i class="fe-chevron-up"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="text-center">
+                                        <td>2</td>
+                                        <td><input class="form-check-input" type="checkbox" value=""></td>
+                                        <td>
+                                            <div class="teacherImg">
+                                                <img src="/images/teacher01.png" alt="teacher-image" class="img-fluid">
+                                            </div>
+                                        </td>
+                                        <td>dreamer</td>
+                                        <td class="text-start">
+                                            최현정(여)<br/>
+                                            생년월일: 1999년10월10일 상세보기<br/>
+                                            010-0000-0000<br/>
+                                            서울시 강남구 역삼동 11-11 102호
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-secondary btn-rounded waves-effect waves-light">
+                                                <span class="btn-label"><i class="fe-check"></i></span>메인노출
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-primary" onclick="moveDetail()">상세보기</button>
+                                        </td>
+                                        <td>
+                                            <div class="orderChange cursor">
+                                                <i class="fe-chevron-down"></i>
+                                            </div>
+                                            <div class="orderChange cursor">
+                                                <i class="fe-chevron-up"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+                                <div>
+                                    <button type="button" class="btn btn-primary waves-effect waves-light position_Btm_btn_right btn_bg" onclick="moveRegister();">강사 등록</button>
+                                </div>
+
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<script type="text/javaScript">
+    let table;
+
+    $(document).ready(function () {
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+                { "width": "3%", "targets": 1 }
+            ],
+            "lengthChange": false,//페이지 개수 삭제
+            "ordering": false,
+            "scrollX": true,
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+    });
+
+
+
+    $('#table tbody').on('click', 'td', function () {
+        let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+        let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+        let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+        let totalColumnCount = table.columns().count(); //전체 열 갯수
+        let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+
+        // if (indexColumn < totalColumnCount) {
+        //     // 수정&삭제 영역은 클릭 적용하지 않음
+        //     location.href = "/pub/notice/detail?id=" + indexData;
+        // }
+    });
+
+    //강사 상세
+    function moveDetail(){
+        location.href =  conPath + "pub/teacher/detail";
+    }
+
+    //강사 등록
+    function moveRegister(){
+        location.href =  conPath + "pub/teacher/register";
+    }
+</script>
+
+</body>
+
+</html>

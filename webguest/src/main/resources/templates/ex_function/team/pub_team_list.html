@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!--custom Css -->
+    <!-- end custom css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Lecture-01-01 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">팀목록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">팀목록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="searchTable mb-3">
+
+                                    <div class="articleWrap row">
+                                        <div class="col-lg-4 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>프로그램</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <select id="programName" name="programName" class="form-select">
+                                                    <option value="">선택</option>
+                                                    <option th:each='_ : ${programList}'
+                                                            th:value='${_?.programId}'
+                                                            th:utext='|${_?.programName}(${_?.programStartAge}~${_?.programEndAge})|'
+                                                            th:selected="${_?.programId} eq ${programId}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>팀명</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input type="text" class="form-control" id="teamName" th:value='${teamName}'>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>강사이름</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input type="text" class="form-control" id="userName" th:value='${userName}'>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--검색 날짜 articleWrap -->
+                                    <th:block th:include="ex_function/init/init_pub_filter_bar.html"></th:block>
+
+
+                                </div>
+
+                                <div class="button-list text-center mb-3">
+                                    <button type="button" class="btn btn-primary btn_bg btn90" id="btn_serch">검색</button>
+                                </div>
+
+
+                                <table id="table" class="table table-hover nowrap w-100">
+                                    <thead>
+                                    <tr class="text-center">
+<!--                                        <th>dataID</th>-->
+                                        <th>#</th>
+                                        <th class="text-start">팀 이름</th>
+                                        <th>강의 기간</th>
+                                        <th>전체강의 횟수</th>
+                                        <th>강사 이름</th>
+                                        <th>팀 구성원 수</th>
+                                        <th>등록일시</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr th:each='_,num : ${resList}' class="cursor text-center" th:onclick="moveDetails([[${_.teamId}]]);">
+<!--                                        <td th:text='${_.teamId}'></td>-->
+                                        <td th:text='${num.count}'></td>
+                                        <td th:text='${_.teamName}'></td>
+<!--                                        <td th:text='|${_?.startDt }~${_?.endDt}|'></td>-->
+                                        <td >
+                                            <a th:text='${_?.startDt}'></a>
+                                            <a th:text='${_?.startDt != null ? "~" : "-"}'></a>
+                                            <a th:text='${_?.endDt}'></a>
+                                        </td>
+                                        <td th:text='${_?.totalLecture}'></td>
+                                        <td th:text='${_.userName}'></td>
+                                        <td th:text='${_.countMember}'></td>
+                                        <td th:text='${_.regDt}'></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+                                <div>
+                                    <button type="button" class="btn btn-primary waves-effect waves-light position_Btm_btn_right btn_bg" onclick="moveRegister();">팀등록</button>
+                                </div>
+
+
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<!-- custom date setting  -->
+<script th:src="@{/assets/js/date_setting.js}"></script>
+
+<script type="text/javaScript">
+    /*<![CDATA[*/
+    // let teamId = [[${resModel?.teamId}]];
+    /*]]>*/
+    let table;
+
+    $(function () {
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "searching": false, //검색 삭제
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+
+        //조건 검색 동작
+        $("#btn_serch").on( "click", function() {
+            const programId = $("#programName").val();
+            const userName = $("#userName").val();
+            const teamName = $("#teamName").val();
+            const searchStartDt = $("#searchStart").val();
+            const searchEndDt = $("#searchEnd").val();
+            location.href = conPath+"team/list?programId="+programId+"&userName="+userName+"&teamName="+teamName+"&searchStartDt="+searchStartDt+"&searchEndDt="+searchEndDt;
+        });
+
+        //날짜 세팅 버튼 동작
+        $(".btn_func_date").on("click", function() {
+            setStartEnd($(this));
+        });
+
+        //날짜 초기화 버튼 동작
+        $("#btn_set_no_date").on( "click", function() {
+            $("#searchStart").val("");
+            $("#searchEnd").val("");
+        });
+
+    });
+
+    //상세 페이지 이동
+    const moveDetails = function (id){
+        location.href = conPath+"team/finishiedDetail?id="+id;
+    }
+
+    //작성 페이지 이동
+    const moveRegister = function () {
+        location.href = conPath+"team/register?type=register";
+    }
+
+    //input date 세팅부
+    const setStartEnd = function (argument) {
+        let type = String($(argument).attr("id")).trim();
+        const getDates =  getFormatDate(type);
+
+        $("#searchStart").val("");
+        $("#searchEnd").val("");
+        $("#searchStart").val(getDates.startDt);
+        $("#searchEnd").val(getDates.endDt);
+    }
+
+</script>
+
+</body>
+</html>

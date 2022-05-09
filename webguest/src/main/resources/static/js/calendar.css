@@ -1,0 +1,52 @@
+.cld-main {width:100%;min-width:600px;padding-top:20px;border:1px solid #e4e4e4;border-radius:15px;}
+.cld-main a {}
+.cld-datetime {position: relative;display:flex;margin-bottom:20px;width:100%;align-items:flex-end;justify-content:space-between;overflow:hidden;padding:0 16px;box-sizing:border-box;}
+.cld-datetime .today {position:relative;text-align:center;font-size:30px;}
+
+.cld-nav {position:relative;width:50px;height:50px;}
+.cld-nav:hover {cursor:pointer;}
+.cld-rwd:before {content:'';display:block;width:50px;height:50px;background:url('./assets/images/calender_prev_btn.png') no-repeat 0 0;}
+.cld-fwd:before {content:'';display:block;width:50px;height:50px;background:url('./assets/images/calender_prev_btn.png') no-repeat 0 0;transform:rotateZ(180deg);}
+
+.cld-labels, .cld-days {display:grid;grid-template-columns:repeat(7,1fr);padding-left:0;}
+
+.cld-label, .cld-day {display:flex;align-items:center;justify-content:center;box-sizing:border-box;}
+.cld-label {height:40px;background:#fbeaed;}
+.cld-label + .cld-label {border-left:1px solid #fff;}
+.cld-title {display:block;margin-bottom:8px;}
+.cld-day {display:block;padding:19px 8px 8px;min-height:97px;box-sizing:border-box;border-top:1px solid #e4e4e4;overflow:hidden;}
+.cld-day + .cld-day {border-left:1px solid #e4e4e4;}
+.cld-day:nth-child(7n - 6) {border-left:none;}
+.cld-day.clickable:hover {cursor:pointer;}
+.cld-day b {position:relative;left:16px;display:block;width:30px;height:30px;font-weight:500;line-height:20px;padding:5px 6px;box-sizing:border-box;margin:-5px 0 0 -6px;border-radius:50%;white-space:nowrap;}
+.cld-day.today b {background:#F05672;text-align:center;color:#fff;}
+.cld-day.disableDay {color:#888;}
+.cld-day.nextMonth, .cld-day.prevMonth {color:#888;}
+.cld-number {}
+.cld-schedule {font-size:14px;line-height:20px;padding:2px;display:block;margin:0;font-weight:normal;border-radius:5px;}
+.cld-day:hover {background: #eee;}
+.cld-number.eventday {}
+.cld-number.eventday:hover {}
+.today .cld-number.eventday:hover {}
+
+/* title 타입 */
+.cld-schedule {text-align:center;}
+.cld-schedule + .cld-schedule {margin-top:3px;}
+.cld-schedule.type1 {background:#cfbaf0;color: #1a0a24;}
+.cld-schedule.type2 {background:#b9fbc0;color: #082423;}
+.cld-schedule.type3 {background: #faf6bf;color: #1f1b03;}
+.cld-schedule.type4 {background:#90dbf4;color: #0f0f1f;}
+.cld-schedule.type5 {background: #e2aff8;color: #150615;}
+.cld-schedule.type6 {background:#98f5e1;color: rgb(3, 13, 17);}
+.cld-schedule.type7 {background:#0888EA;color: #120e2f;}
+.cld-schedule.type8 {padding:1px 2px;background:#fff;color:#0888EA;border:1px solid rgba(8,136,234,0.4);}
+.cld-schedule.type9 {background:#f1c0e8;color: #1a0516;}
+.cld-schedule.type10 {background: #c2fdca;color: #020a04;}
+.cld-schedule.type11 {background:#FDE6EA;color: #2b0409;}
+.cld-schedule.typeEnd{background:#E9E9E9;color: #181818;}
+
+
+.cld-schedule.didnt-attend {background: #959ec5;color: #04002b;}
+.cld-schedule.did-attend {background: #b3f8fc;color: #10531b;}
+.cld-schedule.didnt-homework {background: #75def5;color: #00213e;}
+.cld-schedule.did-homework {background: #f6aebb;color: #5c0f16;}

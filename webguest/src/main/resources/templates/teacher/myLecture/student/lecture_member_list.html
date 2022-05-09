@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/lecture.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+    <style>
+        .disabledBadges2 {
+            position: absolute;
+            background: #ff385e;
+            color: #fff;
+            left: 100px;
+            padding: 2px 10px;
+            border-radius: 25px;
+            display: inline-block;
+            font-size: 12px;
+            top: auto;
+            transform: initial;
+        }
+        .bg-grey-student{
+            background-color: rgba(152, 152, 152, 0.96);
+        }
+    </style>
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-05-01 -->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">출석현황</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a href="#">전체 대시보드</a></li>
+                                    <li class="breadcrumb-item"><a href="#">팀 대시보드</a></li>
+                                    <li class="breadcrumb-item active">팀원목록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="button-list"  >
+                                        <th:block th:each='_,num : ${myTeamList}'>
+                                            <button type="button" th:class="${_.division eq 0 ?'btn btn-outline-primary btn_bg':'btn btn-outline-danger btn_bg'}"
+                                                    th:classappend="${myTeam?.teamId eq _.teamId?'active':''}"
+                                                    th:text="|[${_.programName != null ? _.programName: _.categoryName}]${_.teamName}|"
+                                                    th:onclick="moveTeamMemberList([[${_.teamId}]])">
+                                            </button>
+                                        </th:block>
+                                    </div>
+
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <button type="button" class="btn btn-success btn-sm me-2" onclick="moveDashboard()"> < 팀 대시보드</button>
+                                            <p class="lecture_txt01 d-inline-block"
+                                               th:text='|[${myTeam.programName !=null ? myTeam.programName :myTeam.categoryName }]${myTeam.teamName}|'></p>
+                                            <p class="lecture_txt01 d-inline-block" th:text="|총 학생수 : ${countMember} 명|"></p>
+                                            <p class="lecture_txt01 d-inline-block"
+                                               th:text="|강의 기간 : ${myTeam?.startDt}${myTeam?.startDt != null ? '~' : '-'}${myTeam?.endDt}|"></p>
+                                            <p class="lecture_txt01 d-inline-block" th:text="|총 강의 수 : ${countLecture} 회|"></p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <p class="form_title" th:text="|총 팀원수 : ${studentList.size()} 명|"></p>
+                                            <table id="table" class="table nowrap w-100">
+                                                <thead>
+                                                <tr class="text-center">
+                                                    <th>dataID</th>
+                                                    <th>팀원이름</th>
+                                                    <th>캐릭터</th>
+                                                    <th>생년월일</th>
+                                                    <th>성별</th>
+                                                    <th>수강일시</th>
+                                                    <th>출석율</th>
+                                                    <th>부모님정보</th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                <th:block th:each='_,num : ${studentList}'>
+                                                    <tr class="text-center" th:classappend="${_.userRole ne 'MEMBER'? 'bg-grey-student':''}">
+                                                        <td th:text="${num.count}"></td>
+                                                        <td th:text="${_.userName}"></td>
+                                                        <td>
+                                                            <div th:if="${_.userRole ne 'MEMBER'}" class="disabledBadges2">구독기간 만료</div>
+                                                            <div class="d-inline-block">
+                                                                <th:block th:switch="${_.studentMbti}">
+                                                                    <img th:case="''" th:src="@{/assets/images/users/avatar-1.jpg}" class="img-fluid avatar-xs rounded-circle">
+                                                                    <img th:case="1" th:src="@{/images/team_mbti_type1.png}" class="img-fluid avatar-xs rounded-circle">
+                                                                    <img th:case="2" th:src="@{/images/team_mbti_type2.png}" class="img-fluid avatar-xs rounded-circle">
+                                                                    <img th:case="3" th:src="@{/images/team_mbti_type3.png}" class="img-fluid avatar-xs rounded-circle">
+                                                                    <img th:case="4" th:src="@{/images/team_mbti_type4.png}" class="img-fluid avatar-xs rounded-circle">
+                                                                    <img th:case="5" th:src="@{/images/team_mbti_type5.png}" class="img-fluid avatar-xs rounded-circle">
+                                                                    <img th:case="6" th:src="@{/images/team_mbti_type6.png}" class="img-fluid avatar-xs rounded-circle">
+                                                                    <img th:case="7" th:src="@{/images/team_mbti_type7.png}" class="img-fluid avatar-xs rounded-circle">
+                                                                    <img th:case="8" th:src="@{/images/team_mbti_type8.png}" class="img-fluid avatar-xs rounded-circle">
+                                                                </th:block>
+                                                            </div>
+                                                            <th:block th:switch="${_.studentMbti}">
+                                                                <p th:case="''" class="d-inline-block m-0" th:text="${'미등록'}"></p>
+                                                                <p th:case="1" class="d-inline-block m-0" th:text="${'펭귄'}"></p>
+                                                                <p th:case="2" class="d-inline-block m-0" th:text="${'판다'}"></p>
+                                                                <p th:case="3" class="d-inline-block m-0" th:text="${'토끼'}"></p>
+                                                                <p th:case="4" class="d-inline-block m-0" th:text="${'다람쥐'}"></p>
+                                                                <p th:case="5" class="d-inline-block m-0" th:text="${'라쿤'}"></p>
+                                                                <p th:case="6" class="d-inline-block m-0" th:text="${'여우'}"></p>
+                                                                <p th:case="7" class="d-inline-block m-0" th:text="${'돌고래'}"></p>
+                                                                <p th:case="8" class="d-inline-block m-0" th:text="${'사자'}"></p>
+                                                            </th:block>
+                                                        </td>
+                                                        <td th:text="${_.studentBirth}"></td>
+                                                        <td th:text="${_.studentGender eq 'F'? '여성':'남성'}"></td>
+                                                        <td th:text="${_.attendDt}"></td>
+                                                        <td>
+                                                            <div class="progress mb-0 memberAttendanceBar d-inline-block">
+                                                                <div class="progress-bar h-100" role="progressbar"
+                                                                     th:style="${_.percentAttend ne null ? 'width:'+_.percentAttend+'%':'width:0'}"
+                                                                     th:text="|${_.percentAttend}%|"
+                                                                     th:aria-valuenow="${_.percentAttend}" aria-valuemin="0" aria-valuemax="100">
+                                                                </div>
+                                                            </div>
+                                                            <p class="d-inline-block m-0 ms-2 memberAttendanceNum">
+                                                                <span class="text-primary" th:text="|${_.countAttend}/${_.countLecture}회|"></span></p>
+                                                        </td>
+                                                        <td th:text="|${_.parentName ne null ? _.parentName: ''} ${_.parentCell ne null ? _.parentCell:''}|"></td>
+                                                    </tr>
+                                                </th:block>
+
+                                                </tbody>
+                                            </table>
+
+                                        </div> <!-- end card body-->
+                                    </div>
+
+                                </div><!-- end col-->
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<script type="text/javaScript">
+    /*<![CDATA[*/
+    let fkTeamId = "[[${myTeam?.teamId}]]";
+    /*]]>*/
+
+    let table;
+
+    $(function () {
+
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02 a').addClass('active');
+
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+                {"width": "100px", "targets": 3}
+            ],
+            "searching": true, //검색 삭제
+            "ordering": false,
+            "scrollX": true,
+            "info": false, //하단 정보 삭제 (Showing 1 to 8 of 8 entries)
+            "lengthChange": false, //테이블의 페이징 표시
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+
+    });
+
+    //팀 대시보드
+    function moveDashboard() {
+        location.href = conPath + "myLecture/teamDashboard?teamId="+fkTeamId;
+    }
+
+    //다른 팀 출석현황
+    function moveTeamMemberList(teamId){
+        location.href = conPath + "myLecture/teamMemberList?teamId="+teamId;
+    }
+
+</script>
+
+</body>
+
+</html>

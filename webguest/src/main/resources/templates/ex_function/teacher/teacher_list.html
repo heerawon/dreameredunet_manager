@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <table id="table">
+            <thead>
+            <tr>
+                <th>dataID</th>
+                <th>#</th>
+                <th>프로필</th>
+                <th>강사아이디</th>
+                <th>강사정보</th>
+                <th>메인노출</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each='_,num : ${resList}' class="cursor">
+                <td th:text="${_.fkUserId}"></td>
+                <td th:text='${num.count}'></td>
+                <td>
+<!--                    <img th:src="${_.teacherProfile}"  alt="image" width="200">-->
+                    <img src="/manager/images/teacher01.png"  alt="image" width="200">
+                </td>
+                <td th:text='${_.fkUserId}'></td>
+                <td >
+                    <p th:text='|${_.userName}(${_.teacherGender eq "F" ? "여" : "남"})|'></p>
+                    <p th:text='${_.teacherBirth}'></p>
+                    <p th:text='${_.teacherCell}'></p>
+                    <p th:text='${_.teacherAddr}'></p>
+                </td>
+                <td >
+                    <button type="button"
+                            class="btn btn-outline-dark waves-effect waves-light"
+                            th:classappend="${_.teacherIsMain} eq 1 ? active"
+                            th:text="${_.teacherIsMain eq 1 ? '노출해제' : '메인노출'}"
+                            th:onclick="changeIsMain([[${_.fkUserId}]],[[${_.teacherIsMain}]]);"></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div>
+            <button type="submit" onclick="moveRegister()">등록</button>
+        </div>
+    </div>
+
+
+    <!-- third party js -->
+    <script src="../assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="../assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+
+    <!-- Datatables init -->
+    <script src="../assets/js/pages/datatables.init.js"></script>
+
+    <!-- App js -->
+    <script src="../assets/js/app.min.js"></script>
+
+    <script type="text/javaScript">
+
+        let table;
+
+        $(document).ready(function(){
+            table = $('#table').DataTable({
+                "language": {
+                    "paginate": {
+                        "previous": "<i class='mdi mdi-chevron-left'>",
+                        "next": "<i class='mdi mdi-chevron-right'>"
+                    }
+                },
+                "drawCallback": function () {
+                    $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+                },
+                "scrollX": true
+            });
+        });
+
+        $('#table tbody').on('click', 'td', function () {
+            console.log('tbody clicked!!!! ');
+
+            let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+            let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+            let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+            let totalColumnCount = table.columns().count(); //전체 열 갯수
+            let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+
+            console.log('indexColumn',indexColumn);
+            console.log('totalColumnCount',totalColumnCount);
+
+            if (indexColumn < totalColumnCount -1 ) {
+                // 수정&삭제 영역은 클릭 적용하지 않음
+                location.href =  conPath + "teacher/detail?id=" + indexData;
+            }
+        });
+
+        $('#table tbody').on( 'click', 'tr', function () {
+            console.log( table.row( this ).data() );
+        } );
+
+        function moveDetails(id){
+            console.log("id",id);
+            // location.href = "/teacher/detail?id="+id;
+        }
+
+        function changeIsMain(id,isMain){
+            console.log("id",id);
+            console.log("isMain",isMain);
+            location.href =  conPath + "teacher/changeIsMain?fkUserId="+id+"&teacherIsMain="+isMain;
+        }
+
+        function moveRegister(){
+            location.href =  conPath + "teacher/register?type=register";
+        }
+    </script>
+</body>
+</html>

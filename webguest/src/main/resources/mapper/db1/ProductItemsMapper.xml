@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.ProductItemsMapper">
+
+    <!-- 판매 상품 리스트 -->
+    <select id="selectProductItemList" resultType="ProductItemsModel" >
+        <![CDATA[
+            SELECT product_items_id,items_name,items_price,reg_date,is_active
+            FROM dreamer.product_items
+            WHERE is_del = 0
+            ORDER BY is_active DESC,items_price
+        ]]>
+    </select>
+
+    <!-- 판매 상품 추가 -->
+    <insert id="insertProductItem" parameterType="ProductItemsModel" >
+        <![CDATA[
+            INSERT INTO dreamer.product_items
+            (
+                items_name,
+                items_price
+            )
+            VALUES (
+               #{itemsName},
+               #{itemsPrice}
+           );
+        ]]>
+    </insert>
+
+
+    <!-- 판매 상품 수정 -->
+    <update id="updateProductItem" parameterType="ProductItemsModel" >
+        <![CDATA[
+            UPDATE  dreamer.product_items
+            SET items_name = #{itemsName}, items_price = #{itemsPrice}
+            WHERE product_items_id = ${productItemsId}
+        ]]>
+    </update>
+
+    <!-- 판매 상품 삭제 -->
+    <update id="deleteProductItem" parameterType="int" >
+        <![CDATA[
+            UPDATE dreamer.product_items
+            SET is_del = 1
+            WHERE product_items_id = ${productItemsId}
+        ]]>
+    </update>
+
+    <!-- 판매 상품 상세 -->
+    <select id="selectProductItemDetail" parameterType="int"  resultType="ProductItemsModel">
+        <![CDATA[
+            SELECT product_items_id,items_name,items_price,reg_date,is_active
+            FROM dreamer.product_items
+            WHERE is_del = 0
+            AND product_items_id = ${productItemsId}
+        ]]>
+    </select>
+
+
+    <!-- 판매 상품 공개 여부 변경 -->
+    <update id="setProductItemIsActive" parameterType="ProductItemsModel" >
+        <![CDATA[
+            UPDATE  dreamer.product_items
+            SET is_active = #{isActive}
+            WHERE product_items_id = ${productItemsId}
+        ]]>
+    </update>
+
+</mapper>

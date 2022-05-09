@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+    <!--custom Css -->
+
+    <!-- end custom css -->
+</head>
+
+<body class="loading" data-layout-mode="two-column"
+      data-layout='{"mode": "light", "width": "fluid", "menuPosition": "fixed", "sidebar": { "color": "light", "size": "default", "showuser": false}, "topbar": {"color": "light"}, "showRightSidebarOnPageLoad": true}'>
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 S-01 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">상품목록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">상품목록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <table id="table" class="table nowrap w-100">
+                                    <thead>
+                                    <tr>
+                                        <th>dataID</th>
+                                        <th>#</th>
+                                        <th>판매자명</th>
+                                        <th>이메일</th>
+                                        <th>패키지명</th>
+                                        <th>커리큘럼명</th>
+                                        <th>상품명</th>
+                                        <th>등록일시</th>
+                                        <th>처리상태</th>
+                                    </tr>
+                                    </thead>
+
+
+                                    <tbody>
+                                    <tr class="cursor">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>김00</td>
+                                        <td>youn@naver.com</td>
+                                        <td>키키미술</td>
+                                        <td>하반기 수업</td>
+                                        <td>색체 미술 심리</td>
+                                        <td>2021.08.08 10:00</td>
+                                        <td>
+                                            <span class="bg-dark text-light btn80 btn">미승인</span>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="cursor">
+                                        <td>2</td>
+                                        <td>2</td>
+                                        <td>이00</td>
+                                        <td>youn@naver.com</td>
+                                        <td>키키미술</td>
+                                        <td>하반기 수업</td>
+                                        <td>색체 미술 심리</td>
+                                        <td>2021.08.08 10:00</td>
+                                        <td>
+                                            <span class="badge-outline-dark btn80 btn">승인</span>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="cursor">
+                                        <td>3</td>
+                                        <td>3</td>
+                                        <td>최00</td>
+                                        <td>youn@naver.com</td>
+                                        <td>키키미술</td>
+                                        <td>하반기 수업</td>
+                                        <td>색체 미술 심리</td>
+                                        <td>2021.08.08 10:00</td>
+                                        <td>
+                                            <span class="bg-secondary text-light btn80 btn">반려</span>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<script type="text/javaScript">
+    var table;
+
+    $(document).ready(function () {
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false
+                },
+            ],
+            "searching": false, //검색 삭제
+            "scrollX": true,
+
+            "language": { //페이지네비 디자인
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+    });
+
+    //테이블 검색
+    $('#table thead tr').clone(true).appendTo('#table thead');
+    $('#table thead tr:eq(1) th').each(function (i) {
+        var title = $(this).text();
+        if (i > 1) {  //첫번째는 안되게
+            $(this).html('<input type="text" placeholder="' + title + '" />');
+
+            $('input', this).on('keyup change', function () {
+                if (table.column(i).search() !== this.value) {
+                    table
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        }
+    });
+
+    $('#table tbody').on('click', 'td', function () {
+        let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+        let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+        let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+        let totalColumnCount = table.columns().count(); //전체 열 갯수
+        let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+
+        if (indexColumn < totalColumnCount - 1) {
+            // 수정&삭제 영역은 클릭 적용하지 않음
+            location.href = "/pub/item/detail?id=" + indexData;
+        }
+    });
+
+    //상품 상세 이동
+    function moveDetails(){
+        location.href =  conPath + "detail";
+    }
+</script>
+
+</body>
+
+</html>

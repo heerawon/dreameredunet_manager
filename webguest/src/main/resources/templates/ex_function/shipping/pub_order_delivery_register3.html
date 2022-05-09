@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!-- AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.serializeObject/2.0.3/jquery.serializeObject.min.js"></script>
+
+    <!--custom Css -->
+    <link rel="stylesheet" th:href="@{/assets/css/order.css}" type="text/css"/>
+    <!-- end custom css -->
+
+    <style>
+        .error_txt {display:none;grid-column:1 / span 2;padding-left:125px;margin-top:7px;font-size:14px;line-height:16px;color:var(--color-primary);box-sizing:border-box;}
+        .error_txt.active {display:block;}
+    </style>
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Order-02-01 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">배송 상세</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/user/list}">배송 목록</a></li>
+                                    <li class="breadcrumb-item active">배송 상세</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="overflow-hidden">
+                                        <label class="form-label mb-2 form_title float-start">배송상세</label>
+                                    </div>
+
+                                    <div class="grayLine"></div>
+
+                                    <div class="mt-3">
+                                        <label class="form-label form_title">학생정보</label>
+
+                                        <div class="studentInfo mt-2">
+                                            <p class="form-label form_title">[[${resModel?.userName}]]</p>
+                                            <div class="row">
+                                                <div class="col-md-4 mb-2">
+                                                    <div class="h-100 infoBox">
+                                                        <div class="">
+                                                            <p class="d-inline-block info_txt01">가입일시</p>
+                                                            <p class="d-inline-block">[[${resModel?.userRegDt}]]</p>
+                                                        </div>
+
+                                                        <div class="-hidden">
+                                                            <p class="d-inline-block info_txt01">생년월일</p>
+                                                            <p class="d-inline-block">[[${resModel?.studentBirth}]]</p>
+                                                        </div>
+
+                                                        <div class="-hidden">
+                                                            <p class="d-inline-block info_txt01">주문 상품</p>
+                                                            <p class="d-inline-block" th:if="${resModel?.subscribeName ne null}">[[ ${resModel?.subscribeName} ]]  </br>[[ ${resModel?.subscribeTerm} ]]일</p>
+                                                            <p class="d-inline-block" th:if="${resModel?.itemsName ne null}">[[ ${resModel?.itemsName} ]]</p>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-8 mb-2">
+                                                    <div class="infoBox">
+                                                        <table id="address" class="table nowrap w-100 text-dark">
+                                                            <thead>
+                                                            <tr class="text-center">
+                                                                <th>수령인</th>
+                                                                <th>배송정보</th>
+                                                            </tr>
+                                                            </thead>
+
+
+                                                            <tbody>
+                                                            <tr class="cursor text-center">
+                                                                <td>
+                                                                    <a href="#" th:onclick="moveUserDetails([[${resModel?.userId}]])">
+                                                                        <span class="d-block">
+                                                                            <ins>[[${resModel?.receiverName}]]<br/>[[${resModel?.receiverCell}]]</ins>
+                                                                        </span>
+                                                                    </a>
+                                                                </td>
+                                                                <td class="text-start">
+                                                                   ( [[${resModel?.receiverZipcode}]] )<br/>
+                                                                    [[${resModel?.receiverAddress}]]<br/>
+                                                                    배송정보 : [[${resModel?.memo}]]
+                                                                </td>
+                                                            </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 두번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="mb-3 col-md-2">
+                                            <label class="form-label">택배사</label>
+                                            <div class="align-middle">
+                                                <select name="shippingCompany" class="form-select" id="shippingCompany">
+                                                    <th:block th:each='_ : ${shippingCodeList}'>
+                                                        <option th:value='${_?.shippingServiceCode}'
+                                                                th:utext='${_?.shippingServiceName}'
+                                                                th:selected="${_.shippingServiceCode} eq ${resModel?.shippingCompany}">
+                                                        </option>
+                                                    </th:block>
+                                                </select>
+                                            </div>
+                                            <small id="shippingCompanyErrTxt" class="text-danger error_txt">택배사를 선택해주세요</small>
+                                        </div>
+
+                                        <div class="mb-3 col-md-7">
+                                            <label class="form-label">송장번호</label>
+                                            <input  type="text" class="form-control" id="shippingInvoice" name="shippingInvoice" th:value="${resModel?.shippingInvoice}">
+                                            <p class="text-danger mb-0 mt-1">송장번호를 입력하면 발송완료 상태로 저장됩니다.</p>
+                                            <small id="shippingInvoiceErrTxt" class="text-danger error_txt">송장 번호를 입력해주세요</small>
+                                        </div>
+
+                                        <div class="mb-3 col-md-3">
+                                            <label class="form-label">발송일자</label>
+                                            <input class="form-control dateInput" type="date" id="sendDt" name="sendDt" th:value="${#dates.format(resModel?.sendDt, 'yyyy-MM-dd')}">
+                                        </div>
+                                        <div class="mb-3 col-md-3">
+                                            <button type="button" id="btnShippingTracer" class="btn btn-primary">택배조회</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </form>
+
+
+                        <!-- 하단 버튼 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-start">
+                                    <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveList();">목록으로</button>
+                                    <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">취소</button>
+                                </div>
+                                <div class="float-end">
+                                    <button type="button" class="btn btn_bg" onclick="updateOrInsert();" id="btn-update-invoice"
+                                            th:classappend="${resModel.shippingInvoice ne null ? 'btn-outline-warning':'btn-outline-primary'}"
+                                            th:text="${resModel.shippingInvoice ne null ? '운송장 수정':'운송장 등록'}"></button>
+                                    <button type="button" class="btn btn-outline-danger btn_bg" onclick="confirmDelete();" >배송 삭제</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+<script th:src="@{/assets/js/summernote.min.js}"></script>
+
+<!-- Init js 에디터-->
+
+
+<script type="text/javaScript" th:inline="javascript">
+    /*<![CDATA[*/
+    let shippingId = [[${resModel.shippingId}]];
+    let shippingInvoice = [[${resModel.shippingInvoice}]];
+    let orderId = [[${resModel.fkOrderId}]];
+    let isShipping = [[${resModel?.shippingStatus}]];
+    let sendDt = [[${#dates.format(resModel?.sendDt, 'yyyy-MM-dd')}]];
+    /*]]>*/
+
+    // sendDt = sendDt.split("T");
+
+    let table;
+
+    let $shippingCompany = $("#shippingCompany"),
+        $shippingInvoice = $("#shippingInvoice"),
+        $sendDt = $("#sendDt");
+
+    //발송일자 세팅 (오늘날짜)
+    const now = new Date();
+    const nowDay = now.getDate();
+    const nowMonth = now.getMonth();
+    let nowYear = now.getYear();
+    nowYear += (nowYear < 2000) ? 1900 : 0;
+
+    $(function () {
+
+        $("#sendDt").val(sendDt);
+
+        $('.menu06').addClass('menuitem-active');
+        $('.menu06-menu').addClass('show');
+        $('.menu06-2').addClass('active');
+        $('#btnShippingTracer').hide();
+
+        if(shippingInvoice){
+            $("#shippingCompany").attr("disabled",true);
+            $("#shippingInvoice").attr("disabled",true);
+            // $("#sendDt").attr("disabled",true);
+            $('#btnShippingTracer').show();
+        }
+
+        $("#sendDt").val(nowYear+"-"+(nowMonth+1)+"-"+nowDay);
+
+    });
+
+    //취소
+    const moveBack = () => {
+        history.back();
+    }
+
+    //목록으로
+    const moveList = () => {
+        location.href =  conPath + "shipping/list";
+    }
+
+    //학생 상세로 이동
+    const moveUserDetails = function (id) {
+        window.open(conPath + "student/detail?id="+encodeURI(id));
+    }
+
+    //송장 삭제 (알림)
+    const confirmDelete = () =>{
+        Swal.fire({
+            title: '알림',
+            html: '삭제시 데이터를 복구하실 수 없습니다. <br>삭제 하시겠습니까? ',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '확인', //확인 글자
+            confirmButtonColor: '#f1556c',
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                deleteShipping();
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+            }
+        })
+    }
+
+    //송장 삭제부
+    const deleteShipping = () =>{
+        let sFormData = new FormData();
+        sFormData.append('shippingId',shippingId);
+        sFormData.append('orderId',orderId);
+        sFormData.append('isShipping',0);
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'shipping/updateShippingStatus', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+
+                if(result.data.status == 200){
+                    Swal.fire('삭제가 완료되었습니다.', '', 'success')
+                    location.href = conPath+"shipping/list";
+                }else{
+                    alert(result.data.message);
+                }
+
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+
+    //송장 등록, 수정 버튼
+    const updateOrInsert = () =>{
+        if($("#btn-update-invoice").text() == '운송장 수정'){
+            $("#shippingCompany").attr("disabled",false);
+            $("#shippingInvoice").attr("disabled",false);
+            $("#sendDt").attr("disabled",false);
+            $("#btn-update-invoice").text("수정완료");
+            $('#btnShippingTracer').hide();
+        }else{
+            firstOfAll();
+        }
+    }
+
+    //송장 등록 전 validation check
+    const firstOfAll = () =>{
+        if(validateSubmit()){
+            confirmChange();
+        }
+    }
+
+    //운송장 등록 (알림)
+    const confirmChange = ()=>{
+        Swal.fire({
+            title: '알림',
+            html: '송장 추가시 발송완료 상태로 저장됩니다.<br>송장 추가하시겠습니까 ?',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '확인', //확인 글자
+            confirmButtonColor: '#f1556c',
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                updateInvoice();
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+            }
+        })
+    }
+
+    $("#btnShippingTracer").click(function () {
+        window.open( conPath + "shippingTracer?code="+ $('#shippingCompany').val() + "&invoice="+ $('#shippingInvoice').val());
+        return false;
+    });
+
+
+    //송장 등록부
+    const updateInvoice = () => {
+        let sFormData = new FormData();
+        sFormData.append('shippingId',shippingId);
+        sFormData.append('shippingCompany',$("#shippingCompany").val());
+        sFormData.append('shippingInvoice', $("#shippingInvoice").val());
+        sFormData.append('sendDt', $("#sendDt").val());
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'shipping/update', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+
+                if(result.data.status == 200){
+                    console.log("result.data.data",result.data.data);
+                    $("#shippingCompany").attr("disabled",true);
+                    $("#shippingInvoice").attr("disabled",true);
+                    $("#sendDt").attr("disabled",true);
+                    $("#btn-update-invoice").text("운송장 수정");
+                    Swal.fire("등록 완료 되었습니다.");
+                    $('#btnShippingTracer').show();
+
+                }else{
+                    alert(result.data.message);
+                    $('#btnShippingTracer').hide();
+                }
+
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+
+    //값 유효성 검사
+    const validateSubmit = () =>{
+
+        if (!authValidCheck($shippingCompany)) {
+            return false;
+        }
+        if (!authValidCheck($shippingInvoice)) {
+            return false;
+        }
+        if (!authValidCheck($sendDt)) {
+            return false;
+        }
+        return true;
+    }
+
+    //유효성 검사부
+    let authValidCheck = function ($_elem) {
+
+        let $elem = $_elem instanceof jQuery ? $_elem : $(this),
+            validValue = String($elem.val()).trim(),
+            type = String($elem.attr("name")).trim(),
+            isValid = false;
+
+        switch (type) {
+            case"shippingCompany":
+                if (!validValue) {
+                    $("#shippingCompanyErrTxt").addClass("active");
+                    $shippingCompany.focus();
+                } else {
+                    $("#shippingCompanyErrTxt").removeClass("active");
+                    isValid = true;
+                }
+                break;
+            case"shippingInvoice":
+                if (!validValue || validValue.length < 2 ) {
+                    $("#shippingInvoiceErrTxt").addClass("active");
+                    $shippingInvoice.focus();
+                } else {
+                    $("#shippingInvoiceErrTxt").removeClass("active");
+                    isValid = true;
+                }
+                break;
+            case"sendDt":
+                if (!validValue) {
+                    $("#sendDtErrTxt").removeClass("active");
+                    $sendDt.focus();
+                } else {
+                    $("#sendDtErrTxt").removeClass("active");
+                    isValid = true;
+                }
+                break;
+        }
+        if (isValid) {
+            // authValidMessage(type, "", isValid);
+            return true
+        } else {
+            return false
+        }
+    };
+
+
+</script>
+
+</body>
+
+</html>

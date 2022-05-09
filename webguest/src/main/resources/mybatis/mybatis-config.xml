@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <typeAliases>
+        <typeAlias type="com.webstarter.manage.model.MainUserModel" alias="MainUserModel"/>
+        <typeAlias type="com.webstarter.manage.security.model.UserModel" alias="UserModel"/>
+        <typeAlias type="com.webstarter.manage.security.model.UserRoleModel" alias="UserRoleModel"/>
+        <typeAlias type="com.webstarter.manage.model.BoardModel" alias="BoardModel"/>
+        <typeAlias type="com.webstarter.manage.model.TeacherModel" alias="TeacherModel"/>
+        <typeAlias type="com.webstarter.manage.model.CategoryModel" alias="CategoryModel"/>
+        <typeAlias type="com.webstarter.manage.model.StudentModel" alias="StudentModel"/>
+        <typeAlias type="com.webstarter.manage.model.TermModel" alias="TermModel"/>
+        <typeAlias type="com.webstarter.manage.model.TeamModel" alias="TeamModel"/>
+        <typeAlias type="com.webstarter.manage.model.TeamMemberModel" alias="TeamMemberModel"/>
+        <typeAlias type="com.webstarter.manage.model.ProgramModel" alias="ProgramModel"/>
+        <typeAlias type="com.webstarter.manage.model.FeeModel" alias="FeeModel"/>
+        <typeAlias type="com.webstarter.manage.model.PaymentOrderModel" alias="PaymentOrderModel"/>
+        <typeAlias type="com.webstarter.manage.model.LectureModel" alias="LectureModel"/>
+        <typeAlias type="com.webstarter.manage.model.LectureListModel" alias="LectureListModel"/>
+        <typeAlias type="com.webstarter.manage.model.ProductSubscriptionModel" alias="ProductSubscriptionModel"/>
+        <typeAlias type="com.webstarter.manage.model.ProductItemsModel" alias="ProductItemsModel"/>
+        <typeAlias type="com.webstarter.manage.model.CelebrityLectureModel" alias="CelebrityLectureModel"/>
+        <typeAlias type="com.webstarter.manage.model.HomeworkModel" alias="HomeworkModel"/>
+        <typeAlias type="com.webstarter.manage.model.ReplyModel" alias="ReplyModel"/>
+        <typeAlias type="com.webstarter.manage.model.QaModel" alias="QaModel"/>
+        <typeAlias type="com.webstarter.manage.model.TeamCategoryModel" alias="TeamCategoryModel"/>
+        <typeAlias type="com.webstarter.manage.model.PreparationModel" alias="PreparationModel"/>
+        <typeAlias type="com.webstarter.manage.model.AttendanceModel" alias="AttendanceModel"/>
+        <typeAlias type="com.webstarter.manage.model.SliderImagesModel" alias="SliderImagesModel"/>
+        <typeAlias type="com.webstarter.manage.model.UploadFile" alias="UploadFile"/>
+        <typeAlias type="com.webstarter.manage.model.ApplyCourseModel" alias="ApplyCourseModel"/>
+        <typeAlias type="com.webstarter.manage.model.ShippingModel" alias="ShippingModel"/>
+        <typeAlias type="com.webstarter.manage.model.ShippingServiceModel" alias="ShippingServiceModel"/>
+    </typeAliases>
+    <typeHandlers>
+    </typeHandlers>
+
+</configuration>

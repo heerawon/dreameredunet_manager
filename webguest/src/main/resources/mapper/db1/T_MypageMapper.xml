@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.teacher.T_MypageMapper">
+
+    <!-- 마이페이지 상세 -->
+    <select id="getMyDetailInfo" resultType="TeacherModel" parameterType="String">
+        <![CDATA[
+            SELECT fk_tuser_id, teacher_gender, teacher_cell, teacher_addr, teacher_addr_detail,
+                   teacher_email, teacher_profile, fk_category_id, teacher_history, teacher_introduce,
+                   teacher_assign_dt, teacher_is_president, teacher_is_main, teacher_sort_num, teacher_birth,
+                   user_name, user_id,teacher_category categoryName
+            FROM dreamer.view_teacher_user
+
+            WHERE fk_tuser_id = #{fkUserId}
+        ]]>
+    </select>
+
+    <!-- 암호변경 -->
+    <update id="updateUserPw" parameterType="HashMap">
+        <![CDATA[
+            UPDATE dreamer.user
+            SET user_password = #{userPassword}
+            WHERE user_id = #{userId}
+        ]]>
+    </update>
+
+</mapper>

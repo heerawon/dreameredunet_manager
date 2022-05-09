@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>택배조회</title>
+</head>
+<body>
+<h2>조회중...</h2>
+<form id="frm" action="https://info.sweettracker.co.kr/tracking/5" method="post">
+    <div class="form-group">
+        <input type="hidden" class="form-control" id="t_key" name="t_key" th:value="${t_key}" placeholder="제공받은 APIKEY">
+    </div>
+    <div class="form-group">
+        <input type="hidden" class="form-control" name="t_code" id="t_code" th:value="${code}" placeholder="택배사 코드">
+    </div>
+    <div class="form-group">
+        <input type="hidden" class="form-control" name="t_invoice" id="t_invoice" th:value="${invoice}" placeholder="운송장 번호">
+    </div>
+</form>
+</body>
+<script th:src="@{/assets/js/vendor.min.js}"></script>
+<script type="application/javascript">
+    /*<![CDATA[*/
+    /*]]>*/
+    $(document).ready(function () {
+        $("#frm").submit();
+    });
+
+</script>
+</html>

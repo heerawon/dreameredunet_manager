@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/notice.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+    <script type="text/javascript">
+        document.oncontextmenu = function () {
+            Swal.fire('경고', '드리머에듀넷의 모든 학습자료는 드리머에듀넷의 자산입니다. 다운로드 및 배포를 엄중히 금합니다.  ', 'danger');
+
+            return false;
+        }
+    </script>
+</head>
+
+<body class="loading" oncontextmenu="return false" onselectstart="return false" ondragstart="return false"
+      onkeydown="return false">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 R-03 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">공지사항 상세</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a th:href="@{/t_reference}">강의자료</a></li>
+                                    <li class="breadcrumb-item active">강의자료 상세</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="mb-3 notice_title">
+                                            <p class="" th:text='${data?.title}'></p>
+                                        </div>
+
+                                        <div class="mb-3 notice_text">
+                                            <p th:utext='${data?.content}'>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 하단 버튼 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="float-start">
+                                        <button type="button" class="btn btn-outline-primary btn_bg"
+                                                onclick="moveBack();">강의자료 목록
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+</body>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+<script th:src="@{/assets/js/summernote.min.js}"></script>
+
+<!-- Init js 에디터-->
+
+
+<script type="text/javaScript" th:inline="javascript">
+    /*<![CDATA[*/
+    let boardId = [[${data?.id}]];
+    /*]]>*/
+
+    let table;
+
+    $(document).ready(function () {
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02-menu').addClass('show');
+        $('.menu02-2').addClass('active');
+
+        Swal.fire('경고', '드리머에듀넷의 모든 학습자료는 드리머에듀넷의 자산입니다. 다운로드 및 배포를 엄중히 금합니다.  ', 'danger');
+    });
+
+    // 목록으로
+    function moveBack() {
+        location.href = conPath + "t_reference";
+    }
+
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/lecture.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-06-01 -->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">과제 게시판</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub2/lecture/dashboard/total}">전체 대시보드</a></li>
+                                    <li class="breadcrumb-item"><a th:href="@{/pub2/lecture/dashboard/team}">팀 대시보드</a></li>
+                                    <li class="breadcrumb-item active">과제 게시판</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="button-list">
+                                        <button type="button" class="btn btn-outline-primary btn_bg active">[주니어] 기초</button>
+                                        <button type="button" class="btn btn-outline-primary btn_bg">[주니어] 기초 +</button>
+                                        <button type="button" class="btn btn-outline-danger btn_bg">[주니어] 기초 +</button>
+                                    </div>
+
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <button type="button" class="btn btn-success btn-sm me-2" onclick="moveDashboard()"> < 팀 대시보드</button>
+                                            <p class="lecture_txt01 d-inline-block">[주니어] 기초</p>
+                                            <p class="lecture_txt01 d-inline-block">총 학생 수 : 43명</p>
+                                            <p class="lecture_txt01 d-inline-block">강의 기간 : 2021.08.01 ~2021.09.21</p>
+                                            <p class="lecture_txt01 d-inline-block">총 강의 수 : 25회</p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="searchTable mb-3">
+                                                <div class="articleWrap row">
+
+                                                    <div class="col-md-6 searchList">
+                                                        <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                            <p>작성자</p>
+                                                        </div>
+                                                        <div class="d-table-cell align-middle articleChoice">
+                                                            <input name="studentName" type="text" class="form-control">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                            <p>제목</p>
+                                                        </div>
+                                                        <div class="d-table-cell align-middle articleChoice">
+                                                            <input name="qaTitle" type="text" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="button-list text-center mb-3">
+                                                <button type="button" class="btn btn-primary btn_bg btn90">검색</button>
+                                            </div>
+
+                                            <table id="table" class="table table-hover nowrap w-100" .>
+                                                <thead>
+                                                <tr class="text-center">
+                                                    <th>dataID</th>
+                                                    <th>#</th>
+                                                    <th class="text-start">과제 제목</th>
+                                                    <th>작성자</th>
+                                                    <th class="col-1">수업일</th>
+                                                    <th class="col-1">작성일</th>
+                                                    <th class="col-1">수정일</th>
+                                                </tr>
+                                                </thead>
+
+
+                                                <tbody>
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td>10</td>
+                                                    <td class="text-start">동화작가 과제입니다.<span class="text-danger ms-1">[2]</span></td>
+                                                    <td>원빈</td>
+                                                    <td>2021.08.08</td>
+                                                    <td>2021.08.08</td>
+                                                    <td>2021.08.08</td>
+                                                </tr>
+
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td>9</td>
+                                                    <td class="text-start">동화작가 과제입니다.</td>
+                                                    <td>원빈</td>
+                                                    <td>2021.08.08</td>
+                                                    <td>2021.08.08</td>
+                                                    <td>2021.08.08</td>
+                                                </tr>
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td>8</td>
+                                                    <td class="text-start">동화작가 과제입니다.</td>
+                                                    <td>원빈</td>
+                                                    <td>2021.08.08</td>
+                                                    <td>2021.08.08</td>
+                                                    <td> </td>
+                                                </tr>
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td>7</td>
+                                                    <td class="text-start">동화작가 과제입니다.</td>
+                                                    <td>원빈</td>
+                                                    <td>2021.08.08</td>
+                                                    <td>2021.08.08</td>
+                                                    <td> </td>
+                                                </tr>
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td>6</td>
+                                                    <td class="text-start">동화작가 과제입니다.</td>
+                                                    <td>원빈</td>
+                                                    <td>2021.08.08</td>
+                                                    <td>2021.08.08</td>
+                                                    <td>2021.08.08</td>
+                                                </tr>
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td>5</td>
+                                                    <td class="text-start">동화작가 과제입니다.</td>
+                                                    <td>원빈</td>
+                                                    <td>2021.08.08</td>
+                                                    <td>2021.08.08</td>
+                                                    <td>2021.08.08</td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+
+
+                                        </div> <!-- end card body-->
+                                    </div> <!-- end card -->
+                                </div><!-- end col-->
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<script type="text/javaScript">
+    let table;
+
+    $(document).ready(function () {
+
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02 a').addClass('active');
+
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+                {"width": "3%", "targets": 1}
+            ],
+            "searching": false, //검색 삭제
+            "ordering": false,
+            "scrollX": true,
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+
+    });
+
+
+    $('#table tbody').on('click', 'td', function () {
+        let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+        let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+        let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+        let totalColumnCount = table.columns().count(); //전체 열 갯수
+        let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+
+        if (indexColumn < totalColumnCount) {
+            location.href = conPath + "pub2/lecture/homework/detail?id=" + indexData;
+        }
+    });
+
+    //팀 대시보드
+    function moveDashboard() {
+        location.href = conPath + "pub2/lecture/dashboard/team";
+    }
+
+
+</script>
+
+</body>
+
+</html>

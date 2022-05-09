@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--/*-->
+<div>
+    해당 주석은 타임리프가 처리하며 삭제합니다.
+    변수에? 로 null 처리를 합니다.
+</div>
+<!--*/-->
+
+<h3>아이디</h3>
+<span th:text='${userPkId}'></span>
+<h3>이름</h3>
+<span th:text='${userName}'></span>
+<h3>UserModel</h3>
+<span th:text='${reqModel?.toString()}'></span>
+<h3></h3>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/notice.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+    <style>
+        table {
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 R-03 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">공지사항 상세</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/notice/list}">공지사항</a></li>
+                                    <li class="breadcrumb-item active">공지사항 상세</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="mb-3 notice_title">
+                                            <p class="" th:text='${resModel?.boardTitle}'></p>
+                                        </div>
+
+                                        <div class="mb-3 notice_text">
+                                            <p th:utext='${resModel?.boardContent}'>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 하단 버튼 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="float-start">
+                                        <button type="button" class="btn btn-outline-primary btn_bg"
+                                                onclick="moveBack();">공지 목록
+                                        </button>
+                                    </div>
+                                    <div class="float-end button-list">
+                                        <button type="button" class="btn btn-outline-danger btn_bg"
+                                                data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                onclick="delNotice(0);">공지 삭제
+                                        </button>
+                                        <button type="button" class="btn btn-outline-warning btn_bg" onclick="moveUpdate();">공지
+                                            수정
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+<script th:src="@{/assets/js/summernote.min.js}"></script>
+
+<!-- Init js 에디터-->
+
+
+<script type="text/javaScript">
+
+    /*<![CDATA[*/
+    let msg = "[[${msg}]]";
+    /*]]>*/
+
+    /*<![CDATA[*/
+    let boardId = [[${resModel.boardId}]];
+    /*]]>*/
+
+    let table;
+
+    $(document).ready(function () {
+        $('.menu01').addClass('menuitem-active');
+        $('.menu01 a').addClass('active');
+
+
+        if (msg != "") {
+            alert(msg);
+        }
+    });
+
+
+    //알림
+    function delNotice(params) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '삭제 알림',
+            html: '공지사항을 삭제 하시겠습니까?<br/> 삭제시 복구가 불가능합니다.',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '삭제', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                location.href =  conPath + "board/delete?id=" + boardId;
+
+
+                // Swal.fire('삭제가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+
+    }
+
+    //공지사항 목록으로
+    function moveBack() {
+        location.href =  conPath + "board/list";
+    }
+
+    //공지사항 수정
+    function moveUpdate() {
+        location.href =  conPath + "board/register?id=" + boardId + "&type=edit";
+    }
+
+</script>
+
+</body>
+
+</html>

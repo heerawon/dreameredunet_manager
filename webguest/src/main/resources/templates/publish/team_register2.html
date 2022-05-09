@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/team.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-01-03-03 / Lecture-01-04 등록 & 수정-->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">팀등록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/team/list}">팀목록</a></li>
+                                    <li class="breadcrumb-item active">팀등록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="mb-3 col-lg-2">
+                                            <label class="form-label">프로그램</label>
+                                            <div class="d-table-cell align-middle">
+                                                <select name="programName" class="form-select">
+                                                    <option value="1">키즈 (7세~10세)</option>
+                                                    <option value="2">주니어 (11세~13세)</option>
+                                                    <option value="3">유스 (14세~16세)</option>
+                                                    <option value="4">하이틴 (17세~19세)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-lg-3">
+                                            <label class="form-label">팀명 <span class="text-danger">*</span></label>
+                                            <input name="teamName" type="text" class="form-control" required placeholder="팀명을 입력해 주세요.">
+                                        </div>
+
+                                        <div class="mb-3 col-lg-3">
+                                            <label class="form-label">전체강의횟수</label>
+                                            <input name="classCount" type="text" class="form-control">
+                                        </div>
+
+                                        <div class="mb-3 col-lg-4">
+                                            <label class="form-label">강의기간</label>
+                                            <div class="classPeriod">
+                                                <input name="classPeriod" class="form-control" type="date" required> ~ <input name="classPeriod" class="form-control float-right"
+                                                                                                                              type="date" required>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="grayLine"></div>
+
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="form-label form_title">강사</label>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <div class="mb-2 pt-1">
+                                                        <img th:src='@{/images/teacher01.png}' class="img-fluid rounded"/>
+                                                    </div>
+                                                    <button type="button" class="btn btn-outline-primary align-bottom" onclick="moveTeacherList();">강사 목록</button>
+                                                </div>
+
+                                                <div class="col-md-10">
+                                                    <div class="mb-2">
+                                                        <label class="form-label">강의 소개</label>
+                                                        <div>
+                                                            <textarea class="form-control" id="lectureIntroduction" rows="5" placeholder="강의 소개를 작성해 주세요."></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-label">강의자료 YouTube 링크</label>
+                                                        <input name="lectureMtrls" type="text" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="grayLine"></div>
+
+                                <div class="card-body">
+                                    <label class="form-label form_title">일정</label>
+                                    <p class="scheduleText m-0">아래 달력의 날짜를 클릭하시면 해당 날짜의 세부 내용을 보실 수 있습니다.</p>
+
+                                    <div class="scheduleBox">
+                                        <div class="row">
+                                            <div class="col-md-10 align-items-center scheduleWrap">
+                                                <div class="calenderDay">
+                                                    <i class="ri-calendar-check-line calenderIcon"></i>
+                                                    <p class="mb-0">2021-07-19</p>
+                                                </div>
+
+                                                <div class="calenderData position-relative">
+                                                    <p>2021년 07월 19일 오늘 일정은 없습니다.</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2 scheduleWrap scheduleClassCount">
+                                                <div class="w-100 overflow-hidden">
+                                                    <p class="">등록된 강의 횟수 : 0회</p>
+                                                </div>
+                                                <div class="w-100 overflow-hidden text-danger">
+                                                    <p class="">등록할 강의 횟수 : 22회</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 두번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">수업요일 <span class="text-danger">*</span></label>
+                                            <div class="pt-1 pb-1">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox">
+                                                    <label class="form-check-label">월</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox">
+                                                    <label class="form-check-label">화</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox">
+                                                    <label class="form-check-label">수</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox">
+                                                    <label class="form-check-label">목</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox">
+                                                    <label class="form-check-label">금</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox">
+                                                    <label class="form-check-label">토</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox">
+                                                    <label class="form-check-label">일</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label class="form-label">개강일 <span class="text-danger">*</span></label>
+                                            <input name="classDate" class="form-control" type="date">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">수업시간 <span class="text-danger">*</span></label>
+                                            <input name="classTime" class="form-control" type="time">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label">수업일수 <span class="text-danger">*</span></label>
+                                            <input name="dayNumber" type="text"
+                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" class="form-control" required
+                                                   placeholder="수업 일수 입력">
+                                        </div>
+
+                                        <div class="mt-3">
+                                            <button type="button" class="btn btn-primary waves-effect waves-light btn_bg me-2">생성</button>
+                                            <p class="d-inline-block input_title_sm">*수업 요일과 개강일, 수업 일수 작성 후 생성 버튼을 누르면 수업 회차가 자동으로 생성됩니다.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 세번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">회차 <span class="text-danger">*</span></label>
+
+                                        <div class="table-responsive-xl">
+                                            <table id="table" class="table dt-responsive nowrap w-100">
+                                                <thead>
+                                                <tr class="text-center">
+                                                    <th class="col-1">#</th>
+                                                    <th class="col-4">수업날짜/시간</th>
+                                                    <th class="col-5">줌링크</th>
+                                                    <th class="col-1">과제제출 필요</th>
+                                                    <th class="col-1">삭제</th>
+
+                                                </tr>
+                                                </thead>
+
+
+                                                <tbody id="divChapter">
+                                                <!-- addChapter()로 동적 생성-->
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+                                        <div>
+                                            <p class="d-inline-block input_title_sm">*직접 날짜를 입력해서 회차를 추가할 수 있습니다.</p>
+
+                                            <div class="d-inline-block float-end">
+                                                <button type="button" class="btn btn-primary waves-effect waves-light btn80" onclick="addChapter()">추가</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 네번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <label class="form-label mb-3 form_title">학생</label>
+                                    <div class="titleTopBtn">
+                                        <button type="button" class="btn btn-outline-primary align-bottom" onclick="moveStudentList()">학생 목록</button>
+                                    </div>
+
+                                    <div class="clean"></div>
+
+                                    <div class="row">
+                                        <div class="studentBox col-xl-4 col-md-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="studentMbti float-start rounded">
+                                                        <img th:src='@{/images/teacher01.png}' class="img-fluid"/>
+                                                    </div>
+                                                    <div class="studentInfo float-start">
+                                                        <p class="studentInfo_txt01"><b>NTJS</b> 원빈 <span>(1984.01.12)</span></p>
+                                                        <ul class="studentClass">
+                                                            <li>하이틴 3팀</li>
+                                                            <li>주니어 1팀</li>
+                                                            <li class="specialClass text-success">독서활동 1팀</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="studentDle">
+                                                        <a data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                           onclick="delStudent(0);"><i class="mdi mdi-close"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+
+                        <!-- 하단 버튼 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-start">
+                                    <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">취소</button>
+                                </div>
+                                <div class="float-end button-list">
+                                    <button type="submit" class="btn btn-primary btn_bg" onclick="moveDetail();">등록 완료</button>
+                                    <button type="submit" class="btn btn-primary btn_bg" onclick="moveDetail();">수정 완료</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<script type="text/javaScript">
+    let table;
+    let cntChapter = 0;
+
+    $(document).ready(function () {
+        $('.menu03').addClass('menuitem-active');
+        $('.menu03-menu').addClass('show');
+        $('.menu03-1').addClass('active');
+
+        addChapter();
+
+
+    });
+
+    //회차 추가
+    function addChapter() {
+        let ele = '<tr class="rowChapter text-center">\n' +
+            '                                                <td>1</td>\n' +
+            '                                                <td>\n' +
+            '                                                    <div class="d-inline-block float-left dayTime">\n' +
+            '                                                        <input class="form-control" type="date" name="classDate">\n' +
+            '                                                    </div>\n' +
+            '                                                    <div class="d-inline-block float-left dayTime">\n' +
+            '                                                        <input class="form-control" type="time" name="classTime">\n' +
+            '                                                    </div>\n' +
+            '                                                </td>\n' +
+            '                                                <td><input type="text" class="form-control" name="classUrl" placeholder="줌 링크 입력"></td>\n' +
+            '                                                <td>\n' +
+            '                                                    <input class="form-check-input" type="checkbox">\n' +
+            '                                                </td>\n' +
+            '                                                <td>\n' +
+            '                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn80" onclick="delChapter(this)">삭제</button>\n' +
+            '                                                </td>\n' +
+            '                                            </tr>';
+
+        if (cntChapter == 0) {
+            $('tr.rowChapter').remove();
+        }
+        $('#divChapter').append(ele);
+
+        cntChapter++;
+    }
+
+    //회차 없을 시
+    function delChapter(arguments) {
+        let ele = '<tr class="rowChapter">' +
+            '<td class="position-relative text-center pt-4 pb-4" colspan="5">회차를 추가 해주세요.' +
+            '</td>' +
+            '</tr>';
+
+        $(arguments).parents('tr.rowChapter').remove();
+        cntChapter--;
+
+        if (cntChapter == 0) {
+            console.log('cn000000');
+            $('#divChapter').append(ele);
+        }
+    }
+
+
+    //알림
+    function delStudent(params) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '탈퇴 알림',
+            html: '팀원을 탈퇴 시키시겠습니까?',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '탈퇴', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                Swal.fire('삭제가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+
+    }
+
+    //강사목록
+    function moveTeacherList() {
+        location.href =  conPath + "pub/team/register/teacher";
+    }
+
+    //학생목록
+    function moveStudentList() {
+        location.href =  conPath + "pub/team/register/student";
+    }
+
+    //뒤로
+    function moveBack() {
+        location.href =  conPath + "pub/team/list";
+    }
+
+    //등록
+    function moveDetail() {
+        location.href = "/pub/team/detail";
+    }
+
+</script>
+
+</body>
+
+</html>

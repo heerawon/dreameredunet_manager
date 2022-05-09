@@ -1,0 +1,139 @@
+<!-- Topbar Start -->
+<div class="navbar-custom" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="container-fluid">
+
+        <ul class="list-unstyled topnav-menu float-end mb-0">
+
+            <li class="dropdown notification-list topbar-dropdown">
+                <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light"
+                   data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
+                   aria-expanded="false">
+<!--                    <img th:src="@{/assets/images/users/avatar-1.jpg}" alt="user-image" class="rounded-circle">-->
+                    <span class="pro-user-name ms-1">
+                        <b>[<span th:text="${session.user.role.title}"></span>]</b> [[${session.user.name}]] <i class="mdi mdi-chevron-down"></i>
+                            </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end profile-dropdown ">
+                    <!-- item-->
+<!--                    <div class="dropdown-header noti-title">-->
+<!--                        <h6 class="text-overflow m-0">Welcome !</h6>-->
+<!--                    </div>-->
+                    <!-- item-->
+                    <a href="/manager/auth/logout" class="dropdown-item notify-item">
+                        <i class="ri-logout-box-line"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </li>
+
+        </ul>
+
+        <!-- LOGO -->
+        <div class="logo-box">
+            <a href="/manager" class="logo logo-light text-center">
+               <span class="logo-sm">
+                    <img th:src="@{/assets/images/logo-dream-sm.png}" alt="" height="30">
+               </span>
+                <span class="logo-lg">
+                    <img th:src="@{/assets/images/logo-dream.png}" alt="" height="35">
+                </span>
+            </a>
+        </div>
+
+        <ul class="list-unstyled topnav-menu topnav-menu-left m-0">
+            <li>
+                <button class="button-menu-mobile waves-effect waves-light">
+                    <i class="fe-menu"></i>
+                </button>
+            </li>
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!-- end Topbar -->
+
+<!-- ========== Left Sidebar Start ========== -->
+<div class="left-side-menu">
+
+    <!-- LOGO -->
+    <div class="logo-box">
+        <a href="/manager" class="logo logo-light text-center">
+                <span class="logo-sm">
+                    <img th:src="@{/assets/images/logo-dream-sm.png}" alt="" height="30">
+                </span>
+            <span class="logo-lg">
+                    <img th:src="@{/assets/images/logo-dream.png}" alt="" height="35">
+                </span>
+        </a>
+    </div>
+
+    <div class="h-100" data-simplebar>
+
+        <!--- Sidemenu -->
+        <div id="sidebar-menu">
+
+            <ul id="side-menu">
+
+                <li class="menu-title mt-2">일정</li>
+                <li class="menu01">
+                    <a class="nav-link" th:href="@{/schedule/upcomingLecture}">
+                        <i class="ri-calendar-event-line"></i>
+                        <span>일정</span>
+                    </a>
+                </li>
+
+                <li class="menu-title mt-2">내강의</li>
+                <li class="menu02">
+                    <a class="nav-link" th:href="@{/myLecture/dashboard}">
+                        <i class="ri-book-2-line"></i>
+                        <span>내강의</span>
+                    </a>
+                </li>
+                <li class="menu-title mt-2">강의자료</li>
+                <li class="menu04">
+                    <a class="nav-link" th:href="@{/t_reference}">
+                        <i class="ri-book-2-line"></i>
+                        <span>강의자료</span>
+                    </a>
+                </li>
+
+                <li class="menu-title mt-2">커뮤니티</li>
+                <li class="menu03">
+                    <a href="#setting" data-bs-toggle="collapse" aria-expanded="false" aria-controls="sidebarLayouts">
+                        <i class="ri-question-answer-line"></i>
+                        <span>커뮤니티</span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse menu03-menu" id="setting">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class="nav-link menu03-1" th:href="@{/qa/list}">Q&A</a>
+                            </li>
+                            <li>
+                                <a class="nav-link menu03-2" th:href="@{/homework/list}">과제</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="menu-title mt-2">내정보</li>
+                <li class="menu01">
+                    <a class="nav-link" th:href="@{/mypage/info}">
+                        <i class="mdi mdi-account-circle-outline"></i>
+                        <span>내정보</span>
+                    </a>
+                </li>
+
+
+            </ul>
+
+        </div>
+        <!-- End Sidebar -->
+
+        <div class="clearfix"></div>
+
+    </div>
+    <!-- Sidebar -left -->
+
+</div>
+<!-- Left Sidebar End -->

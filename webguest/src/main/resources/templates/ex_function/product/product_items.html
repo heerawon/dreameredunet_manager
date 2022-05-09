@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+    <!--custom Css -->
+    <!-- end custom css -->
+    <!-- AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.serializeObject/2.0.3/jquery.serializeObject.min.js"></script>
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Setting-02-01-->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">상품 관리</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">상품 관리</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <span class="text-danger"> * 수정시 오기 방지를 위해 비공개로 전환 됩니다.</span>
+
+                                    <table id="table" class="table table-hover nowrap w-100">
+                                        <thead>
+                                        <tr class="text-center">
+                                            <!--                                        <th>dataID</th>-->
+                                            <th>#</th>
+                                            <th>판매상품명</th>
+                                            <th class="text-end">금액</th>
+                                            <th>공개여부</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each='_,num : ${lsData}' class="">
+                                            <td class="text-center" th:text='${num.count}'></td>
+
+                                            <td class="text-center" th:text='${_.itemsName}'></td>
+                                            <td class="text-end" th:text="${#numbers.formatInteger(_.itemsPrice,0,'COMMA')}"></td>
+                                            <td class="text-center">
+                                                <button type="button"
+                                                        class="btn btn-sm btn-rounded waves-effect waves-light"
+                                                        th:classappend="${_.isActive eq 1 ? 'btn-success' : 'btn-secondary'}"
+                                                        th:onclick="changeActive([[${_.productItemsId}]],[[${_.isActive}]],this);"></span>
+                                                    <span  th:text="${_.isActive eq 1 ? '공개' : '비공개'}"></span></button>
+                                            </td>
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-sm btn-outline-warning " th:onclick="moveRegister([[${_.productItemsId}]])">수정</button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger " th:onclick="delSubscribe([[${_.productItemsId}]])">삭제</button>
+                                            </td>
+                                        </tr>
+
+
+                                        </tbody>
+                                    </table>
+
+                                    <!--                                    <div id="divChapter">-->
+<!--                                        <div class="mb-2 row">-->
+<!--                                            <div class="col-md-4">-->
+<!--                                                <input name="subscribe" class="form-control" value="추가 구매 상품">-->
+<!--                                            </div>-->
+<!--                                            <div class="col-md-5">-->
+<!--                                                <input name="subscribe" class="form-control subscribeInput" value="120,000">원-->
+<!--                                            </div>-->
+<!--                                            <div class="col-md-1">-->
+<!--                                                <button type="button" class="btn btn-dark " onclick="delSubscribe()">삭제</button>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="mb-2 row">-->
+<!--                                            <div class="col-md-4">-->
+<!--                                                <input name="subscribe" class="form-control" value="교구 상품">-->
+<!--                                            </div>-->
+<!--                                            <div class="col-md-5">-->
+<!--                                                <input name="subscribe" class="form-control subscribeInput" value="300,000">원-->
+<!--                                            </div>-->
+<!--                                            <div class="col-md-1">-->
+<!--                                                <button type="button" class="btn btn-dark " onclick="delSubscribe()">삭제</button>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="mb-2 row">-->
+<!--                                            <div class="col-md-4">-->
+<!--                                                <input name="subscribe" class="form-control" value="교재 상품[주니어 B반]">-->
+<!--                                            </div>-->
+<!--                                            <div class="col-md-5">-->
+<!--                                                <input name="subscribe" class="form-control subscribeInput" value="550,000">원-->
+<!--                                            </div>-->
+<!--                                            <div class="col-md-1">-->
+<!--                                                <button type="button" class="btn btn-dark " onclick="delSubscribe()">삭제</button>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="mb-2 row">-->
+<!--                                            <div class="col-md-4">-->
+<!--                                                <input name="subscribe" class="form-control" value="교재 상품[주니어 A반]">-->
+<!--                                            </div>-->
+<!--                                            <div class="col-md-5">-->
+<!--                                                <input name="subscribe" class="form-control subscribeInput" value="1,000,000">원-->
+<!--                                            </div>-->
+<!--                                            <div class="col-md-1">-->
+<!--                                                <button type="button" class="btn btn-dark " onclick="delSubscribe()">삭제</button>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+
+                                    <button type="button" class="btn btn-primary waves-effect waves-light btn80" onclick="addItems()">추가</button>
+                                </div>
+                            </div>
+
+
+                            <!-- 하단 버튼 -->
+<!--                            <div class="card">-->
+<!--                                <div class="card-body">-->
+<!--                                    <div class="float-end button-list">-->
+<!--                                        <button type="button" class="btn btn-outline-primary btn_bg"-->
+<!--                                                data-bs-toggle="modal" data-bs-target="#delete-modal"-->
+<!--                                                onclick="save(0);">저장-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+                        </form>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+<script th:src="@{/assets/js/summernote.min.js}"></script>
+
+<!-- Init js 에디터-->
+
+
+<script type="text/javaScript">
+    let cntChapter = 0;
+
+
+    $(document).ready(function () {
+        // addChapter();
+    });
+
+    function addItems(){
+        location.href = conPath + "product/items/register"
+    }
+
+    // 추가
+    // function addChapter() {
+    //     let ele = '<div class="mb-2 row rowChapter">\n' +
+    //         '                                            <div class="col-md-4">\n' +
+    //         '                                                <input name="subscribe" class="form-control">\n' +
+    //         '                                            </div>\n' +
+    //         '                                            <div class="col-md-5">\n' +
+    //         '                                                <input name="subscribe" class="form-control subscribeInput">원\n' +
+    //         '                                            </div>\n' +
+    //         '                                            <div class="col-md-1">\n' +
+    //         '                                                <button type="button" class="btn btn-dark " onclick="delSubscribe()">삭제</button>\n' +
+    //         '                                            </div>\n' +
+    //         '                                        </div>';
+    //
+    //     if (cntChapter == 0) {
+    //         $('div.rowChapter').remove();
+    //     }
+    //     $('#divChapter').append(ele);
+    //
+    //     cntChapter++;
+    // }
+
+    // 공개 비공개 전환, Ajax 추가 되어야 함
+    function changeIsActive(itemId,obj){
+        if($(obj).hasClass("btn-success")){
+            $(obj).removeClass("btn-success");
+            $(obj).addClass("btn-secondary");
+            $(obj).children('span').text('비공개');
+        }else{
+            $(obj).removeClass("btn-secondary");
+            $(obj).addClass("btn-success");
+            $(obj).children('span').text('공개');
+        }
+    }
+    //알림
+    function delSubscribe(params) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '삭제 알림',
+            html: '삭제 하시겠습니까?',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '삭제', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                location.href= conPath + "product/items/delete?id="+params;
+                Swal.fire('삭제가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
+
+    //알림
+    function save(params) {
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: '구독료 관리이 저장 되었습니다.',
+            showConfirmButton: false,
+            timer: 1500
+        })
+
+    }
+
+    // 구독료 수정 페이지로 이동
+    const moveRegister = function (id) {
+        location.href= conPath + "product/items/register?type=edit&id="+id;
+    }
+
+    //공개 여부 변경
+    const changeActive = function (id, isActive, argument) {
+
+        let sFormData = new FormData();
+        sFormData.append('productItemsId', id);
+        if(isActive == 0){
+            sFormData.append('isActive', 1 );
+        }else {
+            sFormData.append('isActive', 0 );
+        }
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'product/items/setActive', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+
+                if(result.data.status == 200){
+                    //TODO : active
+                    if($(argument).hasClass("btn-success")){
+                        $(argument).removeClass("btn-success");
+                        $(argument).addClass("btn-secondary");
+                        $(argument).children('span').text('비공개');
+                    }else{
+                        $(argument).removeClass("btn-secondary");
+                        $(argument).addClass("btn-success");
+                        $(argument).children('span').text('공개');
+                    }
+                }else{
+                    alert(result.data.message);
+                }
+
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+
+</script>
+
+</body>
+
+</html>

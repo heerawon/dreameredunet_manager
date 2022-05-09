@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!--custom Css -->
+    <!-- end custom css -->
+
+    <!-- AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.serializeObject/2.0.3/jquery.serializeObject.min.js"></script>
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Lecture-02 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">명사 특강</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">명사 특강 신청 회원 관리</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="searchTable mb-3">
+
+                                    <div class="articleWrap row">
+                                        <div class="col-lg-3 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>이름</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input type="text" class="form-control" name="userName" id="userName" th:value="${userName}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>성별</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <div class="form-check float-start">
+                                                    <input class="form-check-input" type="radio" name="studentGender" id="sex1" value="" checked>
+                                                    <label class="form-check-label" for="sex1">
+                                                        전체
+                                                    </label>
+                                                </div>
+                                                <div class="form-check float-start ms-2">
+                                                    <input class="form-check-input" type="radio" name="studentGender" id="sex2" value="M"
+                                                           th:checked="${studentGender} eq 'M'">
+                                                    <label class="form-check-label" for="sex2">
+                                                        남성
+                                                    </label>
+                                                </div>
+                                                <div class="form-check float-start ms-2">
+                                                    <input class="form-check-input" type="radio" name="studentGender" id="sex3" value="F"
+                                                           th:checked="${studentGender} eq 'F'">
+                                                    <label class="form-check-label" for="sex3">
+                                                        여성
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>생년월일</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input type="date" class="form-control dateInput" name="birthStartDt" id="birthStartDt" th:value="${birthStartDt}"> ~
+                                                <input type="date" class="form-control dateInput" name="birthEndDt" id="birthEndDt" th:value="${birthEndDt}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--검색 날짜 articleWrap -->
+                                    <th:block th:include="ex_function/init/init_pub_filter_bar.html"></th:block>
+                                </div>
+
+                                <div class="button-list text-center mb-3">
+                                    <button type="button" class="btn btn-primary btn_bg btn90" id="btn_serch">검색</button>
+                                </div>
+
+
+                                <table id="table" class="table nowrap w-100">
+                                    <thead>
+                                    <tr class="text-center">
+                                        <th>dataID</th>
+                                        <th>#</th>
+                                        <th>신청일시</th>
+                                        <th>이름</th>
+                                        <th>생년월일</th>
+                                        <th>상태</th>
+                                        <th>승인</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody id="divChapter">
+                                    <tr th:each='_,num : ${resList}' class="rowChapter text-center">
+                                        <td th:text='${_.celebLectureId}'></td>
+                                        <td th:text='${num.count}'></td>
+                                        <td th:text="${_.regDt}"></td>
+                                        <td th:text='${_.userName}'></td>
+                                        <td th:text='${_.studentBirth}'></td>
+                                        <td>
+                                            <th:block th:switch="${_.celebLectureStatus}">
+                                                <span th:case="-1">승인</span>
+                                                <span th:case="0">신청</span>
+                                            </th:block>
+                                            <input type="hidden" th:value="${_.celebLectureStatus}">
+                                        </td>
+                                        <td>
+                                            <th:block th:if="${_.celebLectureStatus != -1 }">
+                                                <button type="button" class="btn btn-primary btn_bg"
+                                                        th:onclick="updateStatus(this,[[${_.celebLectureId}]]);"
+                                                        th:text="${_.celebLectureStatus == 0? '신청 승인':'수업 종료'}"></button>
+                                            </th:block>
+                                            <span th:if="${_.celebLectureStatus == -1}" th:text="${_.allowDt}"></span>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<!-- custom date setting  -->
+<script th:src="@{/assets/js/date_setting.js}"></script>
+<script type="text/javaScript">
+
+    let table;
+    let selectedArguments;
+
+    //오늘 날짜 세팅
+    let strToday = nowYear+"-"+(nowMonth+1)+"-"+nowDay;
+
+    $(function () {
+
+        console.log(strToday);
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "searching": false, //검색 삭제
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+
+        //조건 검색 동작
+        $("#btn_serch").on( "click", function() {
+            const userName = $("#userName").val();
+            const studentGender = $("input[name = studentGender]:checked").val();
+            const birthStartDt = $("#birthStartDt").val();
+            const birthEndDt = $("#birthEndDt").val();
+            const searchStartDt = $("#searchStart").val();
+            const searchEndDt = $("#searchEnd").val();
+            location.href = conPath+"celebLecture/celebrityLectures?userName="+userName+"&studentGender="+studentGender+"&birthStartDt="+birthStartDt+"&birthEndDt="+birthEndDt+"&searchStartDt="+searchStartDt+"&searchEndDt="+searchEndDt;
+        });
+
+        //날짜 세팅 버튼 동작
+        $(".btn_func_date").on("click", function() {
+            setStartEnd($(this));
+        });
+
+        //날짜 초기화 버튼 동작
+        $("#btn_set_no_date").on( "click", function() {
+            $("#searchStart").val("");
+            $("#searchEnd").val("");
+        });
+    });
+
+    $('#table tbody').on('click', 'td', function () {
+        let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+        let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+        let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+        let totalColumnCount = table.columns().count(); //전체 열 갯수
+        let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+
+        // if (indexColumn < totalColumnCount) {
+        //     location.href = "/pub/sale/detail?id=" + indexData;
+        // }
+    });
+
+    //신청 상태 변경
+    const updateStatus = function (arguments,id) {
+        selectedArguments = arguments;
+        const status = $(arguments).parents('tr.rowChapter').children("td:eq(4)").find("input").val();
+
+        let nextStatus = 0;
+
+        if(status ==0){
+            nextStatus  = -1;
+        }
+
+        // if (status == 0) {
+        //     nextStatus = 1;
+        // } else if (status == 1) {
+        //     nextStatus = -1;
+        // } else {
+        //     return null;
+        // }
+
+        let sFormData = new FormData();
+        sFormData.append('celebLectureId', id);
+        sFormData.append('celebLectureStatus', nextStatus);
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'celebLecture/updateStatus', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+                console.log("result",result);
+                console.log("result.data",result.data);
+                console.log("result.data.status",result.data.status);
+                console.log("result.data.data",result.data.data);
+                console.log("result.data.message",result.data.message);
+
+                if(result.data.status == 200){
+                    console.log(nextStatus);
+                    console.log($(selectedArguments).parents('tr.rowChapter').children("td:eq(4)").text());
+
+                    $(selectedArguments).parents('tr.rowChapter').children("td:eq(4)").text( "승인" );
+                    $(selectedArguments).parents('tr.rowChapter').children("td:eq(5)").text(strToday);
+                    $(selectedArguments).hide();
+
+                    // if(nextStatus == 1){
+                    //     console.log("nextStatus == 1");
+                    //     $(selectedArguments).html("수업 종료");
+                    //     $(selectedArguments).parents('tr.rowChapter').children("td:eq(4)").find("input").val(1);
+                    // }else{
+                    //     console.log("nextStatus == -1");
+                    //     // $(arguments).hide();
+                    //     $(selectedArguments).html("종료됨");
+                    //     $(selectedArguments).attr('disabled', true);
+                    //     $(selectedArguments).parents('tr.rowChapter').children("td:eq(4)").find("input").val(-1);
+                    // }
+                }else{
+                    if(result.data.status != 200){
+                        swal.fire(result.data.message);
+                    }
+                }
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+
+    }
+
+    //input date 세팅부
+    const setStartEnd = function (argument) {
+        let type = String($(argument).attr("id")).trim();
+        const getDates =  getFormatDate(type);
+
+        $("#searchStart").val("");
+        $("#searchEnd").val("");
+        $("#searchStart").val(getDates.startDt);
+        $("#searchEnd").val(getDates.endDt);
+    }
+</script>
+
+</body>
+
+</html>

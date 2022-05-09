@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!-- AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.serializeObject/2.0.3/jquery.serializeObject.min.js"></script>
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/notice.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Member-01-02 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">사용자 상세</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/user/list}">사용자 목록</a></li>
+                                    <li class="breadcrumb-item active">사용자 수정</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <form id="frmStudentInfo" th:action='@{/student/update}' th:object='${resModel}' method="post">
+                    <div class="col-lg-12">
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+
+                                    <div class="row">
+                                        <input type="hidden" th:field="*{userId}" th:value="${resModel?.userId}">
+                                        <input type="hidden" id="studentGender" th:field="*{studentGender}" th:value="${resModel?.studentGender}">
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">이름 <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="userName" th:field="*{userName}" th:value='${resModel?.userName}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">성별</label>
+
+                                            <div>
+                                                <div class="form-check float-start ms-2">
+                                                    <input class="form-check-input" type="radio" name="gender" id="gender1"
+                                                           th:value="M"
+                                                           th:checked="${resModel?.studentGender} eq 'M'" disabled="disabled">
+                                                    <label class="form-check-label" for="gender1">
+                                                        남성
+                                                    </label>
+                                                </div>
+                                                <div class="form-check float-start ms-2">
+                                                    <input class="form-check-input" type="radio" name="gender" id="gender2"
+                                                           th:value="F"
+                                                           th:checked="${resModel?.studentGender} eq 'F'" disabled="disabled">
+                                                    <label class="form-check-label" for="gender2">
+                                                        여성
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">생년월일</label>
+                                            <input class="form-control dateInput" type="date" id="studentBirth" th:field="*{studentBirth}" th:value='${resModel?.studentBirth}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">휴대전화 <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="studentCell"  th:field="*{studentCell}" th:value='${resModel?.studentCell}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">구독만료일</label>
+                                            <input class="form-control dateInput" type="date" id="expiredDt" th:field="*{expiredDt}" th:value="${#dates.format(resModel?.expiredDt, 'yyyy-MM-dd')}" disabled>
+<!--                                            <input name="joinDate" type="text" class="form-control" th:value="${#dates.format(resModel?.expiredDt, 'yyyy-MM-dd')}" disabled>-->
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">가입일</label>
+                                            <input name="joinDate" type="text" class="form-control" th:value='${resModel?.userRegDt}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">수강 중인 팀</label>
+                                            <input name="classCounting" type="text" class="form-control" th:value='${resModel?.teamName ne null ? resModel?.teamName:"수강중인 팀이 없습니다."}' disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">특별활동 중인 팀</label>
+                                            <input name="specialClassCounting" type="text" class="form-control" th:value='${resModel?.teamName2 ne null ? resModel?.teamName2 :"특별활동중인 팀이 없습니다." }' disabled>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="grayLine"></div>
+
+                                <div class="card-body position-relative">
+                                    <label class="form-label mb-3 form_title">주문내역</label>
+                                    <div class="titleTopBtn">
+<!--                                        <button type="button" class="btn btn-outline-primary align-bottom">전체보기</button>-->
+                                    </div>
+
+                                    <p class="totalOrder" th:text="|${orderList ne null?'총'+orderList.size()+'건':'총 0건'}|"></p>
+
+                                    <table id="table" class="table table-bordered nowrap w-100">
+                                        <thead>
+                                        <tr class="text-center">
+                                            <th>주문번호</th>
+                                            <th>결제일시</th>
+                                            <th>상품명</th>
+                                            <th>결제</th>
+                                            <th>결제금액</th>
+                                        </tr>
+                                        </thead>
+
+
+                                        <tbody>
+                                        <tr class="text-center" th:each="_,num : ${orderList}">
+                                            <td>
+                                                <span class="d-block">
+                                                    <a href="#" th:onclick="moveOrderDetails([[${_.itemsName}]],[[${_.orderId}]],[[${_.userId}]])">
+                                                        <ins>[[ ${_?.merchantUid} ]]</ins>
+                                                    </a>
+                                                </span>
+                                            </td>
+                                            <td>[[${#dates.format(_?.regDt, 'yyyy-MM-dd HH:mm')}]]</td>
+                                            <td>
+                                                <span th:if="${_?.subscribeName ne null}">[[ ${_?.subscribeName} ]]  </br>[[ ${_?.subscribeTerm} ]]일</span>
+                                                <span th:if="${_?.itemsName ne null}">[[ ${_?.itemsName} ]]</span>
+                                            </td>
+                                            <td>카드</td>
+                                            <td>[[ ${#numbers.formatInteger(_.totalPrice, 0, 'COMMA')} ]]</td>
+                                        </tr>
+
+                                        <tr th:if="${orderList.size()<1}">
+                                            <td colspan="5" style="text-align: center">주문 내역이 없습니다.</td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+
+                                <div class="grayLine"></div>
+
+                                <div class="card-body position-relative">
+                                    <label class="form-label mb-3 form_title">배송내역</label>
+                                    <div class="titleTopBtn">
+<!--                                        <button type="button" class="btn btn-outline-primary align-bottom">전체보기</button>-->
+                                    </div>
+
+                                    <p class="totalOrder" th:text="|${shippingList ne null?'총'+shippingList.size()+'건':'총 0건'}|"></p>
+
+                                    <table id="table2" class="table table-bordered nowrap w-100">
+                                        <thead>
+                                        <tr class="text-center">
+                                            <th>주문번호</th>
+                                            <th>결제상품</th>
+                                            <th>결제금액</th>
+                                            <th>상태</th>
+                                            <th>수령인</th>
+                                            <th>배송정보</th>
+                                        </tr>
+                                        </thead>
+
+
+                                        <tbody>
+                                        <tr class="text-center" th:each="_,num : ${shippingList}">
+                                            <td>[[ ${_?.merchantUid} ]]</td>
+                                            <td>
+                                                <span th:if="${_?.subscribeName ne null}">[[ ${_?.subscribeName} ]]  </br>[[ ${_?.subscribeTerm} ]]일</span>
+                                                <span th:if="${_?.itemsName ne null}">[[ ${_?.itemsName} ]]</span>
+                                            </td>
+                                            <td>[[ ${#numbers.formatInteger(_.totalPrice, 0, 'COMMA')} ]]</td>
+                                            <td>
+                                                <th:block th:if="${_?.shippingStatus eq '0'}">
+                                                    발송전<br/>
+                                                    <div><button type="button" class="btn btn-sm btn-outline-primary" th:onclick="moveSend([[${_.shippingId}]])">발송</button></div>
+                                                </th:block>
+                                                <th:block th:if="${_?.shippingStatus eq '1'}">
+                                                    발송완료<br/>
+                                                    <a href="#" th:onclick="moveSend([[${_.shippingId}]])">
+                                                        <span class="d-block"><ins>[[ ${_?.shippingCompany} ]][[ ${_?.shippingInvoice} ]]</ins></span>
+                                                    </a>
+                                                </th:block>
+                                            </td>
+                                            <td>[[ ${_?.receiverName} ]]<br/>[[ ${_?.receiverCell} ]]</td>
+                                            <td class="text-start">
+                                                ( [[${_?.receiverZipcode}]] )<br/>
+                                                [[${_?.receiverAddress}]]<br/>
+                                                배송정보 : [[${_?.memo}]]
+                                            </td>
+                                        </tr>
+
+                                        <tr th:if="${shippingList.size()<1}">
+                                            <td colspan="6" style="text-align: center">배송 내역이 없습니다.</td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+
+
+                            </div>
+
+
+
+                        <!-- 하단 버튼 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-start">
+                                    <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveList();">사용자 목록</button>
+                                </div>
+                                <div class="float-end button-list">
+                                    <button type="button" class="btn btn-outline-danger btn_bg" data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                            th:onclick="askWithdrawal([[${resModel?.userId}]]);">회원탈퇴</button>
+                                    <button type="button" class="btn btn-outline-warning btn_bg" onclick="updateOrInsert();" id="btn-update-invoice">수정</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    </form>
+
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+<script th:src="@{/assets/js/summernote.min.js}"></script>
+
+<!-- Init js 에디터-->
+
+
+<script type="text/javaScript">
+    /*<![CDATA[*/
+    let userRole = "[[${resModel?.userRole}]]";
+    /*]]>*/
+
+    let table;
+
+    $(function () {
+        $('.menu05').addClass('menuitem-active');
+        $('.menu05 a').addClass('active');
+    });
+
+    //성별 라디오 버튼
+    $("input[name=gender]").on("change",(event) => {
+        console.log( event.target.value );
+        $("#studentGender").val(event.target.value);
+    });
+
+    //사용자 목록으로
+    const moveList = () =>{
+        location.href = conPath + "student/list";
+    }
+
+    //발송버튼 (= 배송상세)
+    const moveSend = (id) =>{
+        window.open(conPath + "shipping/detail?id="+id);
+    }
+
+    //주문상세
+    const moveOrderDetails = (isType,id,userId) => {
+        let type = isType == null ? 'subscribe':'item';
+        let moveUrl = conPath + "order/detail?type=" + type + "&id=" + id + "&userId=" + encodeURI(userId);
+        window.open(moveUrl);
+    }
+
+    //회원정보 수정 버튼(disabled)
+    const updateOrInsert = () =>{
+        if($("#btn-update-invoice").text() == '수정'){
+            $("#userName").attr("disabled",false);
+            $("#studentBirth").attr("disabled",false);
+            $("#studentCell").attr("disabled",false);
+            $("#expiredDt").attr("disabled",false);
+            $("#btn-update-invoice").text("수정완료");
+
+            if(userRole=='GUEST'){
+                $("#expiredDt").attr("disabled",true);
+                // swal.fire("미결제 회원은 수정할 수 없습니다.");
+            }
+        }else{
+            memberUpdate();
+        }
+    }
+
+    //회원정보 수정(알림)
+    function memberUpdate() {
+        Swal.fire({
+            title: '알림',
+            html: '변경 내용을 저장 하시겠습니까?',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '수정', //확인 글자
+            confirmButtonColor: '#f1556c',
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                updateInvoice()
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+            }
+        })
+    }
+
+    //회원 수정부
+    const updateInvoice = () => {
+        var queryString = $("#frmStudentInfo").serialize() ;
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'student/update', data: queryString}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+
+                if(result.data.status == 200){
+                    console.log("result.data.data",result.data.data);
+                    $("#userName").attr("disabled",true);
+                    $("#studentBirth").attr("disabled",true);
+                    $("#studentCell").attr("disabled",true);
+                    $("#expiredDt").attr("disabled",true);
+                    $("#btn-update-invoice").text("수정");
+                    Swal.fire('수정 완료되었습니다.', '', 'success');
+                }else{
+                    Swal.fire(result.data.message, '', 'success');
+                }
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+
+    //회원 탈퇴(알림)
+    const askWithdrawal = (id) => {
+        Swal.fire({
+            title: '삭제 알림',
+            html: '탈퇴처리 하시겠습니까?',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '탈퇴', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                membershipWithdrawal(id);
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+            }
+        })
+    }
+
+    //회원 탈퇴 처리부
+    const membershipWithdrawal = (id) =>{
+        let sFormData = new FormData();
+        sFormData.append('id',id);
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'student/delete', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+                if(result.data.status == 200){
+                    let msg = '탈퇴처리가 완료되었습니다.<br>탈퇴 처리일 :'+result.data.data;
+                    Swal.fire(msg, '', 'success');
+                    location.href = conPath + "student/list";
+                }else{
+                    Swal.fire(result.data.message, '', 'success');
+                }
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+
+</script>
+
+</body>
+
+</html>

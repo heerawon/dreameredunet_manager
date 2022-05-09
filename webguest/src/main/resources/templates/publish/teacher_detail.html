@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/user.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Teacher-01-02 -->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">강사 상세</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/teacher/list}">강사관리</a></li>
+                                    <li class="breadcrumb-item active">강사 상세</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">ID</label>
+                                            <input name="teacherID" type="text" class="form-control" value="dreamer" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">강사이름</label>
+                                            <input name="teacherName" type="text" class="form-control" value="도지은" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">성별</label>
+                                            <input name="gender" type="text" class="form-control" value="여성" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">생년월일</label>
+                                            <input name="teacherBirthDate" type="text" class="form-control" value="2020-08-20" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">휴대전화</label>
+                                            <input name="teacherPhoneNumber" type="text" class="form-control" value="01045632144" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">이메일</label>
+                                            <input name="teacherEmail" type="text" class="form-control" value="12143 서울시강남구역삼동112-12102호" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">주소</label>
+                                            <input name="teacherAddress" type="text" class="form-control" value="dreamer@naver.com" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">프로필 사진</label>
+                                            <div class="">
+                                                <a class="me-2 mb-2 d-inline-block" id="profileImage">
+                                                    <img th:src='@{/images/teacher01.png}' class="img-fluid rounded" width="200"/>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">분야</label>
+                                            <div>
+                                                <textarea class="form-control" id="area" rows="10" disabled> 분야 입니다.</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">이력</label>
+                                            <div>
+                                                <textarea class="form-control" id="speck" rows="10" disabled> 이력 입니다.</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">소개말</label>
+                                            <div>
+                                                <textarea class="form-control" id="introduction" rows="10" disabled> 소개말 입니다.</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">배정된 팀</label>
+                                            <input name="team" type="text" class="form-control" value="주니어 1팀???" disabled>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+
+
+                        <!-- 하단 버튼 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-start">
+                                    <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">강사 목록</button>
+                                </div>
+                                <div class="float-end button-list">
+                                    <button type="button" class="btn btn-outline-primary btn_bg" data-bs-toggle="modal" data-bs-target="#delete-modal" onclick="delTeacher(0);">삭제</button>
+                                    <button type="button" class="btn btn-primary btn_bg" onclick="moveUpdate();">수정</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<script type="text/javaScript">
+    let table;
+    let cntChapter = 0;
+
+    $(document).ready(function () {
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02 a').addClass('active');
+
+    });
+
+    //알림
+    function delTeacher(params) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '삭제 알림',
+            html: '강사를 삭제 하시겠습니까? <br/> ' + '삭제시 복구가 불가능합니다.',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '삭제', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                Swal.fire('삭제가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+
+    }
+
+
+    //뒤로
+    function moveBack() {
+        location.href =  conPath + "teacher/list";
+    }
+
+    //수정
+    function moveUpdate() {
+        location.href =  conPath + "pub/teacher/register";
+    }
+
+</script>
+
+</body>
+
+</html>

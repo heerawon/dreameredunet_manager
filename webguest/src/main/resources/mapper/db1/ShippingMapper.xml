@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.ShippingMapper">
+    <!-- 택배사 조회 -->
+    <select id="selectShippingServiceList" resultType="ShippingServiceModel" parameterType="HashMap">
+        <![CDATA[
+        SELECT shipping_service_code, shipping_service_name
+        FROM dreamer.shipping_service SHP
+        ]]>
+    </select>
+
+    <!-- 배송 등록 여부 확인 -->
+    <select id="selectShippingStatus" resultType="ShippingModel" parameterType="HashMap">
+        <![CDATA[
+        SELECT SHP.shipping_id, SHP.fk_suser_id, SHP.fk_order_id, SHP.shipping_status
+        FROM dreamer.shipping SHP
+             JOIN dreamer.payment_order PO on SHP.fk_order_id = PO.order_id
+             LEFT JOIN pg_iamport PI on PO.fk_pg_iamport_id = PI.id
+             LEFT JOIN product_subscribe PS on PO.fk_product_subscribe_id = PS.product_subscribe_id
+             LEFT JOIN view_student_user USR on PO.fk_suser_id = USR.fk_suser_id
+        WHERE SHP.is_del = 0
+          AND SHP.fk_order_id = #{orderId}
+          AND SHP.fk_suser_id = #{userId}
+        ]]>
+    </select>
+
+    <!-- 배송 상세 -->
+    <select id="selectShippingDetail" resultType="ShippingModel" parameterType="HashMap">
+        <![CDATA[
+        SELECT SHP.shipping_id, SHP.fk_suser_id, SHP.fk_order_id, SHP.receiver_name, SHP.receiver_cell, SHP.receiver_zipcode,
+               SHP.receiver_address, SHP.shipping_status, SHP.memo, SHP.shipping_company, SHP.shipping_invoice,SHP.is_del,
+               DATE_FORMAT(SHP.send_dt,'%Y-%m-%d %H:%i')send_dt,DATE_FORMAT(SHP.reg_dt,'%Y-%m-%d %H:%i')reg_dt,
+               PO.fk_product_items_id,PO.fk_product_subscribe_id,PO.total_price,PS.subscribe_name,PS.subscribe_term,PI.merchant_uid,PIM.items_name,
+               USR.user_id, USR.user_name, DATE_FORMAT(USR.user_reg_dt,'%Y-%m-%d %H:%i')user_reg_dt,
+               USR.student_birth ,GROUP_CONCAT(VUT.team_name) team_name
+        FROM dreamer.shipping SHP
+             JOIN dreamer.payment_order PO on SHP.fk_order_id = PO.order_id
+             LEFT JOIN pg_iamport PI on PO.fk_pg_iamport_id = PI.id
+             LEFT JOIN product_items PIM on PIM.product_items_id = PO.fk_product_items_id
+             LEFT JOIN product_subscribe PS on PO.fk_product_subscribe_id = PS.product_subscribe_id
+             JOIN view_student_user USR on PO.fk_suser_id = USR.fk_suser_id
+             JOIN dreamer.team_member TMB on TMB.fk_suser_id = USR.fk_suser_id
+             JOIN dreamer.view_use_team VUT on VUT.team_id = TMB.fk_team_id
+        WHERE SHP.is_del = 0
+          AND SHP.shipping_id = #{shippingId}
+        ]]>
+    </select>
+
+    <!-- 배송 목록 -->
+    <select id="selectShippingList" resultType="ShippingModel" parameterType="HashMap">
+        <![CDATA[
+        SELECT SHP.shipping_id, SHP.fk_suser_id, SHP.fk_order_id, SHP.receiver_name, SHP.receiver_cell, SHP.receiver_zipcode,
+               SHP.receiver_address, SHP.shipping_status, SHP.memo, SHP.shipping_company, SHP.shipping_invoice,SHP.is_del,
+               DATE_FORMAT(SHP.send_dt,'%Y-%m-%d %H:%i')send_dt,DATE_FORMAT(SHP.reg_dt,'%Y-%m-%d %H:%i')reg_dt,
+               PO.fk_product_items_id,PO.fk_product_subscribe_id,PO.total_price,PS.subscribe_name,PS.subscribe_term,PI.merchant_uid,PIM.items_name,
+               USR.user_id, USR.user_name, DATE_FORMAT(USR.user_reg_dt,'%Y-%m-%d %H:%i')user_reg_dt,
+               USR.student_birth ,GROUP_CONCAT(VUT.team_name) team_name,SSV.shipping_service_name
+        FROM dreamer.shipping SHP
+             LEFT JOIN dreamer.payment_order PO on SHP.fk_order_id = PO.order_id
+             LEFT JOIN pg_iamport PI on PO.fk_pg_iamport_id = PI.id
+             LEFT JOIN product_items PIM on PIM.product_items_id = PO.fk_product_items_id
+             LEFT JOIN product_subscribe PS on PO.fk_product_subscribe_id = PS.product_subscribe_id
+             LEFT JOIN view_student_user USR on PO.fk_suser_id = USR.fk_suser_id
+             LEFT JOIN dreamer.team_member TMB on TMB.fk_suser_id = USR.fk_suser_id
+             LEFT JOIN dreamer.view_use_team VUT on VUT.team_id = TMB.fk_team_id
+             LEFT JOIN dreamer.shipping_service SSV on SHP.shipping_company = SSV.shipping_service_code
+        WHERE SHP.is_del = 0
+        ]]>
+        <if test="userId != NULL and userId != '' ">
+            AND USR.user_id = #{userId}
+        </if>
+        <if test="order != '' ">
+            AND SHP.receiver_name LIKE CONCAT('%',#{order},'%')
+        </if>
+        <if test="status != '-1' ">
+            AND SHP.shipping_status = #{status}
+        </if>
+        <if test="startDt != '' and endDt != ''">
+            AND DATE_FORMAT(PO.reg_dt,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDt},'%Y-%m-%d') AND DATE_FORMAT(#{endDt},'%Y-%m-%d')
+        </if>
+        GROUP BY SHP.shipping_id
+        ORDER BY SHP.reg_dt DESC
+    </select>
+
+    <!-- 배송 등록 -->
+    <insert id="insertShipping"  parameterType="ShippingModel" useGeneratedKeys="true" keyProperty="shippingId">
+        <![CDATA[
+            INSERT INTO dreamer.shipping
+            (
+                fk_suser_id,
+                fk_order_id,
+                receiver_name,
+                receiver_cell,
+                receiver_zipcode,
+                receiver_address,
+                shipping_status,
+                memo,
+                reg_dt
+            )
+            VALUES (
+                #{fkSuserId},
+                #{fkOrderId},
+                #{receiverName},
+                #{receiverCell},
+                #{receiverZipcode},
+                #{receiverAddress},
+                0,
+                #{memo},
+                NOW()
+            );
+        ]]>
+    </insert>
+
+    <!-- 배송 송장등록 : 발송 완료로 처리 -->
+    <update id="updateShipping"  parameterType="ShippingModel">
+        <![CDATA[
+        UPDATE  dreamer.shipping
+        SET
+            shipping_company = #{shippingCompany},
+            shipping_invoice = #{shippingInvoice},
+            shipping_status = 1,
+            send_dt = #{sendDt}
+        WHERE shipping_id = #{shippingId}
+        ]]>
+    </update>
+
+    <!-- 배송 삭제 -->
+    <update id="deleteShipping"  parameterType="ShippingModel">
+        <![CDATA[
+        UPDATE  dreamer.shipping
+        SET
+            is_del = 1
+        WHERE shipping_id = #{shippingId}
+        ]]>
+    </update>
+
+</mapper>

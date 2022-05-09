@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!--custom Css -->
+    <!-- end custom css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Extra-01-01 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">특별활동 팀목록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">특별활동 팀목록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="searchTable mb-3">
+
+                                    <div class="articleWrap row">
+                                        <div class="col-md-4 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>특별 활동목록</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <select id="programName" name="specialName" class="form-select">
+                                                    <option value="">선택</option>
+                                                    <option th:each='_ : ${categoryList}'
+                                                            th:value='${_?.teamCategoryId}'
+                                                            th:utext='${_?.categoryName}'
+                                                            th:selected="${_?.teamCategoryId} eq ${categoryId}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>팀명</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input type="text" class="form-control" id="teamName" th:value='${teamName}'>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>강사이름</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input type="text" class="form-control" id="userName" th:value='${userName}'>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--검색 날짜 articleWrap -->
+                                    <th:block th:include="ex_function/init/init_pub_filter_bar.html"></th:block>
+                                </div>
+
+                                <div class="button-list text-center mb-3">
+                                    <button type="button" class="btn btn-primary btn_bg btn90" id="btn_serch">검색</button>
+                                </div>
+
+
+                                <table id="table" class="table table-hover nowrap w-100">
+                                    <thead>
+                                    <tr class="text-center">
+                                        <th>dataID</th>
+                                        <th>#</th>
+                                        <th class="text-start">팀 이름</th>
+                                        <th>강의 기간</th>
+                                        <th>전체강의 횟수</th>
+                                        <th>강사 이름</th>
+                                        <th>팀 구성원 수</th>
+                                        <th>등록일시</th>
+                                    </tr>
+                                    </thead>
+
+
+                                    <tbody>
+                                    <tr class="cursor text-center" th:each='_,num : ${resList}' th:onclick="moveDetails([[${_.teamId}]]);">
+                                        <td th:text='${_.teamId}'></td>
+                                        <td th:text='${num.count}'>10</td>
+                                        <td th:text='${_.teamName}' class="text-start"></td>
+                                        <td >
+                                            <a th:text='${_?.startDt}'></a>
+                                            <a th:text='${_?.startDt != null ? "~" : "-"}'></a>
+                                            <a th:text='${_?.endDt}'></a>
+                                        </td>
+                                        <td th:text='${_?.totalLecture}'></td>
+                                        <td th:text='${_.userName}'></td>
+                                        <td th:text='${_.countMember}'></td>
+                                        <td th:text='${_.regDt}'></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <div>
+                                    <button type="button" class="btn btn-primary waves-effect waves-light position_Btm_btn_right btn_bg" onclick="moveRegister();">팀등록</button>
+                                </div>
+
+
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<!-- custom date setting  -->
+<script th:src="@{/assets/js/date_setting.js}"></script>
+<script type="text/javaScript">
+    let table;
+
+    $(function () {
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "searching": false, //검색 삭제
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+
+        //조건 검색 동작
+        $("#btn_serch").on( "click", function() {
+            const categoryId = $("#programName").val();
+            const userName = $("#userName").val();
+            const teamName = $("#teamName").val();
+            const searchStartDt = $("#searchStart").val();
+            const searchEndDt = $("#searchEnd").val();
+            location.href = conPath+"specialActivity/list?categoryId="+categoryId+"&userName="+userName+"&teamName="+teamName+"&searchStartDt="+searchStartDt+"&searchEndDt="+searchEndDt;
+        });
+
+        //날짜 세팅 버튼 동작
+        $(".btn_func_date").on("click", function() {
+            setStartEnd($(this));
+        });
+
+        //날짜 초기화 버튼 동작
+        $("#btn_set_no_date").on( "click", function() {
+            $("#searchStart").val("");
+            $("#searchEnd").val("");
+        });
+    });
+
+
+    $('#table tbody').on('click', 'td', function () {
+        let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+        let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+        let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+        let totalColumnCount = table.columns().count(); //전체 열 갯수
+        let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+
+        if (indexColumn < totalColumnCount) {
+            // location.href = "/pub/special/team/detail?id=" + indexData;
+            location.href =  conPath + "specialActivity/finishiedDetail?id=" + indexData;
+        }
+    });
+
+    //팀등록
+    function moveRegister() {
+        // Swal.fire('준비중입니다!');
+        location.href =  conPath + "specialActivity/register?type=register";
+    }
+
+    //상세 페이지 이동
+    function moveDetails(id){
+        location.href = conPath+"specialActivity/finishiedDetail?id="+id;
+    }
+
+    //input date 세팅부
+    const setStartEnd = function (argument) {
+        let type = String($(argument).attr("id")).trim();
+        const getDates =  getFormatDate(type);
+
+        $("#searchStart").val("");
+        $("#searchEnd").val("");
+        $("#searchStart").val(getDates.startDt);
+        $("#searchEnd").val(getDates.endDt);
+    }
+
+</script>
+
+</body>
+
+</html>

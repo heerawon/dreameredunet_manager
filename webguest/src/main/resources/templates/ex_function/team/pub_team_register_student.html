@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+    <!--custom Css -->
+    <link th:href="@{/assets/css/team.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Lecture-01-03-06 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+                <!--                <form th:action='@{/teamMember/insert}' method="post">-->
+                <form id="frmMain" method="post">
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">팀등록</h4>
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a th:href="@{/pub/team/list}">팀목록</a></li>
+                                        <li class="breadcrumb-item active">팀등록</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="form_title">학생목록</p>
+                                    <p>학생을 선택하신 후 등록하시면 됩니다.</p>
+
+                                    <div class="mb-3">
+                                        <label class="form-label float-start col-form-label me-2" th:text="${programList != null ? '프로그램' : ''}"></label>
+                                        <div class="d-table-cell align-middle" th:if="${programList}">
+                                            <!-- 프로그램이야 연령별이니 유저정보에서 그룹화 할 수 있지만 카테고리는 그런 관계 설정 불가 -->
+                                            <select th:name='fkProgramId' id="fkProgramId" class="form-select">
+                                                <th:block th:each='_ : ${programList}'>
+                                                    <option th:value='${_?.programId}'
+                                                            th:utext='|${_?.programName}(${_?.programStartAge}~${_?.programEndAge})|'
+                                                            th:selected="${_.programId} eq ${fkProgramId}">
+                                                    </option>
+                                                </th:block>
+                                                <option value="-1" th:selected="-1 eq ${fkProgramId}">그 외</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="studentListWrap overflow-scroll">
+                                        <div class="row">
+                                            <div class="studentBox col-xl-4 col-md-6" th:if="${resList.size()<1}">
+                                                신청한 학생이 없습니다.
+                                            </div>
+                                            <div class="studentBox col-xl-4 col-md-6" th:each='_,num : ${resList}'>
+                                                <div class="card active">
+                                                    <div class="card-body">
+                                                        <div class="studentMbti float-start rounded">
+                                                            <th:block th:switch="${_.studentMbti}">
+                                                                <img th:case="''" th:src="@{/assets/images/users/avatar-1.jpg}" class="img-fluid">
+                                                                <img th:case="1" th:src="@{/images/team_mbti_type1.png}" class="img-fluid">
+                                                                <img th:case="2" th:src="@{/images/team_mbti_type2.png}" class="img-fluid">
+                                                                <img th:case="3" th:src="@{/images/team_mbti_type3.png}" class="img-fluid">
+                                                                <img th:case="4" th:src="@{/images/team_mbti_type4.png}" class="img-fluid">
+                                                                <img th:case="5" th:src="@{/images/team_mbti_type5.png}" class="img-fluid">
+                                                                <img th:case="6" th:src="@{/images/team_mbti_type6.png}" class="img-fluid">
+                                                                <img th:case="7" th:src="@{/images/team_mbti_type7.png}" class="img-fluid">
+                                                                <img th:case="8" th:src="@{/images/team_mbti_type8.png}" class="img-fluid">
+                                                            </th:block>
+                                                        </div>
+                                                        <div class="studentInfo float-start">
+                                                            <input type="hidden" th:name="${'members['+num.index+'].fkTeamId'}" th:value="${teamId}">
+                                                            <input type="hidden" th:name="${'members['+num.index+'].applyCourseId'}" th:value="${_.applyCourseId}">
+                                                            <th:block th:switch="${_.studentMbti}">
+                                                                <b th:case="''" class="studentInfo_txt01" >미등록</b>
+                                                                <b th:case="1" class="studentInfo_txt01" th:text="${'펭귄'}"></b>
+                                                                <b th:case="2" class="studentInfo_txt01" th:text="${'판다'}"></b>
+                                                                <b th:case="3" class="studentInfo_txt01" th:text="${'토끼'}"></b>
+                                                                <b th:case="4" class="studentInfo_txt01" th:text="${'다람쥐'}"></b>
+                                                                <b th:case="5" class="studentInfo_txt01" th:text="${'라쿤'}"></b>
+                                                                <b th:case="6" class="studentInfo_txt01" th:text="${'여우'}"></b>
+                                                                <b th:case="7" class="studentInfo_txt01" th:text="${'돌고래'}"></b>
+                                                                <b th:case="8" class="studentInfo_txt01" th:text="${'사자'}"></b>
+                                                            </th:block>
+                                                            <p class="studentInfo_txt01" >
+                                                                <span th:text='${_?.userName}'></span><span th:text='|(${_?.studentBirth})|'></span>
+                                                            </p>
+                                                            <span th:text='|[${_.userSnsType ne null ? _.userSnsType : "" }]${_.email ne null ? _.email : "" }|'></span>
+                                                        </div>
+                                                        <div class="studentDle">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   th:name="${'members['+num.index+'].fkSuserId'}"
+                                                                   th:value="${_?.userId}" th:onchange="addData(this,[[${num.index}]]);">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="studentBox col-xl-4 col-md-6" th:each='_,num : ${resList2}'>
+                                                <div class="card active">
+                                                    <div class="card-body">
+                                                        <div class="studentMbti float-start rounded">
+                                                            <th:block th:switch="${_.studentMbti}">
+                                                                <img th:case="''" th:src="@{/assets/images/users/avatar-1.jpg}" class="img-fluid">
+                                                                <img th:case="1" th:src="@{/images/team_mbti_type1.png}" class="img-fluid">
+                                                                <img th:case="2" th:src="@{/images/team_mbti_type2.png}" class="img-fluid">
+                                                                <img th:case="3" th:src="@{/images/team_mbti_type3.png}" class="img-fluid">
+                                                                <img th:case="4" th:src="@{/images/team_mbti_type4.png}" class="img-fluid">
+                                                                <img th:case="5" th:src="@{/images/team_mbti_type5.png}" class="img-fluid">
+                                                                <img th:case="6" th:src="@{/images/team_mbti_type6.png}" class="img-fluid">
+                                                                <img th:case="7" th:src="@{/images/team_mbti_type7.png}" class="img-fluid">
+                                                                <img th:case="8" th:src="@{/images/team_mbti_type8.png}" class="img-fluid">
+                                                            </th:block>
+                                                        </div>
+                                                        <div class="studentInfo float-start">
+                                                            <input type="hidden"
+                                                                   th:name="${'members['+num.index+'].fkTeamId'}"
+                                                                   th:value="${teamId}">
+                                                            <th:block th:switch="${_.studentMbti}">
+                                                                <b th:case="''" class="studentInfo_txt01" >미등록</b>
+                                                                <b th:case="1" class="studentInfo_txt01" th:text="${'펭귄'}"></b>
+                                                                <b th:case="2" class="studentInfo_txt01" th:text="${'판다'}"></b>
+                                                                <b th:case="3" class="studentInfo_txt01" th:text="${'토끼'}"></b>
+                                                                <b th:case="4" class="studentInfo_txt01" th:text="${'다람쥐'}"></b>
+                                                                <b th:case="5" class="studentInfo_txt01" th:text="${'라쿤'}"></b>
+                                                                <b th:case="6" class="studentInfo_txt01" th:text="${'여우'}"></b>
+                                                                <b th:case="7" class="studentInfo_txt01" th:text="${'돌고래'}"></b>
+                                                                <b th:case="8" class="studentInfo_txt01" th:text="${'사자'}"></b>
+                                                            </th:block>
+                                                            <p class="studentInfo_txt01" >
+                                                                <span th:text='${_?.userName}'></span><span th:text='|(${_?.studentBirth})|'></span>
+                                                            </p>
+                                                            <span th:text='|[${_.userSnsType ne null ? _.userSnsType : "" }]${_.email ne null ? _.email : "" }|'></span>
+                                                            <ul class="studentClass">
+                                                                <li th:text="${_?.teamName}"></li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="studentDle">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   th:name="${'members['+num.index+'].fkSuserId'}"
+                                                                   th:value="${_?.userId}" th:onchange="addData(this,[[${num.index}]]);">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div> <!-- end card body-->
+                            </div> <!-- end card -->
+
+                            <!-- 하단 버튼 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="float-start">
+                                        <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">뒤로</button>
+                                    </div>
+                                    <div class="float-end button-list">
+                                        <button type="button" class="btn btn-primary btn_bg" onclick="doSubmit()">등록</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end col-->
+                    </div>
+                    <!-- end row-->
+
+                </form>
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<script type="text/javaScript" th:inline="javascript">
+
+    /*<![CDATA[*/
+        let teamId = [[${teamId}]];
+        let fkProgramId = [[${fkProgramId}]];
+        let fkCategoryId = [[${fkCategoryId}]];
+    /*]]>*/
+
+    let arrChoiceId = Array();
+    let arrChoiceApplyId = Array();
+
+    $(function () {
+        if(fkProgramId){
+            $('.menu03').addClass('menuitem-active');
+            $('.menu03-menu').addClass('show');
+            $('.menu03-1').addClass('active');
+        }else{
+            $('.menu04').addClass('menuitem-active');
+            $('.menu04-menu').addClass('show');
+            $('.menu04-1').addClass('active');
+        }
+
+        // $('#field').val(fkProgramId).prop("selected",true);
+        $("#fkProgramId").on("change",function(){
+            location.href = conPath+"teamMember/list?teamId="+teamId+"&fkProgramId="+$(this).val();
+        });
+    });
+
+    //뒤로
+    function moveBack() {
+        history.back();
+    }
+
+    function addData(val,index) {
+        let isAlreadyAdd = $.inArray(val.value, arrChoiceId); // 배열에 들어있는지 확인
+        //th:name="${'members['+num.index+'].applyCourseId'}"
+
+        let name = "input[name='members["+index+"].applyCourseId']";
+        let applyId = $(val).parents().find(name).val();
+        let isAlreadyAddApplyId =$.inArray(applyId, arrChoiceApplyId);
+        console.log('isAlreadyAdd',isAlreadyAdd); // 들어있으면 -1 보다 큰 값
+        console.log('isAlreadyAddApplyId',isAlreadyAddApplyId); // 들어있으면 -1 보다 큰 값
+        if(isAlreadyAdd>=0){
+            // 들어있을 경우
+            arrChoiceId = isAlreadyAdd.splice($.inArray(val.value, isAlreadyAdd),1); //해당 값만 배열에서 제거
+        }else{
+            // 들어있지 않은 경우
+            arrChoiceId.push(val.value); //배열에 추가
+        }
+        if(isAlreadyAddApplyId>=0){
+            // 들어있을 경우
+            arrChoiceApplyId = isAlreadyAddApplyId.splice($.inArray(applyId, isAlreadyAddApplyId),1); //해당 값만 배열에서 제거
+        }else{
+            // 들어있지 않은 경우
+            arrChoiceApplyId.push(applyId); //배열에 추가
+        }
+    }
+
+    function doSubmit() {
+        let newForm = $('<form></form>'); //set attribute (form)
+        newForm.attr("name", "frmMain");
+        newForm.attr("method", "post");
+        newForm.attr("action", conPath +"teamMember/insert");
+        // newForm.attr("target", "_blank"); // create element & set attribute (input)
+
+        if(arrChoiceId.length>0){
+            for(let i =0; i<arrChoiceId.length;i++){
+                newForm.append($('<input/>', {type: 'hidden', name: 'members['+i+'].fkSuserId', value: arrChoiceId[i]}));
+                newForm.append($('<input/>', {type: 'hidden', name: 'members['+i+'].fkTeamId', value: teamId}));
+                newForm.append($('<input/>', {type: 'hidden', name: 'members['+i+'].applyCourseId', value: arrChoiceApplyId[i]}));
+            }
+            newForm.appendTo('body'); // submit form newForm.submit();
+            newForm.submit();
+        }else{
+            swal.fire("학생을 선택해 주세요 !");
+        }
+    }
+
+
+    //팀 등록
+    function moveRegister() {
+        location.href = "/pub/team/register2";
+    }
+</script>
+
+</body>
+
+</html>

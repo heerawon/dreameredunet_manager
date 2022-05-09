@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!-- 에디터 css -->
+    <link th:href="@{/assets/css/summernote.min.css}" rel="stylesheet" type="text/css"/>
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <p>
+            <span>*</span> 표시는 필수 입니다.
+        </p>
+        <form th:action='@{/specialActivity/{pathParam}(pathParam=${urlType})}' th:object='${reqModel}' method="post">
+            <input type="hidden" name="edit" th:value="${edit}">
+            <input type="hidden" th:field='*{teamId}' th:value="${teamId}">
+            <input type="hidden" th:field='*{division}' th:value="${0}">
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="field" class="form-label">프로그램<span class="text-danger">*</span></label>
+                    <select th:name='fkProgramId' id="field" class="form-select">
+                        <option disabled selected hidden>프로그램을 선택해주세요.</option>
+                        <option th:each='_ : ${programList}'
+                                th:value='${_?.programId}'
+                                th:utext='|${_?.programName}(${_?.programStartAge}~${_?.programEndAge})|'
+                                th:selected="${programId eq fkProgramId}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="nameInput" class="form-label">팀 명<span>*</span></label>
+                    <input type="text" th:field='*{teamName}' th:text='${teamName}'
+                           id="nameInput" required >
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="totalLecture" class="form-label">전체 강의 횟수<span>*</span></label>
+                    <input type="text" th:field='*{totalLecture}' th:text='${totalLecture}'
+                           id="totalLecture" required >
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="startDt" class="form-label">강의기간<span>*</span></label>
+                    <input type="text" th:field='*{startDt}' th:text='${startDt}'
+                           id="startDt" required >
+                    ~
+                    <input type="text" th:field='*{endDt}' th:text='${endDt}'
+                           id="endDt" required >
+                </div>
+            </div>
+            <div class="row">
+                <div class="mb-3  col-md-12">
+                    <label for="introduction" class="form-label">강의 소개<span class="text-danger">*</span></label>
+                    <div>
+                            <textarea th:field='*{introduce}' th:text='${introduce}'
+                                      id="introduction" rows="5" required></textarea>
+                    </div>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="link" class="form-label">강의자료 youtube 링크<span>*</span></label>
+                    <input type="text" th:field='*{link}' th:text='${link}'
+                           id="link" required >
+                </div>
+            </div>
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="field" class="form-label">강사<span class="text-danger">*</span></label>
+                    <select th:name='fkUserId' id="field" class="form-select">
+                        <option disabled selected hidden>강사를 선택해주세요.</option>
+                        <option th:each='_ : ${teacherList}'
+                                th:value='${_?.userId}'
+                                th:utext='|${_?.userName}(${_?.teacherEmail})|'
+                                th:selected="${userId eq fkUserId}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="text-end">
+                <button type="submit" th:text="${edit eq 1 ? '수정완료' : '팀생성 후 일정/학생 등록'}"></button>
+            </div>
+
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="link" class="form-label">일정<span>*</span></label>
+                    캘린더
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="link" class="form-label">학생<span>*</span></label>
+                    <select th:name='fkStudentId' id="field" class="form-select">
+                        <option disabled selected hidden>강사를 선택해주세요.</option>
+                        <option th:each='_ : ${studentList}'
+                                th:value='${_?.userId}'
+                                th:utext='|${_?.studentMbti} ${_?.userName}(${_?.studentBirth})|'
+                                th:selected="${userId eq fkUserId}"></option>
+                    </select>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</body>
+</html>

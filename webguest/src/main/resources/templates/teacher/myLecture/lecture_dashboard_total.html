@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/lecture.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+    <style>
+        .empty-div{
+            height: 150px;
+        }
+        .center-comment{
+            position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%);
+        }
+        .disabledBadges2 {
+            position: absolute;
+            background: #ff385e;
+            color: #fff;
+            left: 100px;
+            padding: 2px 10px;
+            border-radius: 25px;
+            display: inline-block;
+            font-size: 12px;
+            top: auto;
+            transform: initial;
+        }
+        .bg-grey-student{
+            background-color: rgba(152, 152, 152, 0.96);
+        }
+    </style>
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-01-01 -->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">대시보드</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item active">전체 대시보드</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                            <!-- 팀 카드 -->
+                            <div class="row mb-5">
+                                <div class="col-12 mb-1">
+                                    <p class="lecture_txt01 d-inline-block" th:text="|관리중인 팀 : ${teamList.size}|"></p>
+                                    <p class="lecture_txt01 d-inline-block" th:text="|학생 수 : ${studentList.size()}명|"></p>
+                                </div>
+
+                                <!-- 수업, 진행여부 검색 -->
+                                <div class="col-12 mb-3">
+                                    <div class="searchTable lectureSearch">
+                                        <div class="articleWrap row">
+                                            <div class="col-lg-6 searchList">
+                                                <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                    <p>수업</p>
+                                                </div>
+                                                <div class="d-table-cell align-middle articleChoice">
+                                                    <div class="form-check float-start">
+                                                        <input class="form-check-input" type="radio" name="division" id="lecture1" value="">
+                                                        <label class="form-check-label" for="lecture1">
+                                                            전체
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check float-start ms-2">
+                                                        <input class="form-check-input" type="radio" name="division" id="lecture2" value="0">
+                                                        <label class="form-check-label" for="lecture2">
+                                                            정규수업
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check float-start ms-2">
+                                                        <input class="form-check-input" type="radio" name="division" id="lecture3" value="1">
+                                                        <label class="form-check-label" for="lecture3">
+                                                            특별활동 수업
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                    <p>진행여부</p>
+                                                </div>
+                                                <div class="d-table-cell align-middle articleChoice">
+                                                    <div class="form-check float-start">
+                                                        <input class="form-check-input" type="radio" name="progress" id="progress1" value="">
+                                                        <label class="form-check-label" for="progress1">
+                                                            전체
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check float-start ms-2">
+                                                        <input class="form-check-input" type="radio" name="progress" id="progress2" value="0">
+                                                        <label class="form-check-label" for="progress2">
+                                                            진행중
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check float-start ms-2">
+                                                        <input class="form-check-input" type="radio" name="progress" id="progress3" value="1">
+                                                        <label class="form-check-label" for="progress3">
+                                                            진행완료
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 1 -->
+                                <div class="col-lg-6 col-md-12" th:each='_,num : ${teamList}' style="cursor: pointer">
+                                    <a th:onclick="moveTeamDashBoard([[${_.teamId}]])">
+                                        <div class="card border mb-3" th:classappend="${_.division eq 0 ? 'border-primary' : 'border-danger'}">
+                                            <th:block th:if="${_.fullEndDayTime ne null}">
+                                                <div th:if="${_.fullEndDayTime} < ${#dates.format(#dates.createNow(),'yyyy-MM-dd HH:mm:ss')}"
+                                                     class="teamComplete">
+                                                </div>
+                                            </th:block>
+                                            <th:block th:if="${_.countLecture eq 0}">
+                                                <div class="teamComplete"></div>
+                                            </th:block>
+                                            <div class="card-header">
+                                                <h5 th:class="${_.division eq 0 ? 'text-primary' : 'text-danger'}"
+                                                    th:text="|[${_.programName != null ? _.programName: _.categoryName}]${_.teamName}|"></h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <ul class="teamInfo row">
+                                                    <li class="col-4" >총 학생 수<br th:text="|${_.countMember != null ? _.countMember : 0}명|"/></li>
+                                                    <li class="col-4">강의 기간<br th:if="${_.startDt != null}" th:text="|${_?.startDt}${_?.startDt != null ? '~' : '-'}${_?.endDt}|"/></li>
+                                                    <li class="col-4">총 강의 수 <br th:text="|${_.countLecture}회|"></li>
+                                                </ul>
+
+                                                <ul class="lectureInfo row">
+                                                    <li class="col-4">수업 회차<br th:if="${_.chapter != null}" th:text="|${_.chapter}회|"/></li>
+                                                    <li class="col-4">수업날짜/시간<br th:if="${_.startDt != null}" th:text="|${_.startDt} ${_.startTime}|"/></li>
+                                                    <li class="col-4">줌 링크 <br th:if="${_.zoomLink != null}" th:text="${_.zoomLink}"/></li>
+                                                </ul>
+                                            </div>
+                                            <!--tymeleaf오늘 날짜와 비교-->
+                                            <!--class : teamComplete-->
+                                            <th:block th:if="${_.fullEndDayTime ne null}">
+                                                <p class="teamCompleteTxt"
+                                                   th:if="${_.fullEndDayTime} < ${#dates.format(#dates.createNow(),'yyyy-MM-dd HH:mm:ss')}">진행완료</p>
+                                            </th:block>
+                                            <th:block th:if="${_.countLecture eq 0}">
+                                                <p class="teamCompleteTxt">미구성</p>
+                                            </th:block>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12" th:if='${teamList.size() eq 0}'>
+                                    <div class="card border border-primary mb-3">
+                                        <div class="empty-div">
+                                            <p class="center-comment">항목이 없습니다.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            <!-- 하단 목록 부분-->
+                            <div class="row">
+                                <!-- Q&A -->
+                                <div class="col-lg-6">
+                                    <div class="card card-body">
+                                        <h5 class="text-break mb-3">Q&A</h5>
+                                        <div class="boardBtn">
+                                            <button type="button" class="btn btn-primary" onclick="moveQa();">전체보기</button>
+                                        </div>
+
+                                        <ul class="boardList">
+                                            <li th:each='_,num : ${qaList}'>
+                                                <a href="#" th:onclick="moveQaDetail([[${_.qaId}]])">
+                                                    <p class="board_txt01" th:text="${_.title}"></p>
+                                                    <p class="board_txt02" th:text="${_.userName}"></p>
+                                                    <p class="board_txt03" th:text="${_.teamName}"></p>
+                                                    <p class="board_txt04" th:text="${_.regDt}"></p>
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                        <div th:if="${qaList.size() eq 0}" class="empty-div">
+                                            <p class="center-comment">등록된 Q&A 내역이 없습니다.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 과제 -->
+                                <div class="col-lg-6">
+                                    <div class="card card-body">
+                                        <h5 class="text-break mb-3">과제</h5>
+                                        <div class="boardBtn">
+                                            <button type="button" class="btn btn-primary" onclick="moveHomework();">전체보기</button>
+                                        </div>
+
+                                        <ul class="boardList">
+                                            <li th:each='_,num : ${homeworkList}'>
+                                                <a href="#" th:onclick="moveHomeworkDetail([[${_.homeworkId}]])">
+                                                    <p class="board_txt01" th:text="${_.title}"></p>
+                                                    <p class="board_txt02" th:text="${_.userName}"></p>
+                                                    <p class="board_txt03" th:text="${_.teamName}"></p>
+                                                    <p class="board_txt04" th:text="${_.regDt}"></p>
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                        <div th:if="${homeworkList.size() eq 0}" class="empty-div">
+                                            <p class="center-comment">등록된 과제 내역이 없습니다.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 학생목록 -->
+                                <div class="col-lg-12">
+                                    <div class="card card-body">
+                                        <h5 class="text-break mb-3">전체 강의 학생목록 <span th:text="|${studentList.size()}명|"></span></h5>
+
+                                        <table id="table" class="table nowrap w-100 studentListWrap">
+                                            <thead>
+                                            <tr class="text-center">
+                                                <th>dataID</th>
+                                                <th>학생 MBTI</th>
+                                                <th>이름(생년월일)</th>
+                                                <th>성별</th>
+                                                <th>수강중인 팀</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <th:block th:each='_,num : ${studentList}'>
+                                                <tr class="text-center" th:classappend="${_.userRole ne 'MEMBER'? 'bg-grey-student':''}">
+                                                    <td th:text="${num.count}"></td>
+                                                    <td >
+                                                        <div th:if="${_.userRole ne 'MEMBER'}" class="disabledBadges2">구독기간 만료</div>
+                                                        <div>
+                                                            <div class="studentMbti float-start rounded">
+                                                                <th:block th:switch="${_.studentMbti}">
+                                                                    <img th:case="''" th:src="@{/assets/images/users/avatar-1.jpg}" class="img-fluid rounded-circle">
+                                                                    <img th:case="1" th:src="@{/images/team_mbti_type1.png}" class="img-fluid rounded-circle">
+                                                                    <img th:case="2" th:src="@{/images/team_mbti_type2.png}" class="img-fluid rounded-circle">
+                                                                    <img th:case="3" th:src="@{/images/team_mbti_type3.png}" class="img-fluid rounded-circle">
+                                                                    <img th:case="4" th:src="@{/images/team_mbti_type4.png}" class="img-fluid rounded-circle">
+                                                                    <img th:case="5" th:src="@{/images/team_mbti_type5.png}" class="img-fluid rounded-circle">
+                                                                    <img th:case="6" th:src="@{/images/team_mbti_type6.png}" class="img-fluid rounded-circle">
+                                                                    <img th:case="7" th:src="@{/images/team_mbti_type7.png}" class="img-fluid rounded-circle">
+                                                                    <img th:case="8" th:src="@{/images/team_mbti_type8.png}" class="img-fluid rounded-circle">
+                                                                </th:block>
+                                                            </div>
+                                                            <th:block th:switch="${_.studentMbti}">
+                                                                <p th:case="''" class="studentMbtiTxt" th:text="${'미등록'}"></p>
+                                                                <p th:case="1" class="studentMbtiTxt" th:text="${'펭귄'}"></p>
+                                                                <p th:case="2" class="studentMbtiTxt" th:text="${'판다'}"></p>
+                                                                <p th:case="3" class="studentMbtiTxt" th:text="${'토끼'}"></p>
+                                                                <p th:case="4" class="studentMbtiTxt" th:text="${'다람쥐'}"></p>
+                                                                <p th:case="5" class="studentMbtiTxt" th:text="${'라쿤'}"></p>
+                                                                <p th:case="6" class="studentMbtiTxt" th:text="${'여우'}"></p>
+                                                                <p th:case="7" class="studentMbtiTxt" th:text="${'돌고래'}"></p>
+                                                                <p th:case="8" class="studentMbtiTxt" th:text="${'사자'}"></p>
+                                                            </th:block>
+                                                        </div>
+                                                    </td>
+                                                    <td th:text="|${_.userName}(${_.studentBirth})|"></td>
+                                                    <td th:text="${_.studentGender eq'F' ? '여성':'남성'}"></td>
+                                                    <td th:text="${_.teamName}"></td>
+                                                </tr>
+                                            </th:block>
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<script type="text/javaScript">
+    /*<![CDATA[*/
+    let progress = "[[${progress}]]";
+    let division = "[[${division}]]";
+
+    let errMsg = "[[${errMsg}]]"; //에러
+    /*]]>*/
+    let table;
+
+    $(function () {
+        if(errMsg.length>0){
+            Swal.fire('알림',errMsg, 'warning').then(function (result) {
+                if(result.isConfirmed){
+                    location.href= conPath + "myLecture/dashboard"; //에러 메시지 제거
+                }
+            });
+        }
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "searching": true, //검색 삭제
+            "info": false, //하단 정보 삭제 (Showing 1 to 8 of 8 entries)
+            "lengthChange": false, //테이블의 페이징 표시
+            "paging": false,
+            // scrollY: 600,
+            scrollCollapse: false,
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+
+        $("input[name='division']:radio").change(function () {
+            //라디오 버튼 값을 가져온다.
+            var division = this.value;
+            location.href = conPath+"myLecture/dashboard?division="+division+"&prprogress="+progress;
+        });
+
+        $("input[name='progress']:radio").change(function () {
+            //라디오 버튼 값을 가져온다.
+            var progress = this.value;
+            location.href = conPath+"myLecture/dashboard?progress="+progress+"&division="+division;
+        });
+
+        if(progress){
+            $("input[name='progress']:radio:input[value='"+progress+"']").prop("checked",true);
+        }else{
+            $("input[name='progress']:radio:input[value='']").prop("checked",true);
+        }
+
+        if(division){
+            $("input[name='division']:radio:input[value='"+division+"']").prop("checked",true);
+        }else{
+            $("input[name='division']:radio:input[value='']").prop("checked",true);
+        }
+
+    });
+
+    //Q&A 전체보기
+    function moveQa() {
+        location.href = conPath+"qa/list";
+    }
+
+    //Q&A 상세
+    const moveQaDetail = function(id) {
+        location.href = conPath + "qa/detail?id=" + id;
+    }
+
+    //과제 전체보기
+    function moveHomework() {
+        location.href = conPath+"homework/list";
+    }
+
+    //과제 상세
+    const moveHomeworkDetail = function (id){
+        location.href = conPath+"homework/detail?id="+id;
+    }
+
+    //팀 대시보드로 이동
+    function moveTeamDashBoard(teamId) {
+        location.href = conPath+ "myLecture/teamDashboard?teamId="+teamId;
+    }
+
+</script>
+
+</body>
+
+</html>

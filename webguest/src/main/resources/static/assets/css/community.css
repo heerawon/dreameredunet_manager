@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+/* 내 정보 */
+.myName {
+    font-size: 20px;
+    mso-font-width: 600;
+}
+.passwordTxt {
+    font-size: 15px;
+}
+
+@media screen and (max-width: 991px) {
+
+}
+
+@media screen and (max-width: 767px) {
+
+
+}
+
+

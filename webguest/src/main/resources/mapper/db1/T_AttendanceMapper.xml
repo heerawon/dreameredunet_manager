@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.teacher.T_AttendanceMapper">
+
+    <!-- 팀의 학생목록 가져오기 -->
+    <select id="getTeamMemberInfo" resultType="StudentModel" parameterType="HashMap">
+        <![CDATA[
+        SELECT user_id, user_name, student_mbti, student_birth, TMB.is_del, subscribe_status, user_role
+        FROM dreamer.view_use_team VUT
+             JOIN dreamer.team_member TMB ON VUT.team_id = TMB.fk_team_id
+             JOIN dreamer.view_student_user VSU ON TMB.fk_suser_id = VSU.fk_suser_id
+             LEFT JOIN dreamer.subscription SUB ON VSU.fk_suser_id = SUB.fk_suser_id
+        WHERE team_id = #{teamId}
+        GROUP BY user_id
+        ORDER BY user_name
+        ]]>
+    </select>
+
+    <!-- 출석현황 학생별 강의 기초정보 (캘린더에서 진입) -->
+    <select id="getLectureInfoByTeamMember" resultType="LectureModel" parameterType="HashMap">
+        <![CDATA[
+        SELECT homework_id, team_id, team_name, lecture_id, chapter, LEC.start_dt, user_role,
+               user_id as fkSuserId, user_name, student_mbti, student_birth, TMB.is_del as withdrawal,
+               attendance_id, memo, ATD.attend_dt, is_attend
+        FROM dreamer.view_use_team VUT
+             JOIN dreamer.team_member TMB ON VUT.team_id = TMB.fk_team_id
+             JOIN dreamer.view_student_user VSU ON TMB.fk_suser_id = VSU.fk_suser_id
+             JOIN dreamer.lecture LEC ON VUT.team_id = LEC.fk_team_id
+             LEFT JOIN dreamer.view_use_homework VUH ON LEC.lecture_id = VUH.fk_lecture_id AND TMB.fk_suser_id = VUH.fk_suser_id
+             LEFT JOIN dreamer.attendance ATD ON LEC.lecture_id = ATD.fk_lecture_id AND TMB.fk_suser_id = ATD.fk_suser_id
+        WHERE LEC.is_del != 1 AND team_id = #{teamId}
+        GROUP BY lecture_id, user_id
+        ORDER BY LEC.chapter
+        ]]>
+    </select>
+
+    <!-- 오늘의 출석현황 -->
+    <select id="getAttendByDate" resultType="Integer" parameterType="HashMap">
+    <![CDATA[
+        SELECT COUNT(ATD.attendance_id)
+        FROM dreamer.attendance ATD
+             JOIN dreamer.lecture LEC ON ATD.fk_lecture_id = LEC.lecture_id
+             JOIN dreamer.view_use_team VUT ON LEC.fk_team_id = VUT.team_id
+        WHERE LEC.is_del != 1 AND ATD.is_attend != 0 AND VUT.team_id= #{teamId}
+    ]]>
+    <if test="startDt != '' and startDt !=null">
+        AND ATD.attend_dt = #{startDt}
+    </if>
+    </select>
+
+    <!-- 오늘의 출석현황의 오늘 구하기 (없다면 지난강의 중 가장 최근) -->
+    <select id="getMostRecentDate" resultType="String" parameterType="HashMap">
+        <![CDATA[
+            SELECT LEC.start_dt
+            FROM dreamer.lecture LEC
+                 JOIN dreamer.view_use_team VUT ON LEC.fk_team_id = VUT.team_id
+            WHERE DATE_FORMAT(LEC.start_dt,'%Y-%m-%d') <= DATE_FORMAT(NOW(),'%Y-%m-%d') AND VUT.team_id = #{teamId}
+            ORDER BY LEC.start_dt DESC
+            LIMIT 1;
+        ]]>
+    </select>
+
+    <!-- 출석 등록, 취소 (선생님) -->
+    <insert id="insertAttend"  parameterType="AttendanceModel" useGeneratedKeys="true" keyProperty="attendanceId">
+        <![CDATA[
+            INSERT INTO dreamer.attendance (
+        ]]>
+        <if test="attendanceId != null">attendance_id,</if>
+        <![CDATA[
+            fk_lecture_id,
+            fk_suser_id,
+            attend_dt,
+            is_attend,
+            memo,
+            reg_dt
+        )
+        VALUES (
+        ]]>
+        <if test="attendanceId != null">#{attendanceId},</if>
+        <![CDATA[
+           #{fkLectureId},
+           #{fkSuserId},
+           #{attendDt},
+           #{isAttend},
+           #{memo},
+           NOW()
+        )
+            ON DUPLICATE KEY UPDATE
+                reg_dt = NOW(),
+                is_attend = #{isAttend},
+                memo = #{memo}
+        ]]>
+    </insert>
+
+</mapper>

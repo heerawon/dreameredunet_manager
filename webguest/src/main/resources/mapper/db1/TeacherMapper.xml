@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.TeacherMapper">
+    <!-- 분야 목록 -->
+    <select id="getCategoryList" resultType="CategoryModel" >
+        <![CDATA[
+            SELECT category_id, category_name
+            FROM dreamer.field_category
+        ]]>
+    </select>
+
+    <!-- 강사 메인노출 -->
+    <update id="changeIsMain"  parameterType="TeacherModel">
+        <![CDATA[
+            UPDATE  dreamer.teacher
+            SET teacher_is_main = #{teacherIsMain}
+            WHERE fk_user_id = #{fkUserId}
+        ]]>
+    </update>
+
+    <!-- 강사 목록 -->
+    <select id="getTeacherList" resultType="TeacherModel" parameterType="String">
+        <![CDATA[
+            SELECT u.user_id, u.user_name, t.fk_user_id, t.teacher_gender,  t.teacher_cell, t.teacher_addr,
+                   t.teacher_addr_detail, t.teacher_email, t.teacher_profile, t.fk_category_id, t.teacher_category, t.teacher_history,
+                   t.teacher_introduce,t.teacher_assign_dt, t.teacher_is_main, t.teacher_sort_num,
+                   DATE_FORMAT(t.teacher_birth,'%Y-%m-%d') teacher_birth
+            FROM dreamer.teacher as t
+                     LEFT JOIN dreamer.user as u
+                               ON t.fk_user_id = u.user_id
+            WHERE u.user_active = 1
+            ORDER BY teacher_sort_num
+        ]]>
+    </select>
+
+    <!-- 강의 추가시 강사 목록 -->
+    <select id="getTeacherTeamList" resultType="TeacherModel" parameterType="String">
+        <![CDATA[
+        SELECT TB.*,TB1.*,TB2.*
+        FROM dreamer.view_teacher_user TB
+                 LEFT JOIN
+             (SELECT U.user_id, U.user_name, TCH.teacher_email, TCH.teacher_profile,
+                     DATE_FORMAT(TCH.teacher_birth,'%Y-%m-%d') teacher_birth,
+                     GROUP_CONCAT(T.team_name) team_name,GROUP_CONCAT(T.team_id) team_id
+              FROM dreamer.teacher as TCH
+                       JOIN dreamer.user U ON U.user_id = TCH.fk_user_id
+                       LEFT JOIN dreamer.team T ON T.fk_tuser_id = TCH.fk_user_id
+              WHERE T.team_status = 1 AND U.user_active = 1 AND T.division = 0
+              GROUP BY TCH.fk_user_id
+             )TB1
+             ON TB.user_id = TB1.user_id
+                 LEFT JOIN (
+            SELECT U.user_id,
+                   GROUP_CONCAT(T.team_name) special_team_name,GROUP_CONCAT(T.team_id) special_team_id
+            FROM dreamer.teacher as TCH
+                     JOIN dreamer.user U ON U.user_id = TCH.fk_user_id
+                     LEFT JOIN dreamer.team T ON T.fk_tuser_id = TCH.fk_user_id
+            WHERE T.team_status = 1 AND U.user_active = 1 AND T.division = 1
+            GROUP BY TCH.fk_user_id
+        )TB2
+                           ON TB1.user_id = TB2.user_id;
+        ]]>
+    </select>
+
+    <!-- 강사 등록 -->
+    <insert id="insertTeacher"  parameterType="TeacherModel" useGeneratedKeys="true" keyProperty="fkUserId">
+        <![CDATA[
+            INSERT INTO dreamer.teacher (
+                fk_user_id,
+                teacher_gender,
+                teacher_birth,
+                teacher_cell,
+                teacher_addr,
+                teacher_addr_detail,
+                teacher_email,
+                teacher_profile,
+                teacher_category,
+                teacher_history,
+                teacher_introduce,
+                teacher_assign_dt,
+                teacher_sort_num
+            )
+            VALUES (
+                #{fkUserId},
+                #{teacherGender},
+                #{teacherBirth},
+                #{teacherCell},
+                #{teacherAddr},
+                #{teacherAddrDetail},
+                #{teacherEmail},
+                #{teacherProfile},
+                #{teacherCategory},
+                #{teacherHistory},
+                #{teacherIntroduce},
+                #{teacherAssignDt},
+                (
+                    SELECT MAX(T2.teacher_sort_num)
+                    FROM dreamer.teacher T2
+                )+1
+            );
+        ]]>
+    </insert>
+
+    <!-- 강사 상세 -->
+    <select id="getTeacherDetail" resultType="TeacherModel" parameterType="String">
+        <![CDATA[
+            SELECT u.user_id, u.user_name, t.fk_user_id, t.teacher_gender, t.teacher_cell, t.teacher_addr,
+                   t.teacher_addr_detail, t.teacher_email, t.teacher_profile, t.fk_category_id, t.teacher_history,
+                   t.teacher_introduce, t.teacher_assign_dt, c.category_name,teacher_category,
+                   DATE_FORMAT(t.teacher_birth,'%Y-%m-%d') teacher_birth
+            FROM dreamer.teacher as t
+                     LEFT JOIN dreamer.user as u
+                          ON t.fk_user_id = u.user_id
+                     LEFT JOIN dreamer.field_category as c
+                               ON t.fk_category_id = c.category_id
+            WHERE u.user_active = 1 AND t.fk_user_id = #{fkUserId}
+        ]]>
+    </select>
+
+    <!-- 강사 수정 -->
+    <update id="updateTeacher" parameterType="TeacherModel">
+        <![CDATA[
+            UPDATE  dreamer.teacher
+            SET
+                teacher_gender =  #{teacherGender},
+                teacher_birth = #{teacherBirth},
+                teacher_cell = #{teacherCell},
+                teacher_addr = #{teacherAddr},
+                teacher_addr_detail = #{teacherAddrDetail},
+                teacher_email =  #{teacherEmail},
+                teacher_category = #{teacherCategory},
+                teacher_history = #{teacherHistory},
+                teacher_introduce = #{teacherIntroduce},
+                teacher_assign_dt = #{teacherAssignDt},
+                teacher_is_president =  #{teacherIsPresident}
+        ]]>
+        <if test="teacherProfile != null and teacherProfile !=''">
+            ,teacher_profile = #{teacherProfile}
+        </if>
+        WHERE fk_user_id = #{userId}
+    </update>
+
+    <!-- 강사 이름 변경 -->
+    <update id="updateTeacherUserInfo" parameterType="hashmap">
+        <![CDATA[
+            UPDATE dreamer.user
+            SET user_name = #{userName}
+            WHERE user_id = #{userId}
+        ]]>
+    </update>
+
+    <!-- 순서 위로 -->
+    <update id="moveItemUp" parameterType="Hashmap">
+        <![CDATA[
+            UPDATE dreamer.teacher
+            SET teacher_sort_num = teacher_sort_num + 1
+            WHERE teacher_sort_num >=
+                (
+                    SELECT IFNULL(MAX(T3.teacher_sort_num),
+                        (SELECT T2.teacher_sort_num
+                         FROM dreamer.view_teacher_user T2
+                         WHERE fk_tuser_id = #{teacherId}
+                    ))
+                    FROM dreamer.view_teacher_user T3
+                    WHERE T3.teacher_sort_num <
+                        (SELECT T2.teacher_sort_num
+                        FROM dreamer.view_teacher_user T2
+                        WHERE fk_tuser_id = #{teacherId})
+                );
+            UPDATE dreamer.teacher
+            SET teacher_sort_num = ((
+                SELECT IFNULL(MAX(T3.teacher_sort_num),
+                      (SELECT T2.teacher_sort_num
+                       FROM dreamer.view_teacher_user T2
+                       WHERE fk_tuser_id = #{teacherId}
+                      ))
+                FROM dreamer.view_teacher_user T3
+                WHERE T3.teacher_sort_num <
+                      (SELECT T2.teacher_sort_num
+                       FROM dreamer.view_teacher_user T2
+                       WHERE fk_tuser_id = #{teacherId})
+            )-1)
+            WHERE fk_user_id = #{teacherId};
+
+            SELECT @rank:=0;
+            UPDATE dreamer.teacher
+            SET teacher_sort_num=@rank:=@rank+1
+            ORDER BY teacher_sort_num;
+        ]]>
+    </update>
+
+    <!-- 순서 아래 -->
+    <update id="moveItemDown" parameterType="Hashmap">
+        <![CDATA[
+        UPDATE dreamer.teacher
+        SET teacher_sort_num = teacher_sort_num + 1
+        WHERE teacher_sort_num >
+              (
+                  SELECT IFNULL(MIN(T3.teacher_sort_num),
+                                (SELECT T2.teacher_sort_num
+                                 FROM dreamer.view_teacher_user T2
+                                 WHERE fk_tuser_id = #{teacherId}))
+                  FROM dreamer.view_teacher_user T3
+                  WHERE T3.teacher_sort_num >
+                        (SELECT T2.teacher_sort_num
+                         FROM dreamer.view_teacher_user T2
+                         WHERE fk_tuser_id = #{teacherId})
+              );
+        UPDATE dreamer.teacher
+        SET teacher_sort_num = ((
+                SELECT IFNULL(MIN(T3.teacher_sort_num),
+                              (SELECT T2.teacher_sort_num
+                               FROM dreamer.view_teacher_user T2
+                               WHERE fk_tuser_id = #{teacherId}))
+                FROM dreamer.view_teacher_user T3
+                WHERE T3.teacher_sort_num >
+                      (SELECT T2.teacher_sort_num
+                       FROM dreamer.view_teacher_user T2
+                       WHERE fk_tuser_id = #{teacherId})
+
+            )+1
+            )
+        WHERE fk_user_id = #{teacherId};
+
+        SELECT @rank:=0;
+        UPDATE dreamer.teacher
+        SET teacher_sort_num=@rank:=@rank+1
+        ORDER BY teacher_sort_num;
+        ]]>
+    </update>
+
+
+    <!-- 순서 맨 위로  -->
+    <update id="moveItemTop"  parameterType="HashMap">
+        <foreach item="item" index="index" collection="teacherId" separator=";">
+            UPDATE  dreamer.teacher
+            SET teacher_sort_num = teacher_sort_num - 10000
+            WHERE teacher.fk_user_id = #{item}
+        </foreach>
+    </update>
+
+    <!-- 순서 맨 아래로 -->
+    <update id="moveItemBottom"  parameterType="HashMap">
+        <foreach item="item" index="index" collection="teacherId" separator=";">
+            UPDATE  dreamer.teacher
+            SET teacher_sort_num = teacher_sort_num + 10000
+            WHERE teacher.fk_user_id = #{item}
+        </foreach>
+    </update>
+
+    <!-- 순서 재정렬 -->
+    <update id="updateItemSortNum">
+        <![CDATA[
+            SELECT @rank:=0;
+            UPDATE dreamer.teacher
+            SET teacher_sort_num = @rank:=@rank+1
+            ORDER BY teacher_sort_num;
+        ]]>
+    </update>
+
+
+
+
+
+
+
+
+</mapper>

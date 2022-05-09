@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.teacher.T_HomeworkMapper">
+
+    <!-- 대시보드 과제 목록 -->
+    <select id="getHomeworkListByTeacherLimit" resultType="HomeworkModel" parameterType="HomeworkModel">
+        <![CDATA[
+            SELECT homework_id, fk_lecture_id, HWK.fk_suser_id, HWK.title, HWK.content,
+                   fk_file_id, VSU.user_name, team_id, team_name,
+                   DATE_FORMAT(HWK.reg_dt,'%Y-%m-%d') reg_dt,
+                   DATE_FORMAT(update_dt,'%Y-%m-%d') update_dt, COUNT(reply_id) count_reply
+            FROM dreamer.view_use_homework HWK
+                     JOIN dreamer.view_use_team VUT on HWK.fk_team_id = VUT.team_id
+                     JOIN dreamer.view_teacher_user VTU on VUT.fk_tuser_id = VTU.fk_tuser_id
+                     JOIN dreamer.view_student_user VSU on HWK.fk_suser_id = VSU.fk_suser_id
+                LEFT JOIN dreamer.reply RPY on HWK.homework_id = RPY.fk_homework_id
+            WHERE VTU.fk_tuser_id = #{teacherId}
+        ]]>
+        <if test="teamId != null and teamId != ''">
+            AND VUT.team_id = #{teamId}
+        </if>
+        GROUP BY HWK.homework_id
+        ORDER BY HWK.reg_dt desc
+        LIMIT 5;
+    </select>
+
+    <!-- 과제 리스트 -->
+    <select id="getHomeworkListByTeacher" resultType="HomeworkModel" parameterType="HomeworkModel">
+        <![CDATA[
+            SELECT homework_id, fk_lecture_id, HWK.fk_suser_id, HWK.title, HWK.content,
+                   fk_file_id, VSU.user_name, team_id, team_name,
+                   DATE_FORMAT(HWK.reg_dt,'%Y-%m-%d') reg_dt,
+                   DATE_FORMAT(update_dt,'%Y-%m-%d') update_dt, COUNT(reply_id) count_reply
+            FROM dreamer.view_use_homework HWK
+                     JOIN dreamer.view_use_team VUT on HWK.fk_team_id = VUT.team_id
+                     JOIN dreamer.view_teacher_user VTU on VUT.fk_tuser_id = VTU.fk_tuser_id
+                     JOIN dreamer.view_student_user VSU on HWK.fk_suser_id = VSU.fk_suser_id
+                LEFT JOIN dreamer.reply RPY on HWK.homework_id = RPY.fk_homework_id
+            WHERE VTU.fk_tuser_id = #{teacherId}
+        ]]>
+        <if test="teamId != null">
+            AND VUT.team_id  =  #{teamId}
+        </if>
+        <if test="title != null">
+            AND HWK.title LIKE CONCAT('%',#{title},'%')
+        </if>
+        <if test="userName != null">
+            AND VSU.user_name  LIKE CONCAT('%',#{userName},'%')
+        </if>
+        GROUP BY HWK.homework_id
+        ORDER BY HWK.reg_dt desc
+    </select>
+
+    <!-- 과제 상세 -->
+    <select id="getHomeworkDetail" resultType="HomeworkModel" parameterType="Integer">
+        <![CDATA[
+        SELECT homework_id, fk_lecture_id, HWK.fk_suser_id, HWK.title, HWK.content,
+               fk_file_id, user_name, team_id, team_name,
+               DATE_FORMAT(HWK.reg_dt,'%Y-%m-%d') reg_dt,
+               DATE_FORMAT(update_dt,'%Y-%m-%d') update_dt,file_url,file_origin_name
+        FROM dreamer.view_use_homework HWK
+                 JOIN dreamer.view_use_team VUT on HWK.fk_team_id = VUT.team_id
+                 JOIN dreamer.view_student_user VSU on HWK.fk_suser_id = VSU.fk_suser_id
+        WHERE homework_id= #{homeworkId}
+        ]]>
+    </select>
+
+</mapper>

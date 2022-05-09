@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+    <!--custom Css -->
+    <link rel="stylesheet" th:href="@{/assets/css/order.css}" type="text/css"/>
+    <!-- end custom css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Order-02-03 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">학생 선택</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/user/list}">배송 목록</a></li>
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/user/list}">배송 등록</a></li>
+                                    <li class="breadcrumb-item active">학생 선택</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <label class="form-label form_title">학생 선택</label>
+                                <table id="table" class="table table-hover nowrap w-100">
+                                    <thead>
+                                    <tr class="text-center">
+                                        <th>dataID</th>
+                                        <th>#</th>
+                                        <th>가입일시</th>
+                                        <th>이름</th>
+                                        <th>생년월일</th>
+                                        <th>수강중인 팀</th>
+                                        <th>특별활동 팀</th>
+                                    </tr>
+                                    </thead>
+
+
+                                    <tbody>
+                                    <tr class="cursor text-center active">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+                                    <tr class="cursor text-center">
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>2021-10-30 10:30</td>
+                                        <td>원빈</td>
+                                        <td>1999.10.23</td>
+                                        <td>3팀</td>
+                                        <td>독서활동 2팀</td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+
+                                <div class="studentInfo mt-4">
+                                    <p class="form-label form_title">원빈</p>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="infoBox mb-2">
+                                                <div class="">
+                                                    <p class="d-inline-block info_txt01">가입일시</p>
+                                                    <p class="d-inline-block">2021-10-30 10:30</p>
+                                                </div>
+
+                                                <div class="-hidden">
+                                                    <p class="d-inline-block info_txt01">생년월일</p>
+                                                    <p class="d-inline-block">199.01.23</p>
+                                                </div>
+                                            </div>
+
+                                            <!-- 팀선택은 1팀만 가능하게 해야합니다 !! -->
+                                            <div class="infoBox mb-2">
+                                                <div class="">
+                                                    <p class="d-inline-block info_txt01">수강중인팀</p>
+                                                    <div class="d-inline-block">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary btn-rounded">3팀</button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="">
+                                                    <p class="d-inline-block info_txt01">특별활동팀</p>
+                                                    <div class="d-inline-block">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary btn-rounded">독서활동 3팀</button>
+                                                        <button type="button" class="btn btn-sm btn-outline-primary btn-rounded active">명화특강 1팀</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-8">
+                                            <div class="infoBox mb-2">
+                                                <table id="address" class="table nowrap w-100 text-dark">
+                                                <thead>
+                                                <tr class="text-center">
+                                                    <th>dataID</th>
+                                                    <th> </th>
+                                                    <th>배송지</th>
+                                                    <th>수령인</th>
+                                                    <th>배송정보</th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td><input class="form-check-input" type="radio" name="addressRadio"></td>
+                                                    <td>집(기본)</td>
+                                                    <td>김연우<br/>010-2039-0960</td>
+                                                    <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                                </tr>
+
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td><input class="form-check-input" type="radio" name="addressRadio"></td>
+                                                    <td>학원</td>
+                                                    <td>김연우<br/>010-2039-0960</td>
+                                                    <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                                </tr>
+
+
+                                                <tr class="cursor text-center">
+                                                    <td>1</td>
+                                                    <td><input class="form-check-input" type="radio" name="addressRadio"></td>
+                                                    <td>학원</td>
+                                                    <td>김연우<br/>010-2039-0960</td>
+                                                    <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+
+                        <!-- 하단 버튼 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-end">
+                                    <button type="button" class="btn btn-primary btn_bg" onclick="moveRegister();">완료</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<script type="text/javaScript">
+    let table;
+
+    $(document).ready(function () {
+        $('.menu06').addClass('menuitem-active');
+        $('.menu06-menu').addClass('show');
+        $('.menu06-2').addClass('active');
+
+
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+                { "width": "3%", "targets": 1 }
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "info": false, //하단 정보 삭제 (Showing 1 to 8 of 8 entries)
+            "lengthChange": false, //테이블의 페이징 표시
+            "paging": false,
+            scrollY: 600,
+            scrollCollapse: true,
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+    });
+
+    $(document).ready(function () {
+        table = $('#address').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+                { "width": "3%", "targets": 1 }
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "searching": false, //검색 삭제
+            "info": false, //하단 정보 삭제 (Showing 1 to 8 of 8 entries)
+            "lengthChange": false, //테이블의 페이징 표시
+            "paging": false,
+            scrollY: 250,
+            scrollCollapse: true,
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+    });
+
+
+
+    $('#table tbody').on('click', 'td', function () {
+        let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+        let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+        let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+        let totalColumnCount = table.columns().count(); //전체 열 갯수
+        let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+
+        // if (indexColumn < totalColumnCount) {
+        //     // 수정&삭제 영역은 클릭 적용하지 않음
+        //     location.href = "/pub/notice/detail?id=" + indexData;
+        // }
+    });
+
+    //완료
+    function moveRegister(){
+        location.href =  conPath + "pub/order/delivery/register2";
+    }
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+    <!--custom Css -->
+    <link th:href="@{/assets/css/community.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Community-02-01 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">과제</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">과제</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <form th:action='@{/homework/list}' th:object='${reqModel}' method="get">
+                                <div class="searchTable mb-3">
+                                    <div class="articleWrap row">
+                                        <div class="col-md-4 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>팀 선택</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <select name="teamId" class="form-select">
+                                                    <option value="">ALL</option>
+                                                    <option th:each="_:${teamList}" th:value="${_.teamId}"
+                                                            th:text="|[${_.programName ne null ? _.programName:_.categoryName}]${_.teamName}|"
+                                                            th:selected="${reqTeamId} == ${_.teamId}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>작성자</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input name="userName" type="text" class="form-control" th:value="${reqUserName}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>제목</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input name="title" type="text" class="form-control" th:value="${reqTitle}">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="button-list text-center mb-3">
+                                    <button type="submit" class="btn btn-primary btn_bg btn90">검색</button>
+                                </div>
+                                </form>
+
+                                <table id="table" class="table table-hover nowrap w-100" .>
+                                    <thead>
+                                    <tr class="text-center">
+                                        <th>dataID</th>
+                                        <th>#</th>
+                                        <th class="text-start">과제 제목</th>
+                                        <th>작성자</th>
+                                        <th>팀</th>
+<!--                                        <th class="col-1">수업일</th>-->
+                                        <th class="col-1">작성일</th>
+                                        <th class="col-1">수정일</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr class="cursor text-center" th:each='_,num : ${resList}' th:onclick="moveDetails([[${_.homeworkId}]]);">
+                                        <td th:text='${_.homeworkId}'></td>
+                                        <td th:text='${num.count}'></td>
+                                        <td class="text-start">
+                                            <ys th:text='${_.title}'></ys>
+                                            <span class="text-danger ms-1" th:text="|[${_.countReply}]|">[0]</span>
+                                        </td>
+                                        <td th:text='${_.userName}'></td>
+                                        <td th:text='${_.teamName}'></td>
+<!--                                        <td th:text='${_.startDt}'></td>-->
+                                        <td th:text='${_.regDt}'></td>
+                                        <td th:text='${_.updateDt}'></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+<script type="text/javaScript">
+    let table;
+
+    $(document).ready(function () {
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+                {"width": "3%", "targets": 1}
+            ],
+            "searching": false, //검색 삭제
+            "ordering": false,
+            "scrollX": true,
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+    });
+
+
+    $('#table tbody').on('click', 'td', function () {
+        let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+        let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+        let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+        let totalColumnCount = table.columns().count(); //전체 열 갯수
+        let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+
+        if (indexColumn < totalColumnCount) {
+            // 수정&삭제 영역은 클릭 적용하지 않음
+            console.log("indexData",indexData);
+            location.href = conPath+"homework/detail?id=" + indexData;
+        }
+    });
+
+
+</script>
+
+</body>
+
+</html>

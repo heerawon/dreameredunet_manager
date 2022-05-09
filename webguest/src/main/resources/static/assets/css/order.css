@@ -1,0 +1,37 @@
+@charset "UTF-8";
+.completeCheck .btn-label {
+    background-color: rgba(114, 150, 205, 0.1);
+}
+
+.deliveryInfo {
+    background: #f7f8f9;
+}
+
+/* 학생 선택 */
+tr.active {
+    background: #f7f8fa;
+}
+
+.studentInfo {
+    border: 1px solid #e5e6e6;
+    padding: 1.5rem;
+}
+
+.infoBox {
+    background: rgb(246 247 249);
+    padding: 15px 15px 5px 15px;
+    color: #000;
+    border: 1px solid #e5e6e6;
+}
+
+.infoBox .info_txt01 {
+    width: 80px;
+}
+
+#address {
+    border-color: #bec8d1 !important;
+}
+
+#address.table>:not(:last-child)>:last-child>* {
+    border-bottom-color: #bec8d1;
+}

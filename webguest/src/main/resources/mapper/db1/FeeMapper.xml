@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.FeeMapper">
+
+    <!-- 요금 목록 -->
+    <select id="selectFeeList" resultType="FeeModel" >
+        <![CDATA[
+            SELECT
+                   r.rate_id, r.rate_name, r.price, r.is_del
+                   DATE_FORMAT(r.reg_dt,'%Y-%m-%d') reg_dt
+            FROM dreamer.flat_rate as r
+            WHERE r.is_del != 1
+        ]]>
+    </select>
+
+    <!-- 요금 등록 -->
+    <insert id="insertFee"  parameterType="FeeModel" useGeneratedKeys="true" keyProperty="feeId">
+        <![CDATA[
+            INSERT INTO dreamer.flat_rate
+            (
+                rate_name,
+                price,
+            )
+            VALUES
+            (
+               #{rateName},
+               #{price},
+            );
+        ]]>
+    </insert>
+</mapper>

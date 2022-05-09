@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.BoardMapper">
+
+    <!-- 공지사항 리스트 -->
+    <select id="selectBoardList" resultType="BoardModel" >
+        <![CDATA[
+            SELECT b.board_id, b.board_title, b.board_content, b.board_img,
+                   DATE_FORMAT(b.board_updated,'%Y-%m-%d %H:%i:%s') board_updated
+            FROM dreamer.board as b
+            WHERE b.is_del != 1
+            ORDER BY board_id DESC
+        ]]>
+    </select>
+
+    <!-- 공지사항 등록 -->
+    <insert id="insertBoard"  parameterType="BoardModel" useGeneratedKeys="true" keyProperty="boardId">
+        <![CDATA[
+            INSERT INTO dreamer.board
+            (
+                board_title,
+                board_content,
+                board_img,
+                fk_user_id
+            )
+            VALUES (
+               #{boardTitle},
+               #{boardContent},
+               #{boardImg},
+               #{fkUserId}
+            );
+        ]]>
+    </insert>
+
+    <!-- 공지사항 상세 -->
+    <select id="selectBoardDetail" resultType="BoardModel" parameterType="Integer">
+        <![CDATA[
+        SELECT b.board_id, b.board_title, b.board_content, b.board_img,
+               DATE_FORMAT(b.board_updated,'%Y-%m-%d %H:%i:%s') board_updated
+        FROM dreamer.board as b
+        WHERE b.board_id = #{boardId}
+        ]]>
+    </select>
+
+    <!-- 공지사항 수정 -->
+    <update id="updateBoard"  parameterType="BoardModel">
+        <![CDATA[
+            UPDATE  dreamer.board
+            SET
+                board_title = #{boardTitle},
+                board_content = #{boardContent},
+                board_img = #{boardImg},
+                board_updated = #{boardUpdated},
+                fk_user_id = #{fkUserId}
+            WHERE board_id = #{boardId}
+        ]]>
+    </update>
+
+    <!-- 공지사항 삭제 -->
+    <delete id="deleteBoard"  parameterType="Integer">
+        <![CDATA[
+            UPDATE  dreamer.board
+            SET is_del = 1
+            WHERE board_id = #{boardId}
+        ]]>
+    </delete>
+
+</mapper>

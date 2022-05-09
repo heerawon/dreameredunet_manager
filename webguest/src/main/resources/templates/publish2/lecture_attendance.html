@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/lecture.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+    <style>
+        th, td {
+            white-space: nowrap;
+        }
+
+        div.dataTables_wrapper {
+            margin: 0 auto;
+        }
+
+        div.container {
+            width: 80%;
+        }
+    </style>
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-05-01 -->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">출석현황</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub2/lecture/dashboard/total}">전체 대시보드</a></li>
+                                    <li class="breadcrumb-item"><a th:href="@{/pub2/lecture/dashboard/team}">팀 대시보드</a></li>
+                                    <li class="breadcrumb-item active">출석현황</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="button-list">
+                                        <button type="button" class="btn btn-outline-primary btn_bg active">[주니어] 기초</button>
+                                        <button type="button" class="btn btn-outline-primary btn_bg">[주니어] 기초 +</button>
+                                        <button type="button" class="btn btn-outline-danger btn_bg">[주니어] 기초 +</button>
+                                    </div>
+
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <button type="button" class="btn btn-success btn-sm me-2" onclick="moveDashboard()"> < 팀 대시보드</button>
+                                            <p class="lecture_txt01 d-inline-block">[주니어] 기초</p>
+                                            <p class="lecture_txt01 d-inline-block">총 학생 수 : 43명</p>
+                                            <p class="lecture_txt01 d-inline-block">강의 기간 : 2021.08.01 ~2021.09.21</p>
+                                            <p class="lecture_txt01 d-inline-block">총 강의 수 : 25회</p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="card">
+                                        <div class="card-body">
+
+                                            <div class="scheduleBox">
+                                                <div class="row">
+                                                    <div class="col-md-12 align-items-center scheduleWrap">
+                                                        <div class="calenderDay">
+                                                            <i class="ri-calendar-check-line calenderIcon"></i>
+                                                            <p class="mb-0">2021-07-19</p>
+                                                        </div>
+
+                                                        <div class="ps-3 todayAttendance float-start">
+                                                            <p class="todayAttendanceTxt mb-1">오늘의 출석현황</p>
+                                                            <div class="progress mb-0 todayAttendanceBar">
+                                                                <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
+                                                                     aria-valuemax="100">25%
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="totalAttendance">
+                                                            <p class="todayAttendanceTxt mb-1 text-center">출석완료</p>
+                                                            <p class="totalAttendanceNum mb-0"><span>32</span>/43명</p>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> <!-- end card body-->
+                                    </div>
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <table id="table" class="table stripe  order-column attendanceTable" style="width:100%">
+                                                <thead>
+                                                <tr class="text-center">
+                                                    <th>학생정보</th>
+                                                    <th class="active"><span>1회</span>2021.08.01</th>
+                                                    <th><span>2회</span>2021.08.01</th>
+                                                </tr>
+                                                </thead>
+
+
+                                                <tbody>
+                                                <tr class="text-center align-middle">
+                                                    <td class="cursor" data-bs-toggle="modal" data-bs-target="#delete-modal" onclick="moveInfo(0);">
+                                                        <div>
+                                                            <img th:src="@{/images/teacher01.png}" alt="teacher-image" class="img-fluid avatar-sm rounded-circle">
+                                                        </div>
+                                                        <span class="text-primary">JINS</span> 원빈(1998.01.10)
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <button type="button" class="btn btn-outline-primary btn-xs active">출석</button>
+                                                            <button type="button" class="btn btn-outline-danger btn-xs"
+                                                                    data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                                    onclick="moveMemo(0);">Maemo
+                                                            </button>
+                                                        </div>
+                                                        <div class="mt-1">
+                                                            <span class="badge bg-primary rounded-pill solution_badge w-auto m-0">과제제출완료</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <button type="button" class="btn btn-outline-primary btn-xs">출석</button>
+                                                            <button type="button" class="btn btn-outline-danger btn-xs"
+                                                                    data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                                    onclick="moveMemo(0);">Maemo
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <tr class="text-center align-middle">
+                                                    <td class="cursor" data-bs-toggle="modal" data-bs-target="#delete-modal" onclick="moveInfo(0);">
+                                                        <div>
+                                                            <img th:src="@{/images/teacher01.png}" alt="teacher-image" class="img-fluid avatar-sm rounded-circle">
+                                                        </div>
+                                                        <span class="text-primary">JINS</span> 원빈(1998.01.10)
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <button type="button" class="btn btn-outline-primary btn-xs active">출석</button>
+                                                            <button type="button" class="btn btn-outline-danger btn-xs"
+                                                                    data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                                    onclick="moveMemo(0);">Maemo
+                                                            </button>
+                                                        </div>
+                                                        <div class="mt-1">
+                                                            <span class="badge bg-primary rounded-pill solution_badge w-auto m-0">과제제출완료</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <button type="button" class="btn btn-outline-primary btn-xs">출석</button>
+                                                            <button type="button" class="btn btn-outline-danger btn-xs"
+                                                                    data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                                    onclick="moveMemo(0);">Maemo
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <tr class="text-center studentDisabled align-middle">
+                                                    <td class="cursor" data-bs-toggle="modal" data-bs-target="#delete-modal" onclick="moveInfo(0);">
+                                                        <div>
+                                                            <img th:src="@{/images/teacher01.png}" alt="teacher-image" class="img-fluid avatar-sm rounded-circle">
+                                                        </div>
+                                                        <span class="text-primary">JINS</span> 원빈(1998.01.10)
+                                                        <div class="disabledBadges">구독기간 만료</div>
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <button type="button" class="btn btn-outline-primary btn-xs">출석</button>
+                                                            <button type="button" class="btn btn-outline-danger btn-xs"
+                                                                    data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                                    onclick="moveMemo(0);">Maemo
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <button type="button" class="btn btn-outline-primary btn-xs">출석</button>
+                                                            <button type="button" class="btn btn-outline-danger btn-xs"
+                                                                    data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                                    onclick="moveMemo(0);">Maemo
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <tr class="text-center studentDisabled align-middle">
+                                                    <td class="cursor" data-bs-toggle="modal" data-bs-target="#delete-modal" onclick="moveInfo(0);">
+                                                        <div>
+                                                            <img th:src="@{/images/teacher01.png}" alt="teacher-image" class="img-fluid avatar-sm rounded-circle">
+                                                        </div>
+                                                        <span class="text-primary">JINS</span> 원빈(1998.01.10)
+                                                        <div class="disabledBadges">팀탈퇴</div>
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <button type="button" class="btn btn-outline-primary btn-xs">출석</button>
+                                                            <button type="button" class="btn btn-outline-danger btn-xs"
+                                                                    data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                                    onclick="moveMemo(0);">Maemo
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <button type="button" class="btn btn-outline-primary btn-xs">출석</button>
+                                                            <button type="button" class="btn btn-outline-danger btn-xs"
+                                                                    data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                                    onclick="moveMemo(0);">Maemo
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div><!-- end col-->
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<script type="text/javaScript">
+    let table;
+
+    $(document).ready(function () {
+
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02 a').addClass('active');
+
+        let table = $('#table').removeAttr('width').DataTable({
+            scrollY: "600px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: false,
+            ordering: false,
+            searching: false, //검색 삭제
+            info: false, //하단 정보 삭제 (Showing 1 to 8 of 8 entries)
+            lengthChange: false, //테이블의 페이징 표시
+            columnDefs: [
+                {width: 200, targets: 0}
+            ],
+            fixedColumns: true
+        });
+
+    });
+
+
+    //알림
+    function moveInfo(params) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '<p>워빈(1998.10.10) 34세(남)</p>',
+            html: '<div class="studentMpdal text-start">\n' +
+                '                                <div class="studentInfo">\n' +
+                '                                    <p><span class="fw-bold">최종 수강일시</span> : 2021.07.21</p>\n' +
+                '                                </div>\n' +
+                '                                <div class="grayLine"></div>\n' +
+                '                                <div class="attendanceInfo mt-2 mb-3">\n' +
+                '                                    <p class="float-start mb-1 fw-bold">출석율</p>\n' +
+                '                                    <p class="float-end mb-1 attendanceNum"><span>20</span>/25회</p>\n' +
+                '                                    <div class="progress mb-0 w-100 studentAttendanceBar">\n' +
+                '                                        <div class="progress-bar" role="progressbar" style="width: 80%;" aria-valuenow="25" aria-valuemin="0"\n' +
+                '                                             aria-valuemax="100">80%\n' +
+                '                                        </div>\n' +
+                '                                    </div>\n' +
+                '                                </div>\n' +
+                '                                <div class="grayLine"></div>\n' +
+                '                                <div class="parentsInfo mt-2">\n' +
+                '                                    <p class="fw-bold">부모님 정보</p>\n' +
+                '                                    <p>김기산 010.2300.2222</p>\n' +
+                '                                </div>\n' +
+                '                            </div>'
+        })
+
+    }
+
+    //알림
+    function moveMemo(params) {
+        (async () => {
+
+            const {value: text} = await Swal.fire({
+                input: 'textarea',
+                title: '메모',
+                html: '<div class="text-start font-14"><span class="font-20 me-2 fw-bold">3회</span> 2021.07.20 원빈(1998)</div>',
+                inputPlaceholder: '메모를 입력하세요.',
+                inputAttributes: {
+                    'aria-label': '메모를 입력하세요.'
+                },
+                showCancelButton: true
+            })
+
+            if (text) {
+                Swal.fire(text)
+            }
+
+        })()
+
+    }
+
+
+    //팀 대시보드
+    function moveDashboard() {
+        location.href = conPath + "pub2/lecture/dashboard/team";
+    }
+
+
+</script>
+
+</body>
+
+</html>

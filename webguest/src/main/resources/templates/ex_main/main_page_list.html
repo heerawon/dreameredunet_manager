@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- 타임리프 참고
+    https://velog.io/@slo-th/thymeleaf
+-->
+<table class="table" style="width: 100%" border="1">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>id</th>
+        <th>이름</th>
+        <th>짝홀</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each='val,num : ${userList}'>
+        <td th:text='${num.count}'></td>
+        <td class="d-none" th:text='${val.userPkId}'></td>
+        <td th:text='${val.userName}'></td>
+        <td th:text='${ (val.userName eq "하나") ? "일번":"나머지"}'>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

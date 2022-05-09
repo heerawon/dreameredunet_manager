@@ -1,0 +1,492 @@
+#selectLectureList 강의 목록
+SELECT l.lecture_id, l.fk_team_id, l.start_dt, l.start_time, l.homework,
+       l.zoom_link, l.chapter, l.is_del,
+       DATE_FORMAT(l.reg_dt,'%Y-%m-%d') reg_dt
+FROM dreamer.LECTURE AS l
+    LEFT JOIN dreamer.TEAM as t ON l.fk_team_id = t.team_id
+WHERE l.is_del != 1 AND l.fk_team_id = 10;
+
+#프로그램 연령에 맞는 유저 구하기 getMemberList
+SELECT U.user_id, U.user_name, S.student_mbti, TM.fk_team_id, T.team_name,
+       DATE_FORMAT(S.student_birth,'%Y-%m-%d') student_birth
+FROM dreamer.STUDENT as S
+         LEFT JOIN dreamer.TEAM_MEMBER as TM on S.fk_user_id =  TM.fk_user_id
+         LEFT JOIN dreamer.TEAM as T on T.team_id =  TM.fk_team_id
+         LEFT JOIN dreamer.USER as U on S.fk_user_id = U.user_id
+WHERE U.user_active = 1
+AND ROUND((TO_DAYS(NOW()) - (TO_DAYS(S.student_birth))) / 365) BETWEEN 17 AND 19
+AND TM.fk_team_id = 10;
+
+#학생 나이 구하기
+select u.user_name, ROUND((TO_DAYS(NOW()) - (TO_DAYS(s.student_birth))) / 365) AS age
+from dreamer.STUDENT as s
+         left join dreamer.USER as u on s.fk_user_id = u.user_id;
+
+#수강 학생 목록 getTeamMemberList
+SELECT U.user_id, U.user_name, S.student_mbti,
+       DATE_FORMAT(S.student_birth,'%Y-%m-%d') student_birth
+FROM dreamer.TEAM_MEMBER as T
+         LEFT JOIN dreamer.STUDENT as S on T.fk_user_id = S.fk_user_id
+         LEFT JOIN dreamer.USER as U on S.fk_user_id = U.user_id
+WHERE T.fk_team_id =10;
+
+#프로그램 연령 가져오기
+SELECT p.program_id, p.program_name, p.program_start_age, p.program_end_age,
+       t.team_id
+FROM dreamer.TEAM as t
+         left join dreamer.PROGRAM as p on t.fk_program_id = p.program_id
+where team_id = 9;
+
+#팀에 연관된 강의와 학생이 있는지 ?
+SELECT T.team_name, L.lecture_id, TM.fk_user_id
+FROM dreamer.TEAM AS T
+     LEFT JOIN dreamer.LECTURE AS L ON L.fk_team_id = T.team_id
+     LEFT JOIN dreamer.TEAM_MEMBER TM on TM.fk_team_id = T.team_id
+WHERE T.team_status = 1
+AND T.team_id = 10
+GROUP BY L.lecture_id, TM.fk_user_id;
+
+#팀에 연관된 강의 개수
+SELECT COUNT(L.lecture_id)
+FROM dreamer.TEAM AS T
+         LEFT JOIN dreamer.LECTURE AS L ON L.fk_team_id = T.team_id
+WHERE T.team_status = 1
+  AND T.team_id = 10;
+
+#팀에 수강생 수
+SELECT COUNT(TM.fk_user_id)
+FROM dreamer.TEAM AS T
+         LEFT JOIN dreamer.TEAM_MEMBER TM on T.team_id = TM.fk_team_id
+WHERE T.team_status = 1
+  AND T.team_id = 10;
+
+### Q1 어디에도 속하지 않은 학생 구하기
+
+# 1. 설정 된 연령 중 어떠한 팀이라도 한 곳에 속한 학생 id를 구한다.
+SELECT DISTINCT STD.fk_user_id
+FROM dreamer.TEAM_MEMBER TMBR
+         JOIN dreamer.STUDENT STD ON TMBR.fk_user_id = STD.fk_user_id
+WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(STD.student_birth))) / 365) BETWEEN 17 AND 18;
+
+# 2. 해당 연령의 모든 학생을 구한다.
+SELECT *
+FROM dreamer.STUDENT STD
+WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(STD.student_birth))) / 365) BETWEEN 17 AND 18;
+
+# 3. 2모든 학생에서 1 속한 학생을 제외시킨다.
+SELECT *
+FROM dreamer.STUDENT STD
+WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(STD.student_birth))) / 365) BETWEEN 17 AND 18
+  AND STD.fk_user_id NOT IN(
+    SELECT DISTINCT STD.fk_user_id
+    FROM dreamer.TEAM_MEMBER TMBR
+             JOIN dreamer.STUDENT STD ON TMBR.fk_user_id = STD.fk_user_id
+    WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(STD.student_birth))) / 365) BETWEEN 17 AND 18
+);
+
+# 4. 실제 적용 쿼리
+SELECT U.user_name, U.user_id, STD.student_mbti,
+       DATE_FORMAT(STD.student_birth,'%Y-%m-%d') student_birth
+FROM dreamer.STUDENT STD
+     JOIN dreamer.USER U ON STD.fk_user_id = U.user_id
+WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(STD.student_birth))) / 365) BETWEEN 17 AND 18
+  AND STD.fk_user_id NOT IN(
+    SELECT DISTINCT STD.fk_user_id
+    FROM dreamer.TEAM_MEMBER TMBR
+             JOIN dreamer.STUDENT STD ON TMBR.fk_user_id = STD.fk_user_id
+    WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(STD.student_birth))) / 365) BETWEEN 17 AND 18
+);
+
+### Q2 설정 된 연령 중 어떠한 팀이라도 한 곳에 속한 학생 id
+SELECT *,GROUP_CONCAT(T.team_name) team_name,GROUP_CONCAT(T.team_id) team_id
+FROM dreamer.TEAM_MEMBER TMBR
+         JOIN dreamer.STUDENT STD ON TMBR.fk_user_id = STD.fk_user_id
+         JOIN dreamer.TEAM T ON T.team_id = TMBR.fk_team_id
+         JOIN dreamer.USER U ON U.user_id = TMBR.fk_user_id
+WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(STD.student_birth))) / 365) BETWEEN 17 AND 18
+GROUP BY STD.fk_user_id;
+
+SELECT U.user_id, U.user_name, S.student_mbti,
+       DATE_FORMAT(S.student_birth,'%Y-%m-%d') student_birth
+FROM dreamer.TEAM_MEMBER as T
+         LEFT JOIN dreamer.STUDENT as S on T.fk_user_id = S.fk_user_id
+         LEFT JOIN dreamer.USER as U on S.fk_user_id = U.user_id
+WHERE T.fk_team_id = 10;
+
+#수강생 리스트 left join 안하고
+SELECT *
+FROM dreamer.TEAM_MEMBER as T
+         JOIN dreamer.STUDENT as S on T.fk_user_id = S.fk_user_id
+         JOIN dreamer.USER as U on T.fk_user_id = U.user_id
+WHERE T.fk_team_id = 11;
+
+#특별활동 리스트 - 팀원 수 까지 구해서 ( 아직못함)
+SELECT t.team_id, t.fk_program_id, t.team_name, t.reg_dt, t.fk_user_id, t.total_lecture,
+       DATE_FORMAT(t.start_dt,'%Y-%m-%d') start_dt,
+       DATE_FORMAT(t.end_dt,'%Y-%m-%d') end_dt,
+       t.team_status, t.division, t.introduce, t.link,
+       DATE_FORMAT(t.reg_dt,'%Y-%m-%d %H:%i') reg_dt,
+       p.program_id, p.program_name, p.program_start_age, p.program_end_age,
+       u.user_name
+        , COUNT(TM.fk_user_id) as memberCount
+FROM dreamer.TEAM as t
+         LEFT JOIN dreamer.TEACHER as tc
+                   ON t.fk_user_id = tc.fk_user_id
+         LEFT JOIN dreamer.USER as u
+                   ON tc.fk_user_id = u.user_id
+         LEFT JOIN dreamer.PROGRAM as p
+                   ON t.fk_program_id = p.program_id
+         LEFT JOIN dreamer.TEAM_MEMBER TM ON t.team_id = TM.fk_team_id
+         LEFT JOIN dreamer.STUDENT S ON TM.fk_user_id = S.fk_user_id
+WHERE t.team_status = 1 AND t.division = 0;
+
+#getTeacherTeam (강사 강의 팀 가져오기)
+SELECT tm.team_name, tm.division
+FROM dreamer.TEACHER as t
+     JOIN dreamer.USER as u
+         ON t.fk_user_id = u.user_id
+     JOIN dreamer.TEAM as tm
+         ON t.fk_user_id = tm.fk_user_id
+WHERE u.user_active = 1 AND t.fk_user_id ='noze';
+
+#다가오는 강의 일정정보 (1)
+SELECT t.fk_user_id, t.team_name,
+       lec.lecture_id, lec.start_dt, lec.chapter, lec.zoom_link, lec.homework
+FROM dreamer.LECTURE lec
+         JOIN dreamer.TEAM t ON lec.fk_team_id = t.team_id
+WHERE t.team_status =1 AND lec.start_dt > now() AND t.team_id = 20
+LIMIT 1;
+
+##다가오는 강의 일정정보 (2) - 조각조각 따땃따
+SELECT lec.lecture_id, lec.start_dt, lec.chapter, lec.zoom_link, lec.homework
+FROM dreamer.LECTURE lec
+WHERE lec.start_dt > now() AND lec.fk_team_id = 20
+LIMIT 1;
+
+#강의 총 회차 -> 탐정보에서 가져와도 되잖아?
+SELECT COUNT(lec.lecture_id)
+FROM dreamer.LECTURE lec
+         JOIN dreamer.TEAM t ON lec.fk_team_id = t.team_id
+WHERE t.team_status =1 AND lec.start_dt > now() AND t.team_id = 20;
+
+#수강생 정보 몇명인가 ~
+SELECT COUNT(tm.fk_user_id)
+FROM dreamer.TEAM_MEMBER tm
+         JOIN dreamer.TEAM t ON tm.fk_team_id = t.team_id
+WHERE tm.fk_team_id = 20;
+
+#강사 목록 - 강사 강의 목록까지 가져오기
+SELECT u.user_id, u.user_name, te.team_id, te.team_name ,t.fk_user_id, t.teacher_email, t.teacher_profile,
+       DATE_FORMAT(t.teacher_birth,'%Y-%m-%d') teacher_birth
+FROM dreamer.TEACHER as t
+         JOIN dreamer.USER as u ON t.fk_user_id = u.user_id
+         LEFT JOIN dreamer.TEAM as te ON t.fk_user_id = te.fk_user_id
+WHERE u.user_active = 1 and te.team_status = 1
+order by u.user_id;
+# GROUP BY t.fk_user_id;
+
+#강사목록 - group concat
+SELECT U.user_id, U.user_name, TCH.teacher_email, TCH.teacher_profile,
+       DATE_FORMAT(TCH.teacher_birth,'%Y-%m-%d') teacher_birth,
+       GROUP_CONCAT(T.team_name) team_name,GROUP_CONCAT(T.team_id) team_id
+FROM dreamer.TEACHER as TCH
+         JOIN dreamer.TEAM T ON T.fk_user_id = TCH.fk_user_id
+         JOIN dreamer.USER U ON U.user_id = TCH.fk_user_id
+WHERE T.team_status = 1 AND U.user_active
+GROUP BY TCH.fk_user_id;
+
+#강사목록 - division 따로
+SELECT U.user_id, U.user_name, TCH.teacher_email, TCH.teacher_profile,
+       DATE_FORMAT(TCH.teacher_birth,'%Y-%m-%d') teacher_birth,
+       GROUP_CONCAT(T.team_name) team_name,GROUP_CONCAT(T.team_id) team_id
+FROM dreamer.TEACHER as TCH
+         JOIN dreamer.TEAM T ON T.fk_user_id = TCH.fk_user_id
+         JOIN dreamer.USER U ON U.user_id = TCH.fk_user_id
+WHERE T.team_status = 1 AND U.user_active
+GROUP BY TCH.fk_user_id;
+
+## 선생님들 목록
+SELECT TB1.*
+FROM( dreamer.VIEW_TEACHER_USER
+)TB1;
+
+## 강의를 진행 중인 선생님 목록
+SELECT DISTINCT fk_user_id
+FROM dreamer.TEAM TM
+WHERE  TM.team_status = 1;
+
+## 강의를 진행 중인 선생님 목록
+SELECT TB.*,TB1.*,TB2.*
+FROM dreamer.VIEW_TEACHER_USER TB
+    LEFT JOIN
+         (SELECT U.user_id, U.user_name, TCH.teacher_email, TCH.teacher_profile,
+                DATE_FORMAT(TCH.teacher_birth,'%Y-%m-%d') teacher_birth,
+                GROUP_CONCAT(T.team_name) team_name,GROUP_CONCAT(T.team_id) team_id
+         FROM dreamer.TEACHER as TCH
+             JOIN dreamer.USER U ON U.user_id = TCH.fk_user_id
+             LEFT JOIN dreamer.TEAM T ON T.fk_user_id = TCH.fk_user_id
+         WHERE T.team_status = 1 AND U.user_active = 1 AND T.division = 0
+         GROUP BY TCH.fk_user_id
+         )TB1
+    ON TB.user_id = TB1.user_id
+     LEFT JOIN (
+         SELECT U.user_id,
+                GROUP_CONCAT(T.team_name) special_team_name,GROUP_CONCAT(T.team_id) special_team_id
+         FROM dreamer.TEACHER as TCH
+                  JOIN dreamer.USER U ON U.user_id = TCH.fk_user_id
+                  LEFT JOIN dreamer.TEAM T ON T.fk_user_id = TCH.fk_user_id
+             WHERE T.team_status = 1 AND U.user_active = 1 AND T.division = 1
+         GROUP BY TCH.fk_user_id
+         )TB2
+    ON TB1.user_id = TB2.user_id;
+
+#TEACHER_USER_VIEW
+SELECT  TCR.fk_user_id, TCR.teacher_gender, TCR.teacher_cell, TCR.teacher_addr, TCR.teacher_addr_detail,
+        TCR.teacher_email, TCR.teacher_profile, TCR.fk_category_id, TCR.teacher_history, TCR.teacher_introduce,
+        TCR.teacher_assign_dt, TCR.teacher_is_president, TCR.teacher_is_main, TCR.teacher_sort_num,
+        DATE_FORMAT(TCR.teacher_birth,'%Y-%m-%d') teacher_birth, USR.user_name, USR.user_id
+FROM dreamer.TEACHER TCR
+         JOIN dreamer.USER USR ON TCR.fk_user_id = USR.user_id
+WHERE USR.user_active = 1;
+
+#STUDENT_USER_VIEW
+SELECT STD.fk_user_id, STD.student_gender,  STD.student_email, STD.student_cell, STD.student_subscribe,
+       STD.student_mbti, STD.student_address, STD.student_over_fourteen,
+       DATE_FORMAT(STD.student_birth,'%Y-%m-%d') teacher_birth, USR.user_name, USR.user_id
+FROM dreamer.STUDENT STD
+         JOIN dreamer.USER USR ON STD.fk_user_id = USR.user_id
+WHERE USR.user_active = 1;
+
+#getMemberList2
+# AND TMBR.is_del = 0 이 구문을 넣어야 하나... 하 ...
+SELECT U.user_name, U.user_id, STD.student_mbti,
+       GROUP_CONCAT(T.team_name) team_name,GROUP_CONCAT(T.team_id) team_id,
+       DATE_FORMAT(STD.student_birth,'%Y-%m-%d') student_birth
+FROM dreamer.TEAM_MEMBER TMBR
+     JOIN dreamer.STUDENT STD ON TMBR.fk_user_id = STD.fk_user_id
+     JOIN dreamer.TEAM T ON T.team_id = TMBR.fk_team_id
+     JOIN dreamer.USER U ON U.user_id = TMBR.fk_user_id
+WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(STD.student_birth))) / 365) BETWEEN 17 AND 19
+  AND T.team_status = 1
+  AND STD.fk_user_id NOT IN(
+        SELECT DISTINCT STD.fk_user_id
+        FROM dreamer.TEAM_MEMBER TMBR
+                 JOIN dreamer.STUDENT STD ON TMBR.fk_user_id = STD.fk_user_id
+        WHERE TMBR.fk_team_id = 10 AND TMBR.is_del =0
+    )
+GROUP BY STD.fk_user_id;
+
+
+
+
+
+
+
+##TEST
+SELECT U.user_name, U.user_id, STD.student_mbti,
+       GROUP_CONCAT(T.team_name) team_name,GROUP_CONCAT(T.team_id) team_id,
+       DATE_FORMAT(STD.student_birth,'%Y-%m-%d') student_birth
+FROM (
+    SELECT *
+    FROM dreamer.TEAM_MEMBER
+    WHERE is_del = 0
+         ) TMBR
+         JOIN dreamer.STUDENT STD ON TMBR.fk_user_id = STD.fk_user_id
+         JOIN dreamer.TEAM T ON T.team_id = TMBR.fk_team_id
+         JOIN dreamer.USER U ON U.user_id = TMBR.fk_user_id
+    WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(STD.student_birth))) / 365) BETWEEN  17 AND 19
+          AND T.team_status = 1
+    AND STD.fk_user_id NOT IN(
+    SELECT DISTINCT STD.fk_user_id
+    FROM dreamer.TEAM_MEMBER TMBR
+             JOIN dreamer.STUDENT STD ON TMBR.fk_user_id = STD.fk_user_id
+    WHERE TMBR.is_del =0 AND TMBR.fk_team_id = 10
+    )
+GROUP BY STD.fk_user_id;
+
+##1. 해당 연령대의 모든 학생
+SELECT fk_user_id,student_address,student_birth,
+    student_cell,student_email,student_gender,
+    student_mbti,student_over_fourteen,student_subscribe,
+    user_id,user_name
+FROM dreamer.VIEW_STUDENT_USER
+WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(student_birth))) / 365) BETWEEN  17 AND 19;
+
+##2. 해당 팀에 가입한 학생 목록
+SELECT fk_team_id,fk_user_id,is_del,reg_dt
+FROM dreamer.TEAM_MEMBER
+WHERE fk_team_id = 10
+AND is_del = 0;
+
+##2-1. 학생의 아이디 목록
+SELECT fk_user_id
+FROM dreamer.TEAM_MEMBER
+WHERE fk_team_id = 10
+  AND is_del = 0;
+
+## 해당 연령 중 특정 팀에 가입하지 않은 유저 목록은   1-2 의 항목
+SELECT fk_user_id,student_address,student_birth,
+       student_cell,student_email,student_gender,
+       student_mbti,student_over_fourteen,student_subscribe,
+       user_id,user_name
+FROM dreamer.VIEW_STUDENT_USER
+WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(student_birth))) / 365) BETWEEN  17 AND 19
+NOT IN (
+      SELECT fk_user_id
+      FROM dreamer.TEAM_MEMBER
+      WHERE fk_team_id = 10
+     AND is_del = 0
+);
+
+## 해당 학생이 가입 하고있는 모임의 이름 목록을  group concat 으로 가져온다.
+
+## 1. 해당 유저의 모든 팀 정보 가져오기
+SELECT USR.fk_user_id,USR.student_birth,
+       student_mbti,
+       USR.user_id,USR.user_name,TB2.fk_team_id,TB2.team_name
+FROM dreamer.VIEW_STUDENT_USER USR
+JOIN (
+    SELECT T.team_name,T.team_id,TM.fk_team_id,TM.fk_user_id
+    FROM dreamer.TEAM T
+    JOIN dreamer.TEAM_MEMBER TM
+    ON T.team_id = TM.fk_team_id
+    WHERE TM.is_del = 0
+    ) TB2
+ON TB2.fk_user_id = USR.user_id
+WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(student_birth))) / 365) BETWEEN  17 AND 19;
+
+## 2. group concat
+SELECT USR.fk_user_id,USR.student_birth,
+       student_mbti,
+       USR.user_id,TB2.fk_user_id,GROUP_CONCAT(TB2.fk_team_id),GROUP_CONCAT(TB2.team_name)
+FROM dreamer.VIEW_STUDENT_USER USR
+JOIN (
+    SELECT T.team_name,T.team_id,TM.fk_team_id,TM.fk_user_id
+    FROM dreamer.TEAM T
+    JOIN dreamer.TEAM_MEMBER TM
+    ON T.team_id = TM.fk_team_id
+    WHERE TM.is_del = 0
+    ) TB2
+ON TB2.fk_user_id = USR.user_id
+WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(student_birth))) / 365) BETWEEN  17 AND 19
+GROUP BY TB2.fk_user_id;
+
+
+## 2-2
+#TODO not in 쓰지 말고 모집합에서 제외해오기
+SELECT USR.fk_user_id,USR.student_birth,
+       student_mbti,
+       USR.user_id,USR.user_name,GROUP_CONCAT(TB2.fk_team_id),GROUP_CONCAT(TB2.team_name)
+FROM dreamer.VIEW_STUDENT_USER USR
+         JOIN (
+    SELECT T.team_name,T.team_id,TM.fk_team_id,TM.fk_user_id
+    FROM dreamer.VIEW_USE_TEAM T
+             JOIN dreamer.TEAM_MEMBER TM
+                  ON T.team_id = TM.fk_team_id
+#     WHERE TM.is_del = 0
+) TB2
+              ON TB2.fk_user_id = USR.user_id
+WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(student_birth))) / 365) BETWEEN  17 AND 19
+AND USR.fk_user_id NOT IN (
+    SELECT fk_user_id
+    FROM dreamer.TEAM_MEMBER
+    WHERE fk_team_id = 10
+    AND is_del = 0
+)
+GROUP BY TB2.fk_user_id;
+
+#2-2 new
+SELECT USR.fk_user_id,USR.student_birth,
+       student_mbti,
+       USR.user_id,USR.user_name,GROUP_CONCAT(TB2.fk_team_id),GROUP_CONCAT(TB2.team_name)
+FROM dreamer.VIEW_STUDENT_USER USR
+         JOIN (
+    SELECT T.team_name,T.team_id,TM.fk_team_id,TM.fk_user_id
+    FROM dreamer.VIEW_USE_TEAM T
+             JOIN dreamer.TEAM_MEMBER TM
+                  ON T.team_id = TM.fk_team_id
+#     WHERE TM.is_del = 0
+) TB2
+              ON TB2.fk_user_id = USR.user_id
+WHERE ROUND((TO_DAYS(NOW()) - (TO_DAYS(student_birth))) / 365) BETWEEN  17 AND 19
+  AND team_id != 10
+  AND USR.fk_user_id NOT IN (
+    SELECT fk_user_id
+    FROM dreamer.TEAM_MEMBER
+    WHERE fk_team_id = 10
+      AND is_del = 0
+)
+GROUP BY TB2.fk_user_id;
+
+#211025 작업내역
+
+#사용자 목록 개선
+##(1) 테이블 대신 view 가져오기
+SELECT TB1.*
+FROM dreamer.VIEW_STUDENT_USER TB1;
+
+##(2) GROUP_CONCAT(TB2.fk_team_id),GROUP_CONCAT(TB2.team_name)
+SELECT STD.fk_user_id, GROUP_CONCAT(TMBR.fk_team_id),GROUP_CONCAT(TEM.team_name)
+FROM dreamer.STUDENT STD
+JOIN dreamer.TEAM_MEMBER TMBR ON STD.fk_user_id = TMBR.fk_user_id
+JOIN dreamer.TEAM TEM ON TMBR.fk_team_id = TEM.team_id
+GROUP BY TMBR.fk_team_id, TEM.team_name;
+
+##(3) 유효한 값만 가져오기
+SELECT STD.fk_user_id, STD.user_name, GROUP_CONCAT(TMBR.fk_team_id),GROUP_CONCAT(TEM.team_name)
+FROM dreamer.VIEW_STUDENT_USER STD
+         LEFT JOIN dreamer.TEAM_MEMBER TMBR ON STD.fk_user_id = TMBR.fk_user_id
+         LEFT JOIN dreamer.VIEW_USE_TEAM TEM ON TMBR.fk_team_id = TEM.team_id
+WHERE TMBR.is_del =0
+GROUP BY STD.fk_user_id
+
+##팀목록 - NEW - count(team_id)
+SELECT team_id, team_name, total_lecture, team_name, VTU.user_name,
+       DATE_FORMAT(TEA.reg_dt,'%Y-%m-%d') reg_dt,
+       DATE_FORMAT(start_dt,'%Y-%m-%d') start_dt,
+       DATE_FORMAT(end_dt,'%Y-%m-%d') end_dt,
+       COUNT(TM.fk_user_id) count_member
+FROM dreamer.VIEW_USE_TEAM TEA
+    JOIN VIEW_TEACHER_USER VTU on TEA.fk_user_id = VTU.fk_user_id
+    LEFT JOIN TEAM_MEMBER TM on TEA.team_id = TM.fk_team_id
+WHERE TEA.division=1
+GROUP BY TEA.team_id;
+
+
+##(구) 팀 목록
+SELECT t.team_id, t.fk_program_id, t.team_name, t.reg_dt, t.fk_user_id, t.total_lecture,
+       DATE_FORMAT(t.start_dt,'%Y-%m-%d') start_dt,
+       DATE_FORMAT(t.end_dt,'%Y-%m-%d') end_dt,
+       t.team_status, t.division, t.introduce, t.link,
+       DATE_FORMAT(t.reg_dt,'%Y-%m-%d %H:%i') reg_dt,
+       p.program_id, p.program_name, p.program_start_age, p.program_end_age,
+       u.user_name
+FROM dreamer.TEAM as t
+         LEFT JOIN dreamer.TEACHER as tc
+                   ON t.fk_user_id = tc.fk_user_id
+         LEFT JOIN dreamer.USER as u
+                   ON tc.fk_user_id = u.user_id
+         LEFT JOIN dreamer.PROGRAM as p
+                   ON t.fk_program_id = p.program_id
+WHERE t.team_status = 1
+  AND t.division = 1
+
+
+#신청 대기 회원 관리
+## (1) 제외 할 인원 구하기 (중복 없이)
+SELECT DISTINCT STD.user_id
+FROM VIEW_STUDENT_USER STD
+JOIN TEAM_MEMBER TM ON STD.fk_user_id = TM.fk_user_id
+JOIN VIEW_USE_TEAM VUT ON VUT.team_id = TM.fk_team_id
+WHERE VUT.division=0;
+
+## (2) 전체 인원에서 제외
+SELECT user_id, user_name, student_birth,
+       ROUND((TO_DAYS(NOW()) - (TO_DAYS(student_birth))) / 365) AS student_age
+FROM VIEW_STUDENT_USER STD
+WHERE STD.user_id NOT IN (SELECT DISTINCT STD.user_id
+                          FROM VIEW_STUDENT_USER STD
+                                   JOIN TEAM_MEMBER TM ON STD.fk_user_id = TM.fk_user_id
+                                   JOIN VIEW_USE_TEAM VUT ON VUT.team_id = TM.fk_team_id
+                          WHERE VUT.division=0)
+ORDER BY ROUND((TO_DAYS(NOW()) - (TO_DAYS(student_birth))) / 365) desc

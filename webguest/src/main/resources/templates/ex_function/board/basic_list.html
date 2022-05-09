@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <table id="table">
+            <thead>
+            <tr>
+                <th>dataID</th>
+                <th>#</th>
+                <th>제목</th>
+                <th>내용</th>
+                <th>작성일자</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each='_,num : ${boardList}' class="cursor" th:onclick="moveDetails([[${_.boardId}]]);">
+                <td th:text='${_.boardId}'></td>
+                <td th:text='${num.count}'></td>
+                <td th:text='${_.boardTitle}'></td>
+                <td th:text='${_.boardContent}'></td>
+                <td th:text='${_.boardUpdated}'></td>
+            </tr>
+            </tbody>
+        </table>
+        <div>
+            <button type="submit" onclick="moveRegister()">등록</button>
+        </div>
+    </div>
+
+
+    <script type="text/javaScript">
+
+        let table;
+
+        $(document).ready(function(){
+            table = $('#table').DataTable({
+                "language": {
+                    "paginate": {
+                        "previous": "<i class='mdi mdi-chevron-left'>",
+                        "next": "<i class='mdi mdi-chevron-right'>"
+                    }
+                },
+                "drawCallback": function () {
+                    $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+                },
+            });
+        });
+
+        $('#table tbody').on( 'click', 'tr', function () {
+            console.log( table.row( this ).data() );
+        } );
+
+        function moveDetails(id){
+            location.href =  conPath + "board/detail?id="+id;
+        }
+
+        function moveRegister(){
+            location.href =  conPath + "board/register?type=register";
+        }
+    </script>
+</body>
+</html>

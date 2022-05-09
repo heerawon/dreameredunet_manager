@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div class="articleWrap">
+    <div class="d-table-cell align-middle text-center fw-bold articleTit">
+        <p>기간</p>
+    </div>
+    <div class="d-table-cell align-middle articleChoice">
+        <div class="float-start searchDate me-2">
+            <input class="form-control dateInput" type="date" name="searchDate" id="searchStart" th:value='${searchStartDt}'> ~
+            <input class="form-control dateInput" type="date" name="searchDate" id="searchEnd" th:value='${searchEndDt}'>
+        </div>
+
+        <div class="button-list float-start">
+            <button type="button" class="btn btn-outline-primary btn_func_date" id="btn_yesterday">어제</button>
+            <button type="button" class="btn btn-outline-primary btn_func_date" id="btn_today">오늘</button>
+            <button type="button" class="btn btn-outline-primary btn_func_date" id="btn_this_week">이번주</button>
+            <button type="button" class="btn btn-outline-primary btn_func_date" id="btn_this_month">이번달</button>
+            <button type="button" class="btn btn-outline-primary btn_func_date" id="btn_last_week">지난주</button>
+            <button type="button" class="btn btn-outline-primary btn_func_date" id="btn_last_month">지난달</button>
+            <button type="button" class="btn btn-outline-primary " id="btn_set_no_date">전체</button>
+        </div>
+    </div>
+</div>
+</html>

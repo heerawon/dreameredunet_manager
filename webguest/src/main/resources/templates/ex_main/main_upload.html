@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+</head>
+<body>
+<h1>file upload</h1>
+<!--<form method="post" action="http://3.34.177.167/manager/file/upload" enctype="multipart/form-data">-->
+
+<input type='file' id="fileUpload"/>
+<!--  <input type="submit">-->
+</form>
+</body>
+
+<script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+
+<!--REST axios -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script type="text/javascript">
+
+    let sFile;
+    // document.querySelector('#fileUpload').change(uploadFile());
+    //
+    // function uploadFile(){
+    //   let sFormData = new FormData();
+    //   sFile = document.querySelector('#fileUpload')[0].files[0];
+    //
+    //   console.log('test:::',sFile);
+    //   sFormData.append('file', sFile);
+    //   // 로직 작성
+    // }
+    //
+    // 🛠 Jquery
+    $('#fileUpload').change(() => {
+        let sFormData = new FormData();
+        sFile = $('#fileUpload')[0].files[0];
+        sFormData.append('file', sFile);
+        // 로직 작성
+        console.log('sFile', sFile);
+
+        try{
+          axios.request({method: 'POST', url: '/manager/file/upload', data: sFormData,}).then(function (response) {
+              //직렬화
+            console.log('response:::::',response);
+            console.log('get URL 1',response.data.data[0].fileUrl);
+            console.log('get URL 2',response.data.data.first['fileUrl']);
+            console.log('get URL 3',response.data.data.fileUrl);
+          }).catch(function (error) {
+              console.log('error:::::',error);
+          });
+
+        }catch (err){
+          console.error(err);
+        }
+
+
+        // $.ajax({
+        //   type:"POST",
+        //   url: "http://3.34.177.167:8080/manager/file/upload",
+        //   processData: false,
+        //   contentType: false,
+        //   data: sFormData,
+        //   success: function(rtn){
+        //     const message = rtn.data.values[0];
+        //     console.log("message: ", message)
+        //     console.log("messageuploadFilePath : ", message.uploadFilePath);
+        //   },
+        //   err: function(err){
+        //     console.log("err:", err)
+        //   }
+        // })
+
+        $('.fileUpload').value = ''; // 👈 input 초기화
+    })
+
+</script>
+
+
+</html>

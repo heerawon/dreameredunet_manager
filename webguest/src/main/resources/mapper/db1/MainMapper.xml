@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.MainMapper">
+
+    <!-- 계정 정보 HashMap  -->
+    <select id="isLoginHashMap" resultType="String" parameterType="HashMap">
+        <![CDATA[
+        SELECT user_pk_id,user_name
+        FROM raraDB.MAIN_USER
+        WHERE user_pk_id = #{userPkId}
+        ]]>
+    </select>
+
+    <!-- 계정 정보 Model  -->
+    <select id="isLoginModel" resultType="String" parameterType="MainUserModel">
+        <![CDATA[
+        SELECT user_pk_id,user_name
+        FROM raraDB.MAIN_USER
+        WHERE user_pk_id = #{userPkId}
+        AND user_name LIKE #{userName}
+        ]]>
+    </select>
+
+    <!-- 계정 정보 HashMap  -->
+    <select id="isLoginString" resultType="String" parameterType="String">
+        <![CDATA[
+        SELECT user_pk_id,user_name
+        FROM raraDB.MAIN_USER
+        WHERE user_pk_id LIKE #{userName}
+        ]]>
+    </select>
+
+    <!-- 계정 전체 정보 Model  -->
+    <select id="getUserList" resultType="MainUserModel" parameterType="String">
+        <![CDATA[
+        SELECT user_pk_id,user_name
+        FROM raraDB.MAIN_USER
+        WHERE user_pk_id > 0
+        ]]>
+    </select>
+
+</mapper>

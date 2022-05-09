@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/lecture.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+    <!-- AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.serializeObject/2.0.3/jquery.serializeObject.min.js"></script>
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-03-01 -->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">예습</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a href="#">전체 대시보드</a></li>
+                                    <li class="breadcrumb-item"><a href="#">팀 대시보드</a></li>
+                                    <li class="breadcrumb-item active">예습</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="button-list"  >
+                                        <th:block th:each='_,num : ${myTeamList}'>
+                                            <button type="button" th:class="${_.division eq 0 ?'btn btn-outline-primary btn_bg':'btn btn-outline-danger btn_bg'}"
+                                                    th:classappend="${myTeam?.teamId eq _.teamId?'active':''}"
+                                                    th:text="|[${_.programName != null ? _.programName: _.categoryName}]${_.teamName}|"
+                                                    th:onclick="moveTeamPreview([[${_.teamId}]]);">
+
+                                            </button>
+                                        </th:block>
+                                    </div>
+
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <button type="button" class="btn btn-success btn-sm me-2" onclick="moveDashboard()"> < 팀 대시보드</button>
+                                            <p class="lecture_txt01 d-inline-block"
+                                               th:text='|[${myTeam.programName !=null ? myTeam.programName :myTeam.categoryName }]${myTeam.teamName}|'></p>
+                                            <p class="lecture_txt01 d-inline-block" th:text="|총 학생수 : ${countMember} 명|"></p>
+                                            <p class="lecture_txt01 d-inline-block"
+                                               th:text="|강의 기간 : ${myTeam?.startDt}${myTeam?.startDt != null ? '~' : '-'}${myTeam?.endDt}|"></p>
+                                            <p class="lecture_txt01 d-inline-block" th:text="|총 강의 수 : ${countLecture} 회|"></p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h3 class="form_title mb-3">예습</h3>
+
+                                            <table id="table" class="table table-bordered table-hover nowrap w-100 reviewTable">
+                                                <thead>
+                                                <tr class="text-center">
+                                                    <th>dataID</th>
+                                                    <th>노출</th>
+                                                    <th>요약내용</th>
+                                                    <th>등록일시</th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                <tr class="cursor text-center" th:each='_,num : ${resList}' >
+                                                    <td th:text="${_.preparationId}"></td>
+                                                    <td>
+                                                        <input class="form-check-input" type="radio" name="exposureRadio"
+                                                               th:value="${_.preparationId}"
+                                                               th:checked="${#strings.contains(_.appearance,1)}">
+                                                    </td>
+                                                    <td class="text-start">
+                                                        <ys th:text="${_.content}"></ys>
+                                                        <span class="text-danger ms-1" th:text="|[${_.countReply}]|">[0]</span>
+                                                    </td>
+                                                    <td class="col-2" th:text="${_.regDt}"></td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+
+                                            <div>
+                                                <button type="button" class="btn btn-primary position_Btm_btn_right btn_bg" onclick="moveRegister();">예습 등록</button>
+                                            </div>
+
+                                        </div> <!-- end card body-->
+                                    </div> <!-- end card -->
+                                </div><!-- end col-->
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<script type="text/javaScript">
+    /*<![CDATA[*/
+    let fkTeamId = "[[${myTeam?.teamId}]]";
+    let division = 1;
+    /*]]>*/
+
+    let table;
+
+    $(document).ready(function () {
+
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02 a').addClass('active');
+
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+                {"width": "5%", "targets": 1}
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "searching": false, //검색 삭제
+            "info": false, //하단 정보 삭제 (Showing 1 to 8 of 8 entries)
+            "lengthChange": false, //테이블의 페이징 표시
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+
+        $("input:radio[name=exposureRadio]").click(function(){
+            console.log("value",$("input:radio[name=exposureRadio]:checked").val());
+            let id = $("input:radio[name=exposureRadio]:checked").val();
+            changeMainExposure(id);
+        });
+
+    });
+
+
+    $('#table tbody').on('click', 'td', function () {
+        let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+        let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+        let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+        let totalColumnCount = table.columns().count(); //전체 열 갯수
+        let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+
+        if (indexColumn < totalColumnCount - 1 && indexColumn > 1) {
+            // 첫번째 영역은 클릭 적용하지 않음
+            // location.href = conPath + "pub2/lecture/review/detail?id=" + indexData;
+            location.href = conPath + "preparation/detail?teamId="+fkTeamId+"&division="+division+"&preparationId=" + indexData;
+        }
+    });
+
+    //다른 팀 예습으로 이동
+    function moveTeamPreview(teamId) {
+        console.log(teamId);
+        location.href = conPath + "preparation/list?teamId="+teamId+"&division="+division;
+    }
+
+    //팀 대시보드
+    function moveDashboard() {
+        location.href = conPath + "myLecture/teamDashboard?teamId="+fkTeamId;
+    }
+
+    //예습 등록
+    function moveRegister() {
+
+        location.href = conPath + "preparation/register?teamId="+fkTeamId+"&division="+division+"&type=register";
+    }
+
+    function changeMainExposure(id){
+
+        let sFormData = new FormData();
+        sFormData.append('fkTeamId', fkTeamId);
+        sFormData.append('division', division);
+        sFormData.append('preparationId', id);
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'preparation/updateExposure', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+                console.log("result",result);
+                console.log("result.data",result.data);
+                console.log("result.data.status",result.data.status);
+                console.log("result.data.data",result.data.data);
+                console.log("result.data.message",result.data.message);
+
+                if(result.data.status == 200){
+                    alertSuccess();
+                }else{
+                    if(result.data.status != 200){
+                        alert(result.data.message);
+                    }
+                }
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+
+    function alertSuccess (){
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '메인 변경이 완료 되었습니다!',
+            showConfirmButton: false,
+            timer: 1500
+        })
+    }
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.teacher.T_ScheduleMapper">
+
+    <!-- 일정관리 - 선생님의 모든 일정 가져오기 (달별)  -->
+    <select id="getLectureListByTeacher" resultType="LectureModel" parameterType="HashMap">
+        <![CDATA[
+        SELECT lecture_id, LTR.start_dt, start_time, zoom_link, chapter, team_id,
+               team_name, program_name, category_name,user_name
+        FROM dreamer.lecture LTR
+                 JOIN dreamer.view_use_team VUT ON LTR.fk_team_id = VUT.team_id
+                 JOIN dreamer.view_teacher_user VTU ON VUT.fk_tuser_id = VTU.fk_tuser_id
+                 LEFT JOIN dreamer.program PRG ON VUT.fk_program_id = PRG.program_id
+                 LEFT JOIN dreamer.team_category TCR ON VUT.fk_category_id = TCR.team_category_id
+        WHERE LTR.is_del != 1 AND VTU.fk_tuser_id = #{fkTuserId}
+        ]]>
+        <if test="searchMonth != null and searchMonth != ''">
+            AND MONTH(LTR.start_dt) = #{searchMonth}
+        </if>
+        <if test="searchYear != null and searchYear != ''">
+            AND YEAR(LTR.start_dt) = #{searchYear}
+        </if>
+        <if test="teamId != null and teamId != '-1'">
+            AND VUT.team_id = #{teamId}
+        </if>
+        ORDER BY LTR.start_dt, LTR.start_time
+    </select>
+
+    <!-- 선생님의 임박한 일정 중 가장 빠른 2일의 날짜 가져오기 (오늘 포함) -->
+    <select id="getUpcomingDate" resultType="String" parameterType="HashMap">
+        <![CDATA[
+        SELECT DISTINCT LTR.start_dt
+        FROM dreamer.lecture LTR
+                 JOIN dreamer.view_use_team VUT ON LTR.fk_team_id = VUT.team_id
+                 JOIN dreamer.view_teacher_user VTU ON VUT.fk_tuser_id = VTU.fk_tuser_id
+        WHERE LTR.is_del != 1 AND VTU.fk_tuser_id = #{fkTuserId}
+          AND DATE_FORMAT(LTR.start_dt,'%Y-%m-%d') >= DATE_FORMAT(NOW(),'%Y-%m-%d')
+        ORDER BY LTR.start_dt
+        LIMIT 2
+        ]]>
+    </select>
+
+    <!-- 선생님의 임박한 일정의 강의 정보 가져오기  -->
+    <select id="getUpcomingLecture" resultType="LectureModel" parameterType="HashMap">
+        <![CDATA[
+        SELECT lecture_id, LTR.start_dt, start_time, zoom_link, homework,
+               team_id, team_name, program_name, category_name, division,user_name,
+               CONCAT('[',program_name,']',team_name) title,
+               CONCAT('[',category_name,']',team_name) title2,
+               DATE_FORMAT(CONCAT(LTR.start_dt,' ', start_time), '%Y-%m-%d %H:%i:%s')as full_time
+        FROM dreamer.lecture LTR
+             JOIN dreamer.view_use_team VUT ON LTR.fk_team_id = VUT.team_id
+             JOIN dreamer.view_teacher_user VTU ON VUT.fk_tuser_id = VTU.fk_tuser_id
+             LEFT JOIN dreamer.program PRG ON VUT.fk_program_id = PRG.program_id
+             LEFT JOIN dreamer.team_category TCR ON VUT.fk_category_id = TCR.team_category_id
+        WHERE LTR.is_del != 1 AND  VTU.fk_tuser_id = #{fkTuserId}
+          AND LTR.start_dt = #{searchDt}
+        ORDER BY LTR.start_dt, LTR.start_time
+        ]]>
+    </select>
+
+    <!-- 강의 줌 링크 수정 -->
+    <update id="updateLectureZoomLink" parameterType="LectureModel">
+        <![CDATA[
+        UPDATE  dreamer.lecture
+        SET zoom_link = #{zoomLink}
+        WHERE lecture_id = #{lectureId}
+        ]]>
+    </update>
+
+</mapper>

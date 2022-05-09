@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.teacher.T_QaMapper">
+
+    <!-- 대시보드 QA 목록 -->
+    <select id="getAllQaByTeacherLimit" resultType="QaModel" parameterType="QaModel">
+        <![CDATA[
+        SELECT VUQ.qa_id, VUQ.fk_suser_id, VUQ.qa_status, VUQ.title, VSU.user_name,
+               DATE_FORMAT(VUQ.reg_dt,'%Y-%m-%d') reg_dt, COUNT(reply_id) count_reply
+        FROM dreamer.view_use_qa VUQ
+             JOIN dreamer.view_use_team VUT on VUQ.fk_team_id = VUT.team_id
+             JOIN dreamer.view_teacher_user VTU on VUT.fk_tuser_id = VTU.fk_tuser_id
+             JOIN dreamer.view_student_user VSU on VUQ.fk_suser_id = VSU.fk_suser_id
+        LEFT JOIN dreamer.reply RPY on VUQ.qa_id = RPY.fk_qa_id
+        WHERE VTU.fk_tuser_id =  #{teacherId}
+        ]]>
+        <if test="teamId != null and teamId != ''">
+            AND VUT.team_id = #{teamId}
+        </if>
+        GROUP BY VUQ.qa_id
+        ORDER BY VUQ.reg_dt desc
+        LIMIT 5;
+    </select>
+
+    <!-- 커뮤니티> Q&A> 검색시 QA 목록 -->
+    <select id="getAllQaByTeacher" resultType="QaModel" parameterType="QaModel">
+        <![CDATA[
+        SELECT VUQ.qa_id, VUQ.fk_suser_id, VUQ.only_me, VUQ.qa_status, VUQ.content, VUQ.title,
+               VSU.user_name, team_id, team_name,
+               DATE_FORMAT(VUQ.reg_dt,'%Y-%m-%d') reg_dt,
+               DATE_FORMAT(VUQ.update_dt,'%Y-%m-%d') update_dt, COUNT(reply_id) count_reply
+        FROM dreamer.view_use_qa VUQ
+            JOIN dreamer.view_use_team VUT on VUQ.fk_team_id = VUT.team_id
+            JOIN dreamer.view_teacher_user VTU on VUT.fk_tuser_id = VTU.fk_tuser_id
+            JOIN dreamer.view_student_user VSU on VUQ.fk_suser_id = VSU.fk_suser_id
+        LEFT JOIN dreamer.reply RPY on VUQ.qa_id = RPY.fk_qa_id
+        WHERE VTU.fk_tuser_id =  #{teacherId}
+        ]]>
+        <choose>
+            <when test="qaStatus == 0">
+                AND VUQ.qa_status  =  0
+            </when>
+            <when test="qaStatus == 1">
+                AND VUQ.qa_status  =  1
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+        <if test="teamId != null and teamId != ''">
+            AND VUT.team_id  =  #{teamId}
+        </if>
+        <if test="title != null and title != ''">
+            AND VUQ.title LIKE CONCAT('%',#{title},'%')
+        </if>
+        <if test="userName != null and userName != ''">
+            AND VSU.user_name  LIKE CONCAT('%',#{userName},'%')
+        </if>
+        GROUP BY VUQ.qa_id
+        ORDER BY VUQ.reg_dt desc
+    </select>
+
+    <!-- Q&A 상세 -->
+    <select id="getQaDetail" resultType="QaModel" parameterType="Integer">
+        <![CDATA[
+        SELECT qa_id, VUQ.fk_suser_id, only_me, qa_status, title, content,
+               user_name, team_id, team_name,
+               DATE_FORMAT(VUQ.reg_dt,'%Y-%m-%d') reg_dt,
+               DATE_FORMAT(update_dt,'%Y-%m-%d') update_dt
+        FROM dreamer.view_use_qa VUQ
+                 JOIN view_use_team VUT on VUQ.fk_team_id = VUT.team_id
+                 JOIN view_student_user VSU on VUQ.fk_suser_id = VSU.fk_suser_id
+        WHERE qa_id= #{qaId}
+        ]]>
+    </select>
+
+    <!-- Q&A 상태(해결/미해결) 수정 -->
+    <update id="updateQaStatus"  parameterType="QaModel">
+        <![CDATA[
+        UPDATE  dreamer.view_use_qa
+        SET
+            qa_status = #{qaStatus},
+            update_dt = NOW()
+        WHERE qa_id = #{qaId}
+        ]]>
+    </update>
+
+    <!-- 댓글 페이징같이 가져오기 -->
+    <sql id="COMMON_PAGING_HEADER">
+        select R1.* FROM(
+    </sql>
+
+    <sql id="COMMON_PAGING_TAIL">
+        ) R1
+	LIMIT #{length, jdbcType=INTEGER} OFFSET #{start, jdbcType=INTEGER}
+    </sql>
+
+
+</mapper>

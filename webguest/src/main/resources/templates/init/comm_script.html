@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<!-- Vendor js -->
+<script th:src="@{/assets/js/vendor.min.js}"></script>
+
+<script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+<!-- third party js -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script th:src="@{/assets/libs/datatables.net/js/jquery.dataTables.min.js}"></script>
+<script th:src="@{/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js}"></script>
+<script th:src="@{/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js}"></script>
+
+<!-- Datatables init -->
+<!-- <script src="/assets/js/pages/datatables.init.js"></script> -->
+
+<!-- App js -->
+<script th:src="@{/assets/js/app.min.js}"></script>
+<script type="text/javaScript">
+    const conPath = "[[@{/}]]";
+
+    jQuery.browser = {};
+    (function () {
+        jQuery.browser.msie = false;
+        jQuery.browser.version = 0;
+        if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+            jQuery.browser.msie = true;
+            jQuery.browser.version = RegExp.$1;
+        }
+    })();
+</script>
+

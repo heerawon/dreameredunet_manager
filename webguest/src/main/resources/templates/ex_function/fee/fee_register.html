@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!-- 에디터 css -->
+    <link th:href="@{/assets/css/summernote.min.css}" rel="stylesheet" type="text/css"/>
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <p>
+            <span>*</span> 표시는 필수 입니다.
+        </p>
+        <form th:action='@{/fee/insert}' th:object='${feeModel}' method="post">
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="rateName" class="form-label">상품 이름<span>*</span></label>
+                    <input type="text"  th:field='*{rateName}' th:text='${rateName}'
+                           id="rateName" required>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="price" class="form-label">상품 금액<span>*</span></label>
+                    <input type="text"  th:field='*{price}' th:text='${price}'
+                           id="price" required>
+                </div>
+            </div>
+            <div class="text-end">
+                <button type="submit" th:text="${edit eq 1 ? '수정완료' : '등록'}"></button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

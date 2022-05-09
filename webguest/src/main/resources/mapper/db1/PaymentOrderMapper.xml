@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.PaymentOrderMapper">
+
+    <!-- 주문 목록 (구독+일반) -->
+    <select id="selectAllOrderList" resultType="PaymentOrderModel" parameterType="HashMap">
+        <![CDATA[
+        SELECT order_id,fk_pg_iamport_id,PO.fk_suser_id,PO.fk_product_items_id,PO.fk_product_subscribe_id,
+               PO.order_name,PO.order_recipient,PO.order_cell,PO.order_address,PO.order_address_detail,
+               PO.order_memo,PO.order_status,PO.order_zipcode,PO.total_price,PO.is_shipping,
+               DATE_FORMAT(reg_dt,'%Y-%m-%d %H:%i:%s')reg_dt
+                ,PI.merchant_uid,PS.subscribe_name,PS.subscribe_term,PIM.items_name,
+               USR.user_sns_type,USR.email email, USR.user_id
+        FROM dreamer.payment_order PO
+                 LEFT JOIN pg_iamport PI on PO.fk_pg_iamport_id = PI.id
+                 LEFT JOIN product_items PIM on PIM.product_items_id = PO.fk_product_items_id
+                 LEFT JOIN product_subscribe PS on PO.fk_product_subscribe_id = PS.product_subscribe_id
+                 LEFT JOIN view_student_user USR on PO.fk_suser_id = USR.fk_suser_id
+        WHERE PO.is_del = 0
+        ]]>
+        <if test="userId != NULL and userId != '' ">
+            AND USR.user_id = #{userId}
+        </if>
+        ORDER BY PO.reg_dt DESC
+    </select>
+
+    <!-- 주문 목록 구독 상품 -->
+    <select id="selectOrderListSubscribe" resultType="PaymentOrderModel" parameterType="HashMap">
+        <![CDATA[
+            SELECT order_id,fk_pg_iamport_id,PO.fk_suser_id,PO.fk_product_items_id,PO.fk_product_subscribe_id,
+                   PO.order_name,PO.order_recipient,PO.order_cell,PO.order_address,PO.order_address_detail,
+                   PO.order_memo,PO.order_status,PO.order_zipcode,PO.total_price,PO.is_shipping,
+                   DATE_FORMAT(reg_dt,'%Y-%m-%d %H:%i:%s')reg_dt
+                   ,PI.merchant_uid,PS.subscribe_name,PS.subscribe_term,USR.user_sns_type,USR.email email, USR.user_id
+            FROM dreamer.payment_order PO
+                     LEFT JOIN pg_iamport PI on PO.fk_pg_iamport_id = PI.id
+                     LEFT JOIN product_subscribe PS on PO.fk_product_subscribe_id = PS.product_subscribe_id
+                     LEFT JOIN view_student_user USR on PO.fk_suser_id = USR.fk_suser_id
+            WHERE PO.is_del = 0
+              AND PO.fk_product_items_id IS NULL
+              AND PO.fk_product_subscribe_id IS NOT NULL
+        ]]>
+        <if test="userId != NULL and userId != '' ">
+            AND USR.user_id = #{userId}
+        </if>
+        <if test="order != '' ">
+            AND PO.order_name LIKE CONCAT('%',#{order},'%')
+        </if>
+        <if test="startDt != '' and endDt != ''">
+            AND DATE_FORMAT(PO.reg_dt,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDt},'%Y-%m-%d') AND DATE_FORMAT(#{endDt},'%Y-%m-%d')
+        </if>
+        ORDER BY PO.reg_dt DESC
+    </select>
+
+    <!-- 주문 목록 일반 상품 -->
+    <select id="selectOrderListItem" resultType="PaymentOrderModel" parameterType="HashMap">
+        <![CDATA[
+        SELECT order_id,fk_pg_iamport_id,PO.fk_suser_id,PO.fk_product_items_id,PO.fk_product_subscribe_id,
+               PO.order_name,PO.order_recipient,PO.order_cell,PO.order_address,PO.order_address_detail,
+               PO.order_memo,PO.order_status,PO.order_zipcode,PO.total_price,PO.is_shipping,
+               DATE_FORMAT(reg_dt,'%Y-%m-%d %H:%i:%s')reg_dt
+               ,PI.merchant_uid,PIM.items_name,USR.user_sns_type,USR.email email, USR.user_id
+        FROM dreamer.payment_order PO
+                 LEFT JOIN pg_iamport PI on PO.fk_pg_iamport_id = PI.id
+                 LEFT JOIN product_items PIM on PIM.product_items_id = PO.fk_product_items_id
+                 LEFT JOIN view_student_user USR on PO.fk_suser_id = USR.fk_suser_id
+        WHERE PO.is_del = 0
+          AND PO.fk_product_items_id IS NOT NULL
+          AND PO.fk_product_subscribe_id IS NULL
+        ]]>
+        <if test="userId != NULL and userId != '' ">
+            AND USR.user_id = #{userId}
+        </if>
+        <if test="order != '' ">
+            AND PO.order_name LIKE CONCAT('%',#{order},'%')
+        </if>
+        <if test="startDt != '' and endDt != ''">
+            AND DATE_FORMAT(PO.reg_dt,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDt},'%Y-%m-%d') AND DATE_FORMAT(#{endDt},'%Y-%m-%d')
+        </if>
+        ORDER BY PO.reg_dt DESC
+    </select>
+
+
+    <!-- 주문 상세 구독 상품 -->
+    <select id="selectDetailSubscribe" resultType="PaymentOrderModel" parameterType="HashMap">
+        <![CDATA[
+        SELECT order_id,fk_pg_iamport_id,PO.fk_suser_id,PO.fk_product_items_id,PO.fk_product_subscribe_id,
+               PO.order_name,PO.order_recipient,PO.order_cell,PO.order_address,PO.order_address_detail,
+               PO.order_memo,PO.order_status,PO.order_zipcode,PO.total_price,PO.is_shipping,
+               DATE_FORMAT(reg_dt,'%Y-%m-%d %H:%i:%s')reg_dt
+               ,PI.merchant_uid,PS.subscribe_name,PS.subscribe_term,USR.user_sns_type,USR.email email, USR.user_id, USR.user_name
+        FROM dreamer.payment_order PO
+                 LEFT JOIN pg_iamport PI on PO.fk_pg_iamport_id = PI.id
+                 LEFT JOIN product_subscribe PS on PO.fk_product_subscribe_id = PS.product_subscribe_id
+                 LEFT JOIN view_student_user USR on PO.fk_suser_id = USR.fk_suser_id
+        WHERE PO.is_del = 0
+          AND PO.order_id = #{orderId}
+        ]]>
+    </select>
+
+    <!-- 주문 상세 일반 상품 -->
+    <select id="selectDetailItem" resultType="PaymentOrderModel" parameterType="HashMap">
+        <![CDATA[
+        SELECT order_id,fk_pg_iamport_id,PO.fk_suser_id,PO.fk_product_items_id,PO.fk_product_subscribe_id,
+               PO.order_name,PO.order_recipient,PO.order_cell,PO.order_address,PO.order_address_detail,
+               PO.order_memo,PO.order_status,PO.order_zipcode,PO.total_price,PO.is_shipping,
+               DATE_FORMAT(reg_dt,'%Y-%m-%d %H:%i:%s')reg_dt
+               ,PI.merchant_uid,PIM.items_name,USR.user_sns_type,USR.email email, USR.user_id, USR.user_name
+        FROM dreamer.payment_order PO
+                 LEFT JOIN pg_iamport PI on PO.fk_pg_iamport_id = PI.id
+                 LEFT JOIN product_items PIM on PIM.product_items_id = PO.fk_product_items_id
+                 LEFT JOIN view_student_user USR on PO.fk_suser_id = USR.fk_suser_id
+        WHERE PO.is_del = 0
+          AND PO.order_id = #{orderId}
+        ]]>
+    </select>
+
+    <!-- 주문 배송여부 저장 -->
+    <update id="updateIsShipping"  parameterType="PaymentOrderModel">
+        <![CDATA[
+        UPDATE  dreamer.payment_order
+        SET
+            is_shipping = #{isShipping}
+        WHERE order_id = #{orderId}
+        ]]>
+    </update>
+</mapper>

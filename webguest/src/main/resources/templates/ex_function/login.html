@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+    <!--custom Css -->
+
+    <!-- end custom css -->
+</head>
+
+<body class="loading" data-layout-mode="two-column"
+      data-layout='{"mode": "light", "width": "fluid", "menuPosition": "fixed", "sidebar": { "color": "light", "size": "default", "showuser": false}, "topbar": {"color": "light"}, "showRightSidebarOnPageLoad": true}'>
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 L-01 -->
+    <!-- ============================================================== -->
+
+
+    <div class="auth-fluid">
+        <!-- Auth fluid right content -->
+        <div class="auth-fluid-right">
+            <div class="auth-user-testimonial">
+                <h3 class="mb-3 text-white">드리머에듀넷</h3>
+                <p class="lead fw-normal"><i class="mdi mdi-format-quote-open"></i> 국내 최초
+                    AI기술을 접목시킨 온오프라인 키즈 스피치 플랫폼 드리머에듀넷<br/>
+                    작은 말하기 습관 하나가 우리 아이의 꿈을 좌우합니다.
+                    지금 바로 드리머에듀넷과 함께하세요.  <i class="mdi mdi-format-quote-close"></i>
+                </p>
+                <h5 class="text-white">
+
+                </h5>
+            </div> <!-- end auth-user-testimonial-->
+        </div>
+        <!-- end Auth fluid right content -->
+
+        <!--Auth fluid left content -->
+        <div class="auth-fluid-form-box">
+            <div class="align-items-center d-flex h-100">
+                <div class="card-body">
+
+
+                    <!-- title-->
+                    <div class="auth-logo mb-3">
+                        <a href="index.html" class="logo logo-dark">
+                            <span class="logo-lg">
+                                <img th:src='@{/assets/images/h_logo.png}' alt="" height="50">
+                            </span>
+                        </a>
+                    </div>
+                    <p class="text-muted mb-4">말하는 문화를 만드는 기업 <br/> 드리머에듀넷</p>
+
+                    <!-- form -->
+                    <form th:action="@{/auth/login}" method="POST" class="form-signin" id="login_form" name="login_form">
+                        <div class="mb-3">
+                            <label class="form-label">아이디</label>
+                            <input name="userId" class="form-control" type="text" required  th:placeholder="userId">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">비밀번호</label>
+                            <div class="input-group input-group-merge">
+                                <input name="userPassword" type="password" class="form-control" required th:placeholder="userPassword">
+                                <div class="input-group-text" data-password="false">
+                                    <span class="password-eye"></span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="d-grid text-center">
+                            <button class="btn btn-primary" type="submit">로그인</button>
+                        </div>
+                    </form>
+                    <!-- end form-->
+
+                </div> <!-- end .card-body -->
+            </div> <!-- end .align-items-center.d-flex.h-100-->
+        </div>
+        <!-- end auth-fluid-form-box-->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<script type="text/javaScript">
+
+</script>
+
+</body>
+
+</html>

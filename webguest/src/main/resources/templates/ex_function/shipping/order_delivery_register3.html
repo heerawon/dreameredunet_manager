@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link rel="stylesheet" th:href="@{/assets/css/order.css}" type="text/css"/>
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Order-02-01 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">배송 등록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/user/list}">배송 목록</a></li>
+                                    <li class="breadcrumb-item active">배송 등록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="overflow-hidden">
+                                        <label class="form-label mb-2 form_title float-start">배송등록</label>
+                                    </div>
+
+                                    <div class="grayLine"></div>
+
+                                    <div class="mt-3">
+                                        <label class="form-label form_title">학생정보</label>
+
+                                        <div class="studentInfo mt-2">
+                                            <p class="form-label form_title">원빈</p>
+                                            <div class="row">
+                                                <div class="col-md-4 mb-2">
+                                                    <div class="h-100 infoBox">
+                                                        <div class="">
+                                                            <p class="d-inline-block info_txt01">가입일시</p>
+                                                            <p class="d-inline-block">2021-10-30 10:30</p>
+                                                        </div>
+
+                                                        <div class="-hidden">
+                                                            <p class="d-inline-block info_txt01">생년월일</p>
+                                                            <p class="d-inline-block">199.01.23</p>
+                                                        </div>
+
+                                                        <div class="-hidden">
+                                                            <p class="d-inline-block info_txt01">팀</p>
+                                                            <p class="d-inline-block">명화특강 1팀</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-8 mb-2">
+                                                    <div class="infoBox">
+                                                        <table id="address" class="table nowrap w-100 text-dark">
+                                                            <thead>
+                                                            <tr class="text-center">
+                                                                <th>배송지</th>
+                                                                <th>수령인</th>
+                                                                <th>배송정보</th>
+                                                            </tr>
+                                                            </thead>
+
+
+                                                            <tbody>
+                                                            <tr class="cursor text-center">
+                                                                <td>집(기본)</td>
+                                                                <td>김연우<br/>010-2039-0960</td>
+                                                                <td class="text-start">경기도 화성시 동탄대로 53 502호<br/>배송정보 : 아이가 있어서 벨을 누르지 말아주세요.</td>
+                                                            </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 두번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="mb-3 col-md-2">
+                                            <label class="form-label">택배사</label>
+                                            <div class="align-middle">
+                                                <select name="courier" class="form-select">
+                                                    <option value="1">우체국</option>
+                                                    <option value="2">CJ대한통운</option>
+                                                    <option value="3">로젠택배</option>
+                                                    <option value="4">한진택배</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-7">
+                                            <label class="form-label">송장번호</label>
+                                            <input name="invoiceNumber" type="text" class="form-control" value="">
+                                            <p class="text-danger mb-0 mt-1">송장번호를 입력하면 발송완료 상태로 저장됩니다.</p>
+                                        </div>
+
+                                        <div class="mb-3 col-md-3">
+                                            <label class="form-label">발송일자</label>
+                                            <input name="sendingDate" class="form-control dateInput" type="date">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </form>
+
+
+                        <!-- 하단 버튼 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-start">
+                                    <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">취소</button>
+                                </div>
+                                <div class="float-end">
+                                    <button type="button" class="btn btn-primary btn_bg" onclick="moveBack();">등록</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+<script th:src="@{/assets/js/summernote.min.js}"></script>
+
+<!-- Init js 에디터-->
+
+
+<script type="text/javaScript">
+    let table;
+
+    $(document).ready(function () {
+        $('.menu06').addClass('menuitem-active');
+        $('.menu06-menu').addClass('show');
+        $('.menu06-2').addClass('active');
+    });
+
+
+    //학생 선택
+    function moveChoice() {
+        location.href =  conPath + "pub/order/student/choice";
+    }
+
+    //취소
+    function moveBack() {
+        location.href =  conPath + "pub/order/delivery/list";
+    }
+
+
+</script>
+
+</body>
+
+</html>

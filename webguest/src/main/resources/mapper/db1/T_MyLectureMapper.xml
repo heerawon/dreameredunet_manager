@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.teacher.T_MyLectureMapper">
+    <!-- 강의 목록 -->
+    <select id="selectMyLectureList" resultType="LectureModel" parameterType="Integer">
+        <![CDATA[
+            SELECT l.lecture_id, l.fk_team_id, l.start_dt, l.start_time, l.homework,
+                   l.zoom_link, l.chapter, l.is_del,
+                   DATE_FORMAT(l.reg_dt,'%Y-%m-%d') reg_dt
+            FROM dreamer.lecture AS l
+                     LEFT JOIN dreamer.team as t
+                           ON l.fk_team_id = t.team_id
+            WHERE l.is_del != 1 AND l.fk_team_id = #{fkTeamId}
+            ORDER BY l.chapter
+        ]]>
+    </select>
+
+    <!-- 팀목록 (대시보드) -->
+    <select id="selectTeamListByTeacher" resultType="LectureModel" parameterType="HashMap">
+        <![CDATA[
+            SELECT  team_id, program_name, category_name, team_name, VUT.start_dt, VUT.end_dt, VUT.division,
+                    LEC.chapter,LEC.start_dt, LEC.start_time, LEC.zoom_link,
+                    DATE_FORMAT(CONCAT(VUT.end_dt,' ', LEC.start_time), '%Y-%m-%d %H:%i:%s')as full_end_day_time,
+                    COUNT(distinct fk_suser_id) as count_member, COUNT(distinct LEC2.lecture_id) as count_lecture
+            FROM dreamer.view_use_team VUT
+                     LEFT JOIN dreamer.lecture LEC ON VUT.team_id = LEC.fk_team_id
+                     LEFT JOIN dreamer.program PRG ON VUT.fk_program_id = PRG.program_id
+                     LEFT JOIN dreamer.team_category TCY ON VUT.fk_category_id = TCY.team_category_id
+                     LEFT JOIN dreamer.team_member TMB ON VUT.team_id = TMB.fk_team_id AND TMB.is_del != 1
+                     LEFT JOIN (select lecture_id, fk_team_id from dreamer.lecture) LEC2 ON VUT.team_id = LEC2.fk_team_id
+            WHERE VUT.fk_tuser_id = #{fkTuserId}
+        ]]>
+        <!--진행중-->
+        <if test="progress != '' and progress == 0">
+            AND VUT.end_dt >= NOW()
+        </if>
+        <!--진행완료-->
+        <if test="progress != '' and progress == 1">
+            AND NOW() >= VUT.end_dt
+        </if>
+        <!--팀구분(정규수업/특별활동)-->
+        <if test="division != null and division != ''">
+            AND VUT.division = #{division}
+        </if>
+        GROUP BY VUT.team_id
+        ORDER BY VUT.reg_dt DESC
+    </select>
+
+    <!-- 강사의 강의 팀 목록 (상단 버튼용/ 현재 강의중인것만 가져옴) -->
+    <select id="getBtnTeacherTeam" resultType="TeamModel" parameterType="String">
+        <![CDATA[
+        SELECT team_id, team_name, division, program_name, category_name, end_dt
+        FROM dreamer.view_teacher_user VTU
+                 JOIN dreamer.view_use_team VUT ON VTU.user_id = VUT.fk_tuser_id
+                 LEFT JOIN dreamer.program PRG ON VUT.fk_program_id = PRG.program_id
+                 LEFT JOIN dreamer.team_category TCY ON VUT.fk_category_id = TCY.team_category_id
+        WHERE end_dt> NOW() AND user_id = #{fkUserId}
+        ORDER BY VUT.reg_dt DESC
+        ]]>
+    </select>
+
+    <!-- 수강학생 목록 (대시보드) -->
+    <select id="selectMyLectureStudentList" resultType="StudentModel" parameterType="HashMap">
+        <![CDATA[
+            SELECT student_mbti, user_id, user_name, student_gender,student_birth, user_role,
+                   GROUP_CONCAT(VUT.team_name ) as team_name,student_cell
+            FROM dreamer.view_student_user VSU
+                LEFT JOIN dreamer.team_member TMB ON TMB.fk_suser_id = VSU.fk_suser_id
+                LEFT JOIN dreamer.view_use_team VUT ON TMB.fk_team_id = VUT.team_id
+            WHERE TMB.is_del != 1
+            AND NOW() <= VSU.expired_dt
+            AND VUT.fk_tuser_id = #{fkTuserId}
+        ]]>
+        <if test="teamId != null and teamId != ''">
+            AND VUT.team_id = #{teamId}
+        </if>
+        GROUP BY VSU.fk_suser_id
+        ORDER BY TMB.reg_dt DESC
+    </select>
+
+
+    <!-- 수강학생 목록 (출석현황) -->
+    <select id="selectStudentDetailList" resultType="StudentModel" parameterType="HashMap">
+        <![CDATA[
+            SELECT student_mbti, user_id, user_name, student_gender, TMB.is_del, user_role,
+                   team_name, VUT.end_dt, MAX(attendance_id)as attendance_id, parent_name, parent_cell,
+                   COUNT(attendance_id) countAttend,
+                   COUNT(lecture_id) countLecture,
+                   DATE_FORMAT(student_birth,'%Y.%m.%d') student_birth,
+                   DATE_FORMAT(MAX(ATD.attend_dt),'%Y.%m.%d') attend_dt,
+                   ROUND((COUNT(attendance_id)/COUNT(lecture_id))*100,0) percentAttend
+            FROM dreamer.team_member TMB
+                 JOIN dreamer.view_student_user VSU ON TMB.fk_suser_id = VSU.fk_suser_id
+                 LEFT JOIN dreamer.parent PRT ON VSU.fk_suser_id = PRT.fk_suser_id AND PRT.parent_status!= 0
+                 JOIN dreamer.view_use_team VUT ON TMB.fk_team_id = VUT.team_id
+                 LEFT JOIN dreamer.lecture LEC ON VUT.team_id = LEC.fk_team_id
+                 LEFT JOIN dreamer.attendance ATD ON VSU.fk_suser_id = ATD.fk_suser_id
+                                                AND LEC.lecture_id = ATD.fk_lecture_id AND is_attend != 0
+            WHERE TMB.is_del != 1 AND VUT.fk_tuser_id = #{fkTuserId}
+              AND VUT.team_id = #{teamId}
+            GROUP BY VSU.fk_suser_id
+            ORDER BY TMB.reg_dt DESC
+        ]]>
+    </select>
+
+</mapper>

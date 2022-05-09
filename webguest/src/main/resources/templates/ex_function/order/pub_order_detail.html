@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!-- AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.serializeObject/2.0.3/jquery.serializeObject.min.js"></script>
+
+    <!--custom Css -->
+    <link rel="stylesheet" th:href="@{/assets/css/order.css}" type="text/css"/>
+    <!-- end custom css -->
+    <style>
+        #isShipping {
+            width: calc(100% - 100px);
+            float: left;
+        }
+        #btn-reset {
+            float: left;
+            margin-left: 10px;
+        }
+    </style>
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Order-01-03 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">주문 상세</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/user/list}">주문 목록</a></li>
+                                    <li class="breadcrumb-item active">주문 상세</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <label class="form-label mb-3 form_title">주문내역</label>
+
+                                    <div class="row">
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">주문번호</label>
+                                            <input name="orderNumber" type="text" class="form-control" th:value="${resModel?.merchantUid}" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">처리상태</label>
+                                            <div>
+                                                <select id="isShipping" name="isShipping" class="form-select">
+                                                    <option value="">미처리</option>
+                                                    <option value="1" th:selected="${resModel?.isShipping} eq 1">배송추가</option>
+                                                    <option value="0" th:selected="${resModel?.isShipping} eq 0">배송없음</option>
+                                                </select>
+                                                <button type="button" class="btn btn-outline-primary" id="btn-reset">초기화</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">주문일</label>
+                                            <input name="orderDate" type="text" class="form-control" th:value="${#dates.format(resModel?.regDt, 'yyyy-MM-dd HH:mm')}" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">주문자명</label>
+                                            <input name="orderName" type="text" class="form-control" th:value="${resModel?.orderName}" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">구독정보</label>
+                                            <th:block th:if="${resModel?.subscribeName ne null}">
+                                                <input name="subsInfo" type="text" class="form-control"
+                                                       th:value="|${resModel?.subscribeName} ${resModel?.subscribeTerm}일|"  disabled>
+                                            </th:block>
+                                            <th:block th:if="${resModel?.itemsName ne null}">
+                                                <input name="subsInfo" type="text" class="form-control" th:value="${resModel?.itemsName}"  disabled>
+                                            </th:block>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">사용자</label>
+                                            <a href="#" th:onclick="moveUserDetails([[${resModel?.userId}]])">
+                                                <span class="d-block">
+                                                    <ins>
+                                                        <input name="orderName" type="text" class="form-control" th:value="${resModel?.userName}" disabled>
+                                                    </ins>
+                                                </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">결제수단</label>
+                                            <input name="paymentMethod" type="text" class="form-control" value="카드" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">결제금액</label>
+                                            <input name="paymentAmount" type="text" class="form-control" th:value="${#numbers.formatInteger(resModel?.totalPrice, 0, 'COMMA')}" disabled>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">배송정보</label>
+                                            <div class="form-control deliveryInfo">
+                                                [[ ${resModel?.orderName} ]] [[ ${resModel?.orderCell} ]]<br/>
+                                                배송정보 : [[${resModel?.orderMemo}]]
+                                            </div>
+<!--                                            <div class="form-control deliveryInfo">-->
+<!--                                                김연수 010-2039-0960 <br/><br/>-->
+<!--                                                경기도 화성시 동탄대로 53 502호<br/>-->
+<!--                                                고객메모 : 문앞(#1234#) 빠른배송<br/>-->
+<!--                                                배송정보 : 아이가 있어서 벨을 누르지 말아주세요.-->
+<!--                                            </div>-->
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </form>
+
+
+                        <!-- 하단 버튼 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="float-start">
+                                    <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">주문 목록</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+<script th:src="@{/assets/js/summernote.min.js}"></script>
+
+<!-- Init js 에디터-->
+
+
+<script type="text/javaScript" th:inline="javascript">
+    /*<![CDATA[*/
+    let type = [[${type}]];
+    let shippingStatus = [[${shippingModel.shippingStatus}]];
+    let isShipping = [[${resModel?.isShipping}]];
+    let shippingId = [[${shippingModel.shippingId}]];
+    let orderId = [[${resModel.orderId}]];
+    /*]]>*/
+    let table;
+
+    $(function () {
+        $('.menu06').addClass('menuitem-active');
+        $('.menu06-menu').addClass('show');
+        $('.menu06-1').addClass('active');
+
+        console.log("shippingStatus",shippingStatus);
+
+        if(isShipping == "" || isShipping == null){
+            $("#btn-reset").hide();
+        }else{
+            $("#isShipping").attr("disabled",true);
+            $("#btn-reset").show();
+        }
+
+    });
+
+    //주문 목록으로
+    const moveBack = () => {
+        location.href =  conPath + "order/list?type="+type;
+    }
+
+    //학생 상세로 이동
+    const moveUserDetails = function (id) {
+        window.open(conPath + "student/detail?id="+encodeURI(id));
+    }
+
+    //처리 상태 변경 선택시
+    $("#isShipping").on('change',(event) => {
+        console.log( event.target.value );
+        let type = event.target.value;
+        if(type =="1"){
+            confirmChange();
+        }else{
+            changeIsShipping();
+        }
+        $(this).attr("disabled",true);
+    });
+
+    //초기화 버튼 동작
+    $("#btn-reset").on("click",(event)=>{
+        Swal.fire({
+            title: '알림',
+            html: '초기화시 배송 정보도 삭제 됩니다. <br>초기화 하시겠습니까 ?',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '확인', //확인 글자
+            confirmButtonColor: '#f1556c',
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                resetShippingStatus();
+                $("#isShipping").attr("disabled",false);
+
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+            }
+        })
+
+    });
+
+    //초기화
+    const resetShippingStatus = () => {
+        let sFormData = new FormData();
+        sFormData.append('shippingId', shippingId);
+        sFormData.append('orderId', orderId);
+        sFormData.append('isShipping', "");
+
+        if($("#isShipping").val()==1){
+            try{
+                axios.request({method: 'POST', url:  conPath+'shipping/updateShippingStatus', data: sFormData}).then(function (response) {
+                    //직렬화
+                    const result = JSON.parse(JSON.stringify(response));
+
+                    if(result.data.status == 200){
+                        $("#isShipping").attr("disabled",false);
+                        $("#isShipping").val("").prop("selected",true);
+                        $("#btn-reset").hide();
+                        shippingId = "";
+                        isShipping = "";
+                    }else{
+                        alert(result.data.message);
+                    }
+
+                }).catch(function (error) {
+                    console.log('error:::::',error);
+                });
+            }catch (err){
+                console.error(err);
+            }
+        }else{
+            $("#isShipping").val("").prop("selected", true);
+            $("#btn-reset").hide();
+        }
+
+    }
+
+    //처리상태 변경 (알림)
+    const confirmChange = ()=>{
+        Swal.fire({
+            title: '알림',
+            html: '배송 추가하시겠습니까 ?',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '확인', //확인 글자
+            confirmButtonColor: '#f1556c',
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                changeShippingStatus();
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+            }
+        })
+    }
+
+    //처리상태 변경 (배송추가)
+    const changeShippingStatus = () => {
+        let sFormData = new FormData();
+        sFormData.append('type', type);
+        sFormData.append('orderId', orderId);
+        sFormData.append('isShipping', 1);
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'shipping/insert', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+
+                if(result.data.status == 200){
+                    $("#btn-reset").show();
+                    if(result.data.data>0){
+                        shippingId = result.data.data;
+                        isShipping = 1;
+                        $("#isShipping").attr("disabled",true);
+                        moveShippingDetail(result.data.data);
+                    }else{
+                        //실패시 다시시도 안내 메시지
+                    }
+                }else{
+                    alert(result.data.message);
+                }
+
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+
+    //처리상태 변경 후 이동 (알림)
+    const moveShippingDetail = ( shippingId )=>{
+        Swal.fire({
+            title: '알림',
+            html: '배송 추가 되었습니다. 확인하시겠습니까?',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '확인', //확인 글자
+            confirmButtonColor: '#f1556c',
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                location.href = conPath+ "shipping/detail?id="+shippingId;
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+            }
+        })
+    }
+
+    //처리상태 변경 (배송없음)
+    const changeIsShipping = () => {
+        let sFormData = new FormData();
+        sFormData.append('orderId', orderId);
+        sFormData.append('isShipping', 0);
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'order/updateIsShipping', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+
+                if(result.data.status == 200){
+                    $("#isShipping").attr("disabled",true);
+                    $("#btn-reset").show();
+                    isShipping = "0";
+                }else{
+                    alert(result.data.message);
+                }
+
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+</script>
+
+</body>
+
+</html>

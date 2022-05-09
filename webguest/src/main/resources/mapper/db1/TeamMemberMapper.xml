@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.TeamMemberMapper">
+
+    <!-- 수강 학생 목록 -->
+    <select id="getTeamMemberList" resultType="TeamMemberModel" parameterType="Integer">
+        <![CDATA[
+        SELECT U.user_id, U.user_name, S.student_mbti, U.user_sns_type, U.email,
+               DATE_FORMAT(S.student_birth,'%Y-%m-%d') student_birth, ac.apply_course_id
+        FROM dreamer.team_member as T
+             JOIN dreamer.team as team on T.fk_team_id = team.team_id
+             JOIN dreamer.student as S on T.fk_suser_id = S.fk_user_id
+             JOIN dreamer.user as U on T.fk_suser_id = U.user_id
+             LEFT JOIN dreamer.apply_course as ac on T.fk_suser_id = ac.fk_suser_id
+                                                  and team.fk_category_id = ac.fk_category_id
+        WHERE T.is_del =0 AND T.fk_team_id = #{fkTeamId}
+        ORDER BY U.user_name
+        ]]>
+    </select>
+
+    <!-- 미수강 학생 목록 (연령 프로그램별 ) -->
+    <!-- (본인이 수강하는 팀도 가져와야 함/ 해당 팀 id는 제외하고 가져와야 하는데 ) -->
+    <!-- 미수강 1 연령 별 어디에도 속하지 않은 학생  -->
+    <select id="getMemberList" resultType="TeamMemberModel" parameterType="HashMap">
+        <![CDATA[
+            SELECT user_name, user_id, student_mbti, user_sns_type, email, user_role,
+                   DATE_FORMAT(student_birth,'%Y-%m-%d') student_birth
+            FROM view_student_user VSU
+            WHERE user_role = 'MEMBER'
+              AND fk_suser_id NOT IN(
+                SELECT DISTINCT STD.fk_user_id
+                FROM team_member TMBR
+                         JOIN student STD ON TMBR.fk_suser_id = STD.fk_user_id
+            )
+        ]]>
+        <if test="startAge != null and startAge !=''">
+            AND ROUND((TO_DAYS(NOW()) - (TO_DAYS(VSU.student_birth))) / 365) BETWEEN #{startAge} AND #{endAge}
+        </if>
+        <if test="startAge == '' and endAge == ''">
+            AND user_id != null
+            OR 7 > ROUND((TO_DAYS(NOW()) - (TO_DAYS(VSU.student_birth))) / 365)
+            OR ROUND((TO_DAYS(NOW()) - (TO_DAYS(VSU.student_birth))) / 365) > 19
+        </if>
+        ORDER BY VSU.user_name
+    </select>
+
+    <!-- 미수강 2 설정 된 연령 중 어떠한 팀이라도 속한 학생  -->
+    <!--  추후 개선 필요 not in 대신 서브쿼리 or 프론트 처리  -->
+    <select id="getMemberList2" resultType="TeamMemberModel" parameterType="HashMap">
+        <![CDATA[
+            SELECT USR.fk_suser_id,USR.student_birth, student_mbti, USR.user_id,USR.user_name, USR.user_sns_type, USR.email,
+                   GROUP_CONCAT(TB2.fk_team_id)AS team_id, GROUP_CONCAT(TB2.team_name)AS team_name, USR.user_role
+            FROM dreamer.view_student_user USR
+                 JOIN (
+                    SELECT team_name, team_id, fk_team_id, fk_suser_id
+                    FROM dreamer.view_use_team VUT
+                        JOIN dreamer.team_member TMB ON VUT.team_id = TMB.fk_team_id
+                ) TB2
+                ON TB2.fk_suser_id = USR.user_id
+            WHERE USR.user_role = 'MEMBER'
+              AND USR.fk_suser_id NOT IN (
+                SELECT fk_suser_id
+                FROM dreamer.team_member
+                WHERE fk_team_id = #{fkTeamId}
+                  AND is_del = 0
+            )
+        ]]>
+        <if test="startAge != null and startAge !=''">
+            AND ROUND((TO_DAYS(NOW()) - (TO_DAYS(USR.student_birth))) / 365) BETWEEN #{startAge} AND #{endAge}
+        </if>
+        <if test="startAge == '' and endAge == ''">
+            AND 7 > ROUND((TO_DAYS(NOW()) - (TO_DAYS(USR.student_birth))) / 365)
+            AND ROUND((TO_DAYS(NOW()) - (TO_DAYS(USR.student_birth))) / 365) > 19
+        </if>
+        GROUP BY TB2.fk_suser_id
+        ORDER BY USR.user_name
+    </select>
+
+    <!-- 미수강 학생 목록3 (팀 카테고리별 ) -->
+    <!-- (본인이 수강하는 팀도 가져와야 함/ 해당 팀 id는 제외하고 가져와야 하는데 ) -->
+    <!-- 미수강 3 카테고리별??  어디에도 속하지 않은 학생  -->
+    <select id="getNoTeamMemberListByCategory" resultType="TeamMemberModel" parameterType="HashMap">
+        <![CDATA[
+            SELECT user_name, user_id, student_mbti, student_birth, user_sns_type, email
+            FROM dreamer.view_student_user
+            WHERE fk_suser_id NOT IN (
+                SELECT DISTINCT VSU.fk_suser_id
+                FROM dreamer.team_member TMBR
+                     JOIN dreamer.view_student_user VSU ON TMBR.fk_suser_id = VSU.fk_suser_id
+                     JOIN dreamer.view_use_team VUT ON TMBR.fk_team_id = VUT.team_id
+            )
+            ORDER BY user_name
+        ]]>
+    </select>
+
+    <!-- 미수강 학생 목록4 (팀 카테고리별 ) -->
+    <!-- 설정 된 카테고리 중?? 이게 필요해 ? 어떠한 팀이라도 속한 학생  -->
+    <select id="getOtherTeamMemberListByCategory" resultType="TeamMemberModel" parameterType="HashMap">
+        <![CDATA[
+            SELECT VSU.fk_suser_id, student_birth, student_mbti, user_id, user_name, user_sns_type, email,
+                   GROUP_CONCAT(TB2.fk_team_id)AS team_id, GROUP_CONCAT(TB2.team_name)AS team_name
+            FROM dreamer.view_student_user VSU
+                     JOIN (
+                SELECT T.team_name,T.team_id,TM.fk_team_id,TM.fk_suser_id, T.fk_category_id
+                FROM dreamer.view_use_team T
+                    JOIN dreamer.team_member TM ON T.team_id = TM.fk_team_id
+            ) TB2 ON TB2.fk_suser_id = VSU.user_id
+            WHERE team_id != #{fkTeamId}
+            GROUP BY TB2.fk_suser_id
+            ORDER BY user_name
+        ]]>
+    </select>
+
+    <!-- 수강생 등록 1 -->
+    <insert id="insertTeamMember"  parameterType="HashMap" >
+        <foreach item="item" index="index" collection="teamMemberModel" separator=";">
+            INSERT INTO dreamer.team_member (
+                fk_team_id,
+                fk_suser_id
+            ) VALUES(
+                 #{item.fkTeamId},
+                 #{item.fkSuserId}
+            )
+            ON DUPLICATE KEY UPDATE
+            is_del = 0
+        </foreach>
+    </insert>
+
+    <!-- 수강생 수정(삭제 등) -->
+    <update id="deleteTeamMember" parameterType="HashMap" >
+        <![CDATA[
+            UPDATE  dreamer.team_member
+            SET is_del = 1
+            WHERE fk_team_id= #{fkTeamId} AND fk_suser_id= #{fkSuserId}
+        ]]>
+    </update>
+
+</mapper>

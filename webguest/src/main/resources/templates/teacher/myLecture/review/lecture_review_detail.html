@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/lecture.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+    <!-- AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.serializeObject/2.0.3/jquery.serializeObject.min.js"></script>
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-02-02 상세-->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">복습 상세</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a href="#">전체 대시보드</a></li>
+                                    <li class="breadcrumb-item"><a href="#">팀 대시보드</a></li>
+                                    <li class="breadcrumb-item"><a href="#">복습</a></li>
+                                    <li class="breadcrumb-item active">복습 상세</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="button-list">
+                                        <th:block th:each='_,num : ${myTeamList}'>
+                                            <button type="button" th:class="${_.division eq 0 ?'btn btn-outline-primary btn_bg':'btn btn-outline-danger btn_bg'}"
+                                                    th:classappend="${myTeam?.teamId eq _.teamId?'active':''}"
+                                                    th:text="|[${_.programName != null ? _.programName: _.categoryName}]${_.teamName}|"
+                                                    th:onclick="moveTeamPreview([[${_.teamId}]])">
+                                            </button>
+                                        </th:block>
+                                    </div>
+
+
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <p class="lecture_txt01 d-inline-block"
+                                               th:text='|[${myTeam.programName !=null ? myTeam.programName :myTeam.categoryName }]${myTeam.teamName}|'></p>
+                                            <p class="lecture_txt01 d-inline-block" th:text="|총 학생수 : ${countMember} 명|"></p>
+                                            <p class="lecture_txt01 d-inline-block"
+                                               th:text="|강의 기간 : ${myTeam?.startDt}${myTeam?.startDt != null ? '~' : '-'}${myTeam?.endDt}|"></p>
+                                            <p class="lecture_txt01 d-inline-block" th:text="|총 강의 수 :${countLecture}회|"></p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 첫번째 카드 -->
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div>
+                                                    <h3 class="form_title mb-3 d-inline-block">복습</h3>
+                                                    <div th:if="${resModel?.appearance eq 1}" class="form-check d-inline-block text-primary ps-2">[노출중 입니다.]</div>
+                                                </div>
+
+                                                <div class="grayLine"></div>
+
+                                                <div class="mb-3 mt-3 col-md-12">
+                                                    <p class="reviewTxt" th:text="${resModel?.content}"></p>
+                                                </div>
+
+                                                <div class="grayLine"></div>
+
+                                                <div class="mb-3 mt-3 col-md-12">
+                                                    <div class="ratio ratio-16x9">
+                                                        <iframe width="560" height="315" th:src="${#strings.replace(resModel?.link,'https://youtu.be/','https://www.youtube.com/embed/')}"
+                                                                title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 댓글 카드 -->
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div>
+                                                <p class="form_title">댓글</p>
+
+                                                <!-- 더보기 클릭할 깨 마다 10개씩 노출 -->
+                                                <div class="text-center mt-4 mb-3" th:style="${countAllReply < 10 ? 'display:none' : 'display:block'}">
+                                                    <button type="button" class="btn btn-primary btn-rounded" th:onclick="getMoreReply([[${replyModel?.fkPreparationId}]],this)">더보기</button>
+                                                </div>
+                                                <div class="reply-more"></div>
+
+                                                <!-- 댓글 목록 -->
+                                                <div class="cmntsWrap mb-2" th:each="_:${replyList}" th:classappend="${_.fkTuserId != null and _.fkTuserId != '' ?'text-end':''}">
+                                                    <div class="cmntsMbti d-inline-block">
+                                                        <div th:unless="${_.fkTuserId != null and _.fkTuserId != ''}">
+                                                            <th:block th:switch="${_.studentMbti}">
+                                                                <img th:case="''" th:src="@{/assets/images/users/avatar-1.jpg}" class="img-fluid avatar-sm rounded-circle" alt="student-image">
+                                                                <img th:case="1" th:src="@{/images/team_mbti_type1.png}" class="img-fluid avatar-sm rounded-circle" alt="student-image">
+                                                                <img th:case="2" th:src="@{/images/team_mbti_type2.png}" class="img-fluid avatar-sm rounded-circle" alt="student-image">
+                                                                <img th:case="3" th:src="@{/images/team_mbti_type3.png}" class="img-fluid avatar-sm rounded-circle" alt="student-image">
+                                                                <img th:case="4" th:src="@{/images/team_mbti_type4.png}" class="img-fluid avatar-sm rounded-circle" alt="student-image">
+                                                                <img th:case="5" th:src="@{/images/team_mbti_type5.png}" class="img-fluid avatar-sm rounded-circle" alt="student-image">
+                                                                <img th:case="6" th:src="@{/images/team_mbti_type6.png}" class="img-fluid avatar-sm rounded-circle" alt="student-image">
+                                                                <img th:case="7" th:src="@{/images/team_mbti_type7.png}" class="img-fluid avatar-sm rounded-circle" alt="student-image">
+                                                                <img th:case="8" th:src="@{/images/team_mbti_type8.png}" class="img-fluid avatar-sm rounded-circle" alt="student-image">
+                                                            </th:block>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cmntsTxtWrap d-inline-block ms-1">
+                                                        <p class="cmntsStudent fw-bolder mb-1" >
+                                                            <span class="ms-1 fw-bolder mb-1 " th:text="${_.fkTuserId != null and _.fkTuserId != '' ? '' : _.studentName }"></span>
+                                                            <span class="ms-1 fw-normal font-13 text-secondary" th:text="${_.regDt}"></span>
+                                                        </p>
+                                                        <p class="cmntsTxt mb-0" th:id="|cmnt${_.replyId}|"
+                                                           th:classappend="${_.fkTuserId != null and _.fkTuserId != '' ? 'text-start teacherCmnts':''}" th:text="${_.content}"></p>
+                                                        <textarea th:id="|reply${_.replyId}|" style="display:none;" class="form-control" rows="3" th:text="${_.content}"></textarea>
+                                                    </div>
+                                                    <div th:if="${_.fkTuserId != null and _.fkTuserId != ''}" class="cmntsMbti d-inline-block">
+                                                        <img th:src="${_.teacherProfile}" alt="teacher-image" class="img-fluid avatar-sm rounded-circle">
+                                                    </div>
+                                                    <div class="cmntsBtn font-13 " th:if="${_.fkTuserId != null and _.fkTuserId != ''}">
+                                                        <th:block th:if="lastReplyRegDt eq null">
+                                                            <div class="btnGroupUpdate">
+                                                                <a type="button" class="" data-bs-toggle="modal" data-bs-target="#delete-modal" th:onclick="delCmnts([[${_.replyId}]],this)">삭제</a>
+                                                                <a type="button" class="ms-1" th:onclick="modCmnts([[${_.replyId}]],[[${_.content}]],[[${_.fkTuserId}]],this)">수정</a>
+                                                            </div>
+                                                        </th:block>
+                                                        <th:block th:if="lastReplyRegDt ne null">
+                                                            <div class="btnGroupUpdate" th:if="${lastReplyRegDt < _.regDt2}">
+                                                                <a type="button" class="" data-bs-toggle="modal" data-bs-target="#delete-modal" th:onclick="delCmnts([[${_.replyId}]],this)">삭제</a>
+                                                                <a type="button" class="ms-1" th:onclick="modCmnts([[${_.replyId}]],[[${_.content}]],[[${_.fkTuserId}]],this)">수정</a>
+                                                            </div>
+                                                        </th:block>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 댓글 달기 -->
+                                                <div>
+                                                    <form th:action="@{/reply/insert}" th:object="${replyModel}" method="post">
+                                                        <input type="hidden" name='teamId' th:field='*{teamId}' th:value="${teamId}">
+                                                        <input type="hidden" name='division' th:field='*{division}' th:value="${division}">
+                                                        <input type="hidden" th:field='*{type}' th:value="${replyModel?.type}">
+                                                        <input type="hidden" th:field='*{fkPreparationId}' th:value="${replyModel?.fkPreparationId}">
+                                                        <textarea required class="form-control" rows="3" th:field='*{content}' placeholder="댓글을 남겨보세요."></textarea>
+                                                        <div class="text-end mt-2">
+                                                            <button type="submit" class="btn btn-warning">등록</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <!-- 하단 버튼 -->
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="float-start">
+                                                <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">목록</button>
+                                            </div>
+                                            <div class="float-end button-list">
+                                                <button type="button" class="btn btn-outline-primary btn_bg" data-bs-toggle="modal" data-bs-target="#delete-modal"
+                                                        onclick="delReview(0);">삭제
+                                                </button>
+                                                <button type="button" class="btn btn-primary btn_bg" onclick="moveUpdate();">수정</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<script type="text/javaScript" th:inline="javascript">
+    /*<![CDATA[*/
+    let preparationId = [[${resModel?.preparationId}]];
+    let fkTeamId = [[${resModel?.fkTeamId}]];
+    let division = [[${resModel?.division}]];
+    let countAllReply = [[${countAllReply}]];
+    /*]]>*/
+    $(function () {
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02 a').addClass('active');
+    });
+
+    //알림
+    function delCmnts(param1, param2) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '삭제 알림',
+            html: '댓글을 삭제 하시겠습니까? <br/> ' + '삭제시 복구가 불가능합니다.',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '삭제', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                delCmntsAxios(param1, param2);
+                Swal.fire('삭제가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
+
+    //알림
+    function delReview(params) {
+        // Swal.fire('Any fool can use a computer');
+        Swal.fire({
+            title: '삭제 알림',
+            html: '복습내용을 삭제 하시겠습니까? <br/> ' + '삭제시 복구가 불가능합니다.',
+            showDenyButton: false, //거절버튼
+            showCancelButton: true, //취소버튼
+            confirmButtonText: '삭제', //확인 글자
+            confirmButtonColor: '#f1556c',
+            denyButtonText: `Don't save`, //거절 글자
+            cancelButtonText: `취소`, //취소 글자
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                //승인 눌럿을때
+                location.href = conPath + "preparation/delete?teamId="+fkTeamId+"&division="+division+"&preparationId="+preparationId;
+                Swal.fire('삭제가 완료되었습니다.', '', 'success')
+            } else if (result.isDenied) {
+                //거절 눌럿을때
+                Swal.fire('Changes are not saved', '', 'info')
+            }
+        })
+    }
+
+    //목록으로
+    function moveBack() {
+        location.href = conPath + "preparation/list?teamId="+fkTeamId+"&division="+division;
+    }
+
+    //수정
+    function moveUpdate() {
+        location.href = conPath + "preparation/register?teamId="+fkTeamId+"&division="+division+"&type=edit&preparationId="+preparationId;
+    }
+
+    //팀 대시보드
+    function moveDashboard() {
+        location.href = conPath + "myLecture/teamDashboard?teamId="+fkTeamId;
+    }
+
+    //다른 팀 예습으로 이동
+    function moveTeamPreview(teamId) {
+        location.href = conPath + "preparation/list?teamId="+teamId+"&division="+division;
+    }
+
+    //댓글 취소 버튼
+    function cancle(arguments,id){
+        $("#cmnt"+id).show();
+        $("#reply"+id).hide();
+        $('.btnGroupUpdate').css("visibility","visible"); // 수정 삭제 버튼 그룹 보여주기
+        $(arguments).parents('.btnGroupUpdatefinish').children().remove();
+    }
+
+    //댓글 수정 버튼
+    function modCmnts(id,content,userId,arguments) {
+
+        selectedArguments = arguments;
+
+        $("#cmnt"+id).hide(); // 댓글 박스 숨기기
+        $("#reply"+id).show(); // 수정 박스 보이기
+        $('.btnGroupUpdate').css("visibility","hidden"); // 수정 삭제 버튼 그룹 숨기기 TODO: 수정 삭제 버튼이 동시에 모두 안보이는게 맞을지? 각각 처리하는게 나을지?
+
+        let ele;
+        ele = '<div class="btnGroupUpdatefinish"><a type="button" onClick="cancle(this,'+id+')">취소</a>\n' +
+            '<a type="button" className="ms-1" onClick="updateCmnts('+id+')">저장</a></div>';
+        $(arguments).parents(".cmntsBtn").append(ele);
+
+    }
+
+    //댓글 저장 버튼
+    function updateCmnts(id){
+
+        let changes = $("#reply"+id).val();
+
+        let sFormData = new FormData();
+        sFormData.append('replyId', id);
+        sFormData.append('content', changes);
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'reply/update', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+                console.log("result",result);
+                console.log("result.data",result.data);
+                console.log("result.data.status",result.data.status);
+                console.log("result.data.data",result.data.data);
+                console.log("result.data.message",result.data.message);
+
+                if(result.data.status == 200){
+
+                    $("#cmnt"+id).text(changes);
+                    $("#cmnt"+id).show();
+                    $("#reply"+id).hide();
+                    $('.btnGroupUpdate').css("visibility","visible"); // 수정 삭제 버튼 그룹 보여주기
+                    $(selectedArguments).parents(".cmntsBtn").children(".btnGroupUpdatefinish").remove();
+
+                }else{
+                    if(result.data.status != 200){
+                        alert(result.data.message);
+                    }
+                }
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+
+    //댓글 삭제
+    function delCmntsAxios(id,arguments){
+        selectedArguments = arguments;
+
+        let sFormData = new FormData();
+        sFormData.append('replyId', id);
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'reply/delete', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+
+                if(result.data.status == 200){
+                    console.log("여기서 원상복구");
+                    $(selectedArguments).parents('.cmntsWrap').children().remove();
+                }else{
+                    if(result.data.status != 200){
+                        alert(result.data.message);
+                    }
+                }
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+
+    //댓글 더보기
+    function getMoreReply(id,argument){
+        requesetReply ++;
+        let length = requesetReply*10;
+
+        let countAll = countAllReply;
+        let limit = Math.floor(countAll/10);
+
+        let sFormData = new FormData();
+        sFormData.append('length', length);
+        sFormData.append('type', 2);
+        sFormData.append('fkPreparationId', id);
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'reply/more', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+                console.log("result",result);
+                console.log("result.data",result.data);
+                console.log("result.data.status",result.data.status);
+                console.log("result.data.data",result.data.data);
+                console.log("result.data.message",result.data.message);
+
+                if(result.data.status == 200){
+                    console.log("여기서 원상복구");
+                    let el = '';
+                    for(let i = 0 ; i <result.data.data.length; i++){
+                        console.log(result.data.data[i]);
+                        if(result.data.data[i].fkTuserId != null && result.data.data[i].fkTuserId !=''){
+                            //쌤
+                            el += '<div class="cmntsWrap mb-2 text-end">\n' +
+                                '                                                    <div class="cmntsTxtWrap d-inline-block ms-1">\n' +
+                                '                                                        <p class="cmntsStudent fw-bolder mb-1">\n' +
+                                '                                                            <span class="me-1 fw-normal font-13 text-secondary">'+result.data.data[i].regDt+'</span>\n' +
+                                '                                                        </p>\n' +
+                                '                                                        <p class="cmntsTxt mb-0 text-start teacherCmnts">\n' +result.data.data[i].content+
+                                '                                                        </p>\n' +
+                                '                                                    </div>\n' +
+                                '                                                    <div class="cmntsMbti d-inline-block">\n' +
+                                '                                                        <img src="'+result.data.data[i].teacherProfile+'" alt="teacher-image" class="img-fluid avatar-sm rounded-circle">\n' +
+                                '                                                    </div>\n' +
+
+                                // '                                                    <div class="cmntsBtn font-13">\n' +
+                                // '                                                        <a type="button" class="" data-bs-toggle="modal" data-bs-target="#delete-modal" onclick="delCmnts(0)">삭제</a>\n' +
+                                // '                                                        <a type="button" class="ms-1">수정</a>\n' +
+                                // '                                                    </div>\n' +
+                                '                                                </div>'
+
+                        }else{
+                            //학생
+                            el +='<div class="cmntsWrap mb-2">\n' +
+                                '                                                    <div class="cmntsMbti d-inline-block">\n' +
+                                '                                                        <img src="/manager/assets/images/users/avatar-1.jpg" alt="student-image" class="img-fluid avatar-sm rounded-circle">\n' +
+                                '                                                    </div>\n' +
+                                '                                                    <div class="cmntsTxtWrap d-inline-block ms-1">\n' +
+                                '                                                        <p class="cmntsStudent fw-bolder mb-1">'+result.data.data[i].studentName+'\n' +
+                                '                                                            <span class="ms-1 fw-normal font-13 text-secondary">'+result.data.data[i].regDt+'</span>\n' +
+                                '                                                        </p>\n' +
+                                '                                                        <p class="cmntsTxt mb-0">\n' +result.data.data[i].content+
+                                '                                                        </p>\n' +
+                                '                                                    </div>\n' +
+                                '                                                </div>';
+                        }
+                    }
+
+                    $(".reply-more").prepend(el);
+                    if(requesetReply >= limit){
+                        $(argument).hide();
+                    }else{
+                        $(argument).show();
+                    }
+                }else{
+                    if(result.data.status != 200){
+                        alert(result.data.message);
+                    }
+                }
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+    }
+
+
+</script>
+
+</body>
+
+</html>

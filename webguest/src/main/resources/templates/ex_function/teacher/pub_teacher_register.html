@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+    <!--custom Css -->
+    <link rel="stylesheet" th:href="@{/assets/css/teacher.css}" type="text/css"/>
+    <!-- end custom css -->
+    <style>
+
+    </style>
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Teacher-01-03 / Teacher-01-04 강사 등록, 수정-->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">강사 등록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a th:href="@{/pub/notice/list}">강사관리</a></li>
+                                    <li class="breadcrumb-item active">강사 등록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form th:action='@{/teacher/{pathParam}(pathParam=${urlType})}' th:object='${reqModel}' method="post">
+                            <input type="hidden" name="edit" th:value="${edit}">
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="text-end">
+                                        <span class="text-danger">*</span> 표시는 필수 입니다.
+                                    </p>
+
+                                    <div class="row">
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">ID <span class="text-danger">*</span></label>
+                                            <input name="userId" id="userId" type="text" class="form-control"
+                                                   th:field='*{userId}' th:text='${userId}'
+                                                   th:readonly="${edit eq 1 ? 'readonly': false}"
+                                                   th:style="${edit eq 1 ? 'background-color:#ececec':''}"
+                                                   th:checked="${teacherGender eq 'M' ? 'checked' : ''}"
+                                                   required placeholder="ID를 입력해 주세요.">
+                                        </div>
+
+                                        <div class="mb-3 col-md-6" th:style="${edit eq 1} ? 'visibility: hidden;' :'' ">
+                                            <label class="form-label">비밀번호 <span class="text-danger">*</span></label>
+                                            <input name="userPassword" id="userPassword" type="password" class="form-control"
+                                                   th:field='*{userPassword}' th:text='${userPassword}'
+                                                   th:readonly="${edit eq 1 ? 'readonly': false}"
+                                                   th:style="${edit eq 1 ? 'background-color:#ececec':''}"
+                                                   th:checked="${teacherGender eq 'F' ? 'checked' : ''}"
+                                                   required placeholder="비밀번호를 입력해 주세요.">
+                                        </div>
+
+                                        <div class="mb-3 col-md-5">
+                                            <label class="form-label">강사이름 <span class="text-danger">*</span></label>
+                                            <input name="userName" id="userName" type="text" class="form-control"
+                                                   th:field='*{userName}' th:text='${userName}'
+                                                   required placeholder="강사이름을 입력해 주세요.">
+                                        </div>
+
+                                        <div class="mb-3 col-md-3">
+                                            <label class="form-label">성별</label>
+                                            <div class="pt-1 pb-1">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio"
+                                                           th:field="*{teacherGender}" th:value="M"
+                                                           name="teacherGender" id="inlineRadio2" checked>
+                                                    <label class="form-check-label" for="inlineRadio2">남자</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio"
+                                                           th:field="*{teacherGender}" th:value="F"
+                                                           name="teacherGender" id="inlineRadio1" >
+                                                    <label class="form-check-label" for="inlineRadio1">여자</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-4">
+                                            <label class="form-label">생년월일  <span class="text-danger">*</span></label>
+                                            <input name="teacherBirth" id="teacherBirth" class="form-control" type="date"
+                                                   th:field='*{teacherBirth}' th:text='${teacherBirth}' required>
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">휴대전화 <span class="text-danger">*</span></label>
+                                            <input name="teacherCell" id="teacherCell" type="text" class="form-control"
+                                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                                   th:field='*{teacherCell}' th:text='${teacherCell}'
+                                                   required placeholder="휴대폰번호를 입력해 주세요.">
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">이메일</label>
+                                            <input name="teacherEmail" type="email" class="form-control" id="teacherEmail"
+                                                   th:field='*{teacherEmail}' th:text='${teacherEmail}'
+                                                   placeholder="이메일을 입력해 주세요." >
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">주소</label>
+                                            <div class="mb-1 input-group addressSearch">
+                                                <input type="text" class="form-control" name="teacherAddr" readonly
+                                                       th:field='*{teacherAddr}' th:text='${teacherAddr}' />
+                                                <button class="btn btn-primary" type="button" id="address_kakao">주소검색</button>
+                                            </div>
+                                            <input type="text" name="address_detail" class="form-control"
+                                                   th:field='*{teacherAddrDetail}' th:text='${teacherAddrDetail}' />
+                                        </div>
+
+                                        <div class="mb-3 col-md-6">
+                                            <label class="form-label">프로필 사진 <span class="text-danger">*</span></label>
+                                            <input id="teacherProfile" name="teacherProfile" type="hidden" th:value='${teacherProfile}'><!--서버에 업로드 된&될 이미지 url-->
+                                            <div class="fallback">
+                                                <input name="artImage" id="artImage" type="file"
+                                                       class="form-control mb-1" placeholder="파일첨부" required>
+                                                <img id="img" th:if="${reqModel.teacherProfile != null}" th:src='${reqModel?.teacherProfile}' width="150" height="150">
+                                                <img id="img" th:if="${reqModel.teacherProfile == null}" src='https://via.placeholder.com/150' width="150" height="150">
+<!--                                                <button class="btn btn-primary" type="button" id="uploadImg">사진첨부</button>-->
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">분야</label>
+                                            <div>
+                                                <textarea class="form-control" id="area"  th:field='*{teacherCategory}' th:text='${teacherCategory}'
+                                                          rows="5" placeholder="분야를 작성해 주세요."></textarea>
+                                            </div>
+<!--                                            <select th:name='fkCategoryId' id="field" class="form-select">-->
+<!--                                                <option disabled selected hidden>분야를 선택해주세요.</option>-->
+<!--                                                <option th:each='_ : ${categoryList}'-->
+<!--                                                        th:value='${_?.categoryId}'-->
+<!--                                                        th:utext='${_?.categoryName}'-->
+<!--                                                        th:selected="${categoryId eq fkCategoryId}"></option>-->
+<!--                                            </select>-->
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">이력</label>
+                                            <div>
+                                                <!--<textarea class="form-control" id="speck" rows="10" placeholder="이력을 작성해 주세요."></textarea>-->
+                                                <textarea class="form-control" th:field='*{teacherHistory}' th:text='${teacherHistory}'
+                                                          id="teacherHistory" rows="5"  placeholder="내용을 등록하십시오"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">소개말</label>
+                                            <div>
+                                                <!--<textarea class="form-control" id="introduction" rows="10" placeholder="소개말을 작성해 주세요."></textarea>-->
+                                                <textarea class="form-control" th:field='*{teacherIntroduce}' th:text='${teacherIntroduce}'
+                                                          id="introduction" rows="5"  placeholder="내용을 등록하십시오"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <div class="float-start">
+                                                <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">취소</button>
+                                            </div>
+                                            <div class="float-end button-list">
+                                                <button type="submit" class="btn btn-primary btn_bg" th:text="${edit eq 1 ? '수정완료' : '등록'}"></button>
+                                                <!--<button type="submit" class="btn btn-primary btn_bg" onclick="moveDetail();">등록 완료</button>-->
+                                                <!--<button type="submit" class="btn btn-primary btn_bg" onclick="moveDetail();">수정 완료</button>-->
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+
+<!-- Init js 에디터-->
+
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javaScript">
+
+    /*<![CDATA[*/
+    let msg = "[[${msg}]]";
+    /*]]>*/
+
+    /*<![CDATA[*/
+    let teacherGender= "[[${reqModel.teacherGender}]]";
+    let teacherProfile = "[[${reqModel.teacherProfile}]]";
+    let edit = [[${edit}]];
+    /*]]>*/
+
+    console.log("teacherProfile",teacherProfile);
+
+
+
+
+    $(document).ready(function () {
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02-menu').addClass('show');
+        $('.menu02-1').addClass('active');
+
+
+        $("#artImage").on("change", handleImgFileSelect);
+
+        if (msg != "") {
+            alert(msg);
+        }
+
+        if (edit !== 1){
+            // 등록 시 기본값
+            $("#inlineRadio2").attr('checked', 'checked');
+
+        }else{
+            //불러오기
+            if(teacherGender == "M"){
+                $("#inlineRadio1").removeAttr('checked');
+                $("#inlineRadio2").attr('checked', 'checked');
+            }else {
+                $("#inlineRadio1").attr('checked', 'checked');
+                $("#inlineRadio2").removeAttr('checked')
+            }
+
+            //수정일 경우 첨부파일(프로필이미지) required false
+            $("[name=artImage]").attr("required" , false);
+        }
+
+
+
+
+    });
+
+
+    //사진 선택
+    function handleImgFileSelect(e) {
+        var files = e.target.files;
+        var filesArr = Array.prototype.slice.call(files);
+
+        var reg = /(.*?)\/(jpg|jpeg|png|bmp)$/;
+
+        filesArr.forEach(function(f) {
+            // 파일 확장자 Not Match
+            if (!f.type.match(reg)) {
+                if ($.browser.msie) {
+                    // ie 일때 input[type=file] init.
+                    $("#artImage").replaceWith( $("#artImage").clone(true) );
+                } else {
+                    // other browser 일때 input[type=file] init.
+                    $("#artImage").val("");
+                }
+                $("#img").attr("src", "https://via.placeholder.com/150"); //이미지 초기화
+                $("#teacherProfile").val("");
+
+                alert("확장자는 이미지 확장자만 가능합니다.");
+                return;
+            }else{
+                let sel_file = f;
+
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    // $("#img").attr("src", e.target.result);
+
+                    //서버에 업로드
+                    let formData = new FormData();
+                    formData.append("images", sel_file);
+                    $.ajax({
+                        data : formData,
+                        type : "POST",
+                        url : conPath + "images",
+                        contentType : false,
+                        processData : false,
+                        success : function(data) {
+                            //항상 업로드된 파일의 url이 있어야 한다.
+                            $("#teacherProfile").removeAttr();
+                            $("#teacherProfile").val(data);
+                            $("#img").attr("src", data); //이미지 초기화
+                            console.log('img',data);
+                            console.log('techerProfileValue ::::: ',$("#teacherProfile").val());
+
+                            // $("#teacherProfile").val(data);
+                        },
+
+                    }).fail(function(data, textStatus, errorThrown){
+                        // callback(data);
+                        alert('재등록해주세요.');
+                    });;
+                }
+                reader.readAsDataURL(f);
+
+
+            }
+
+
+        });
+    }
+
+    //강사 목록으로
+    function moveBack() {
+        location.href =  conPath + "teacher/list";
+    }
+
+    $('#uploadImg').on('click',function(event){
+        data = new FormData();
+        data.append("images", file);
+        $.ajax({
+            data : data,
+            type : "POST",
+            url : conPath + "images",
+            contentType : false,
+            processData : false,
+            success : function(data) {
+                //항상 업로드된 파일의 url이 있어야 한다.
+                console.log('img',data);
+            }
+        });
+
+    });
+
+    //카카오 지도
+    window.onload = function(){
+        document.getElementById("address_kakao").addEventListener("click", function(){ //주소입력칸을 클릭하면
+            //카카오 지도 발생
+            new daum.Postcode({
+                oncomplete: function(data) { //선택시 입력값 세팅
+                    // document.getElementById("address_kakao").value = data.address; // 주소 넣기
+                    document.querySelector("input[name=teacherAddr]").value = data.address;
+                    $("input[name=address_detail]").focus(); //상세입력 포커싱
+                    self.close();
+                    // window.close();
+                }
+            }).open();
+        });
+    }
+</script>
+
+</body>
+
+</html>

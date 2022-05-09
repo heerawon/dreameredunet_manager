@@ -1,0 +1,220 @@
+@charset "UTF-8";
+body, a, .table { color: #464c52; }
+ul { margin: 0; padding: 0; }
+li { list-style: none; }
+.loginWrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -80%);
+}
+
+.nav-link > i {
+    line-height: 40px;
+}
+
+table.dataTable.nowrap th, table.dataTable.nowrap td
+table.nowrap th, table.nowrap td {
+    vertical-align: middle;
+}
+
+div.dataTables_wrapper div.dataTables_paginate {
+    margin: 30px 0;
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+    justify-content: normal;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.divider {
+    height: 25px;
+}
+
+.divider_lg {
+    height: 80px;
+}
+.form_title {
+    font-size: 18px;
+    color: #000;
+}
+
+/* 버튼 */
+.form-control,
+.form-select,
+.btn-dark,
+.btn-primary,
+.btn-warning{
+    box-shadow: none;
+}
+
+.btn80 {
+    width: 80px;
+}
+
+.btn90 {
+    width: 90px;
+}
+
+.btn_bg {
+    padding: 10px 25px;
+}
+
+.position_Btm_btn_right {
+    position: absolute;
+    right: 30px;
+    bottom: 50px;
+}
+.position_Btm_btn_left {
+    position: absolute;
+    left: 30px;
+    bottom: 50px;
+}
+
+.btn-outline-primary, .btn-outline-danger {
+    background: #fff;
+}
+
+.titleTopBtn {
+    position: absolute;
+    top: 16px;
+    right: 25px;
+}
+
+.grayLine {
+    border-top: 1px solid #e5e6e6;
+}
+
+.grayDashedLine {
+    border-top: 1px dashed #e5e6e6;
+}
+
+
+
+/* */
+.input_title_sm {
+    font-weight: 400;
+    color: #b1b1b1;
+    font-size: 13px;
+}
+
+input[type=radio]:disabled {
+    opacity: 1;
+}
+
+input[type=radio]:disabled + label {
+    color: black;
+}
+
+
+/* 상단 검색 부분 */
+.searchTable {
+    border: 1px solid #e5e6e6;
+    border-bottom: none;
+    overflow: hidden;
+}
+
+.articleWrap {
+    border-bottom: 1px solid #e5e6e6;
+}
+
+.articleTit {
+    width: 100px;
+    background: #edeff1;
+    height: 67px;
+}
+
+.articleTit p {
+    margin: 0;
+}
+
+.articleChoice {
+    padding: 15px;
+}
+
+.articleChoice .dateInput {
+    display: inline-block;
+    width: 200px;
+}
+
+.totalOrder {
+    font-size: 20px;
+}
+
+.subscribeInput {
+    width: calc(100% - 20px);
+    display: inline-block;
+    margin-right: 5px;
+}
+
+/* 댓글 */
+.cmntsWrap .cmntsMbti {
+    vertical-align: top;
+}
+.cmntsTxtWrap {
+
+    max-width: 70%;
+}
+.cmntsTxtWrap .cmntsTxt {
+    background: #f0f1f7;
+    padding: 10px;
+    border-radius: 10px;
+}
+.cmntsTxtWrap .teacherCmnts {
+    background: #fff4df;
+}
+.cmntsBtn {
+    margin-right: 40px;
+}
+
+/*Q&A & 과제 게시판*/
+.solution_badge {
+    width: 54px;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 5px;
+    margin-right: 10px;
+    box-shadow: none;
+}
+.fileWrap {
+    border: 1px solid #e5e6e6;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+/* 일정 & 출석현황 */
+.scheduleBox {
+    padding: 0 1.5rem;
+    border: 1px solid #e5e6e6;
+}
+.scheduleBox .scheduleWrap {
+    padding: 1.5rem 1.5rem;
+}
+.scheduleClassCount {
+    border-left: 1px solid #e5e6e6;
+}
+.calenderDay {
+    float: left;
+}
+.calenderDay .calenderIcon {
+    font-size: 40px;
+    padding: 5px 15px;
+    background: #ff9e9e;
+    color: #fff;
+}
+
+
+
+@media screen and (max-width: 1404px) {
+    .searchDate {  margin-bottom: 10px; }
+}
+
+@media screen and (max-width: 991px) {
+    .searchList { border-bottom: 1px solid #e5e6e6; }
+}
+
+
+

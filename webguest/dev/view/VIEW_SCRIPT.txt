@@ -1,0 +1,131 @@
+
+##사용중 강사 목록 (VIEW_TEACHER_USER)
+create view dreamer.VIEW_TEACHER_USER as
+    SELECT  TCR.fk_user_id, TCR.teacher_gender, TCR.teacher_cell, TCR.teacher_addr, TCR.teacher_addr_detail,
+            TCR.teacher_email, TCR.teacher_profile, TCR.fk_category_id, TCR.teacher_history, TCR.teacher_introduce,
+            TCR.teacher_assign_dt, TCR.teacher_is_president, TCR.teacher_is_main, TCR.teacher_sort_num,
+            DATE_FORMAT(TCR.teacher_birth,'%Y-%m-%d') teacher_birth, USR.user_name, USR.user_id
+    FROM TEACHER TCR
+             JOIN USER USR ON TCR.fk_user_id = USR.user_id
+    WHERE USR.user_active = 1;
+
+##사용중 학생 목록 (VIEW_STUDENT_USER)
+create view dreamer.VIEW_STUDENT_USER as
+	SELECT STD.fk_user_id, STD.student_gender,  STD.student_email, STD.student_cell, STD.student_subscribe,
+       STD.student_mbti, STD.student_address, STD.student_over_fourteen,
+       DATE_FORMAT(STD.student_birth,'%Y-%m-%d') student_birth, USR.user_name, USR.user_id, USR.user_reg_dt
+    FROM STUDENT STD
+             JOIN USER USR ON STD.fk_user_id = USR.user_id
+    WHERE USR.user_active = 1;
+
+##사용중인 팀 목록 (VIEW_USE_TEAM)
+create view dreamer.VIEW_USE_TEAM as
+    SELECT team_id, fk_program_id, fk_category_id, team_name, fk_user_id, total_lecture,
+           team_status, division, introduce, link,
+           DATE_FORMAT(start_dt,'%Y-%m-%d') start_dt,
+           DATE_FORMAT(end_dt,'%Y-%m-%d') end_dt,
+           DATE_FORMAT(reg_dt,'%Y-%m-%d') reg_dt
+    FROM dreamer.TEAM T
+         LEFT JOIN dreamer.PROGRAM PGM on T.fk_program_id = PGM.program_id
+         LEFT JOIN dreamer.TEAM_CATEGORY CTG on T.fk_category_id = CTG.team_category_id
+    WHERE team_status = 1
+
+##사용중인 과제 목록 (VIEW_USE_HOMEWORK)
+    create view dreamer.VIEW_USE_HOMEWORK as
+    SELECT homework_id, fk_lecture_id, fk_user_id, reg_dt, update_dt, title, content, is_del, fk_file_id
+    FROM HOMEWORK
+    WHERE is_del != 1
+
+##사용중인 QA 목록 (VIEW_USE_QA)
+    create view dreamer.VIEW_USE_QA as
+    SELECT qa_id, fk_lecture_id, fk_user_id, reg_dt, only_me, qa_status, update_dt, content, is_del, title
+    FROM QA
+    WHERE is_del != 1
+
+
+
+create definer = yeongle@`%` view dreamer.VIEW_STUDENT_USER as
+	select `STD`.`fk_user_id`                             AS `fk_suser_id`,
+       `STD`.`student_gender`                         AS `student_gender`,
+       `STD`.`student_email`                          AS `student_email`,
+       `STD`.`student_cell`                           AS `student_cell`,
+       `STD`.`student_subscribe`                      AS `student_subscribe`,
+       `STD`.`student_mbti`                           AS `student_mbti`,
+       `STD`.`student_address`                        AS `student_address`,
+       `STD`.`student_over_fourteen`                  AS `student_over_fourteen`,
+       date_format(`STD`.`student_birth`, '%Y-%m-%d') AS `student_birth`,
+       `USR`.`user_name`                              AS `user_name`,
+       `USR`.`user_id`                                AS `user_id`,
+       `USR`.`user_reg_dt`                            AS `user_reg_dt`
+from (`dreamer`.`STUDENT` `STD`
+         join `dreamer`.`USER` `USR` on (`STD`.`fk_user_id` = `USR`.`user_id`))
+where `USR`.`user_active` = 1;
+
+create definer = yeongle@`%` view dreamer.VIEW_TEACHER_USER as
+	select `TCR`.`fk_user_id`                             AS `fk_tuser_id`,
+       `TCR`.`teacher_gender`                         AS `teacher_gender`,
+       `TCR`.`teacher_cell`                           AS `teacher_cell`,
+       `TCR`.`teacher_addr`                           AS `teacher_addr`,
+       `TCR`.`teacher_addr_detail`                    AS `teacher_addr_detail`,
+       `TCR`.`teacher_email`                          AS `teacher_email`,
+       `TCR`.`teacher_profile`                        AS `teacher_profile`,
+       `TCR`.`fk_category_id`                         AS `fk_category_id`,
+       `TCR`.`teacher_history`                        AS `teacher_history`,
+       `TCR`.`teacher_introduce`                      AS `teacher_introduce`,
+       `TCR`.`teacher_assign_dt`                      AS `teacher_assign_dt`,
+       `TCR`.`teacher_is_president`                   AS `teacher_is_president`,
+       `TCR`.`teacher_is_main`                        AS `teacher_is_main`,
+       `TCR`.`teacher_sort_num`                       AS `teacher_sort_num`,
+       date_format(`TCR`.`teacher_birth`, '%Y-%m-%d') AS `teacher_birth`,
+       `USR`.`user_name`                              AS `user_name`,
+       `USR`.`user_id`                                AS `user_id`
+from (`dreamer`.`TEACHER` `TCR`
+         join `dreamer`.`USER` `USR` on (`TCR`.`fk_user_id` = `USR`.`user_id`))
+where `USR`.`user_active` = 1;
+
+create definer = yeongle@`%` view dreamer.VIEW_USE_HOMEWORK as
+	select `dreamer`.`HOMEWORK`.`homework_id`   AS `homework_id`,
+       `dreamer`.`HOMEWORK`.`fk_lecture_id` AS `fk_lecture_id`,
+       `dreamer`.`HOMEWORK`.`fk_suser_id`   AS `fk_suser_id`,
+       `dreamer`.`HOMEWORK`.`reg_dt`        AS `reg_dt`,
+       `dreamer`.`HOMEWORK`.`update_dt`     AS `update_dt`,
+       `dreamer`.`HOMEWORK`.`title`         AS `title`,
+       `dreamer`.`HOMEWORK`.`content`       AS `content`,
+       `dreamer`.`HOMEWORK`.`is_del`        AS `is_del`,
+       `dreamer`.`HOMEWORK`.`fk_file_id`    AS `fk_file_id`
+from `dreamer`.`HOMEWORK`
+where `dreamer`.`HOMEWORK`.`is_del` <> 1;
+
+
+create definer = yeongle@`%` view dreamer.VIEW_USE_QA as
+	select `dreamer`.`QA`.`qa_id`         AS `qa_id`,
+       `dreamer`.`QA`.`fk_lecture_id` AS `fk_lecture_id`,
+       `dreamer`.`QA`.`fk_suser_id`   AS `fk_suser_id`,
+       `dreamer`.`QA`.`reg_dt`        AS `reg_dt`,
+       `dreamer`.`QA`.`only_me`       AS `only_me`,
+       `dreamer`.`QA`.`qa_status`     AS `qa_status`,
+       `dreamer`.`QA`.`update_dt`     AS `update_dt`,
+       `dreamer`.`QA`.`content`       AS `content`,
+       `dreamer`.`QA`.`is_del`        AS `is_del`,
+       `dreamer`.`QA`.`title`         AS `title`
+from `dreamer`.`QA`
+where `dreamer`.`QA`.`is_del` <> 1;
+
+create definer = yeongle@`%` view dreamer.VIEW_USE_TEAM as
+	select `T`.`team_id`                           AS `team_id`,
+       `T`.`fk_program_id`                     AS `fk_program_id`,
+       `T`.`fk_category_id`                    AS `fk_category_id`,
+       `T`.`team_name`                         AS `team_name`,
+       `T`.`fk_tuser_id`                       AS `fk_tuser_id`,
+       `T`.`total_lecture`                     AS `total_lecture`,
+       `T`.`team_status`                       AS `team_status`,
+       `T`.`division`                          AS `division`,
+       `T`.`introduce`                         AS `introduce`,
+       `T`.`link`                              AS `link`,
+       date_format(`T`.`start_dt`, '%Y-%m-%d') AS `start_dt`,
+       date_format(`T`.`end_dt`, '%Y-%m-%d')   AS `end_dt`,
+       date_format(`T`.`reg_dt`, '%Y-%m-%d')   AS `reg_dt`
+from ((`dreamer`.`TEAM` `T` left join `dreamer`.`PROGRAM` `PGM` on (`T`.`fk_program_id` = `PGM`.`program_id`))
+         left join `dreamer`.`TEAM_CATEGORY` `CTG` on (`T`.`fk_category_id` = `CTG`.`team_category_id`))
+where `T`.`team_status` = 1;
+

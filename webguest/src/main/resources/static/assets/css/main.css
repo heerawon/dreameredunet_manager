@@ -1,0 +1,86 @@
+@charset "UTF-8";
+.dd {
+    max-width: 100%;
+}
+
+.slide_th {
+    padding: 13px 0px 13px 60px;
+    border-bottom: 1px solid #e4e4e4;
+    --bs-gutter-x: 0px;
+}
+.category_th {
+    padding: 13px 13px 13px 30px;
+    border-bottom: 1px solid #e4e4e4;
+    --bs-gutter-x: 0px;
+}
+
+.dd-list .dd3-item {
+    border-bottom: 1px solid #e4e4e4;
+}
+.dd-list .dd3-item a {
+    color: #000;
+}
+.dd-list .dd3-item a:hover {
+    color: #6559cc;
+}
+
+.dd-list .dd3-content {
+    padding: 20px 0px 20px 60px;
+    background: #fff;
+}
+.dd-list .dd3-content.categoryWrap {
+    padding: 20px 0px 20px 30px;
+    background: #fff;
+}
+
+.dd-list .dd-item button {
+    width: auto;
+}
+
+.dd-list .dd-item .dd-handle {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 5px;
+    font-size: 18px;
+    background: #fff;
+}
+
+.dd-empty, .dd-item, .dd-placeholder {
+    font-size: 15px;
+}
+
+.dd-list .dd-item .uploadBtn {
+    color: #323a46;
+    font-size: .9rem;
+}
+
+.dd-list .dd-item .uploadBtn:hover {
+    color: white;
+}
+
+.dd-list .dd-item .delBtn {
+    color: white;
+    font-size: .9rem;
+}
+.dd-list .dd-item .registerBtn {
+    color: #fff;
+    font-size: .9rem;
+}
+
+.categoryTxt {
+    margin: auto 0;
+}
+.cateNum {
+    display: none;
+}
+
+.registerWrap {
+    padding: 15px 0 18px 30px;
+    border-bottom: 1px solid #e4e4e4;
+}
+.classInfo span {
+    font-size: 13px;
+    margin-bottom: 10px;
+    display: block;
+}

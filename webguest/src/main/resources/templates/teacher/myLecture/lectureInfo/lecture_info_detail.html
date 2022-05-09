@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init2/comm_head.html"></th:block>
+
+
+    <!--custom Css -->
+    <link th:href="@{/assets/css/lecture.css}" rel="stylesheet" type="text/css"/>
+    <!-- end custom css -->
+
+    <!-- AJAX -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.serializeObject/2.0.3/jquery.serializeObject.min.js"></script>
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init2/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Lecture-02-02 상세-->
+    <!-- ============================================================== -->
+
+
+    <div class="content-page">
+        <div class="content mb-5">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">복습 상세</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0 ">
+                                    <li class="breadcrumb-item"><a href="#">전체 대시보드</a></li>
+                                    <li class="breadcrumb-item"><a href="#">팀 대시보드</a></li>
+                                    <li class="breadcrumb-item"><a href="#">일정 수</a></li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="button-list">
+                                        <th:block th:each='_,num : ${myTeamList}'>
+                                            <button type="button" th:class="${_.division eq 0 ?'btn btn-outline-primary btn_bg':'btn btn-outline-danger btn_bg'}"
+                                                    th:classappend="${myTeam?.teamId eq _.teamId?'active':''}"
+                                                    th:text="|[${_.programName != null ? _.programName: _.categoryName}]${_.teamName}|"
+                                                    th:onclick="moveTeamPreview([[${_.teamId}]])">
+                                            </button>
+                                        </th:block>
+                                    </div>
+
+
+                                    <div class="card mt-4">
+                                        <div class="card-body">
+                                            <button type="button" class="btn btn-success btn-sm me-2" onclick="moveDashboard()"> < 팀 대시보드</button>
+                                            <p class="lecture_txt01 d-inline-block"
+                                               th:text='|[${myTeam.programName !=null ? myTeam.programName :myTeam.categoryName }]${myTeam.teamName}|'></p>
+                                            <p class="lecture_txt01 d-inline-block" th:text="|총 학생수 : ${countMember} 명|"></p>
+                                            <p class="lecture_txt01 d-inline-block"
+                                               th:text="|강의 기간 : ${myTeam?.startDt}${myTeam?.startDt != null ? '~' : '-'}${myTeam?.endDt}|"></p>
+                                            <p class="lecture_txt01 d-inline-block" th:text="|총 강의 수 :${countLecture}회|"></p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 첫번째 카드 -->
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="table-responsive-xl">
+                                                    <table id="table" class="table dt-responsive nowrap w-100">
+                                                        <thead>
+                                                        <tr class="text-center">
+                                                            <th class="col-1">#</th>
+                                                            <th class="col-4">수업날짜/시간</th>
+                                                            <th class="col-5">줌링크</th>
+                                                            <th class="col-1">과제제출</th>
+                                                            <th class="col-1">수정</th>
+                                                        </tr>
+                                                        </thead>
+
+
+                                                        <tbody id="divChapter">
+
+                                                        <!-- update : resList 값 출력 -->
+                                                        <div>
+                                                            <input type="hidden" id="exChapterSize" th:if="${resList != null}" th:value="${resList.size()}">
+                                                            <tr th:each='_ : ${resList}' class="rowChapter text-center">
+                                                                <td th:text='${_?.chapter}'></td>
+                                                                <td>
+                                                                    <input type="hidden" th:name="${'lectures['+ _?.chapter +'].lectureId'}" th:value="${_?.lectureId}">
+                                                                    <input type="hidden" th:name="${'lectures['+ _?.chapter +'].chapter'}" th:value="${_?.chapter}">
+                                                                    <input type="hidden" th:name="${'lectures['+ _?.chapter +'].fkTeamId'}" th:value="${fkTeamId}">
+                                                                    <div class="d-inline-block float-left dayTime" >
+                                                                        <input class="form-control" type="date" th:name="${'lectures['+ _?.chapter +'].startDt'}" th:value="${_?.startDt}" disabled>
+                                                                    </div>
+                                                                    <div class="d-inline-block float-left dayTime" >
+                                                                        <input class="form-control" type="time" th:name="${'lectures['+ _?.chapter +'].startTime'}" th:value="${_?.startTime}" disabled>
+                                                                    </div>
+                                                                </td>
+                                                                <td >
+                                                                    <input type="text" class="form-control" th:name="${'lectures['+ _?.chapter +'].zoomLink'}" th:value="${_?.zoomLink}" disabled>
+                                                                </td>
+                                                                <td >
+                                                                    <input class="form-check-input" type="checkbox" value="1"
+                                                                           th:name="${'lectures['+ _?.chapter +'].homework'}" th:checked="${_?.homework} eq '1'" disabled>
+                                                                </td>
+                                                                <td >
+                                                                    <button type="button" class="btn btn-dark waves-effect waves-light btn80"
+                                                                            onclick="editChapter(this)">수정</button>
+                                                                </td>
+                                                            </tr>
+                                                        </div>
+
+                                                        <!-- insert : addChapter()로 동적 생성-->
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- 하단 버튼 -->
+<!--                                    <div class="card">-->
+<!--                                        <div class="card-body">-->
+<!--                                            <div class="float-start">-->
+<!--                                                <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">목록</button>-->
+<!--                                            </div>-->
+<!--                                            <div class="float-end button-list">-->
+<!--&lt;!&ndash;                                                <button type="button" class="btn btn-outline-primary btn_bg" data-bs-toggle="modal" data-bs-target="#delete-modal"&ndash;&gt;-->
+<!--&lt;!&ndash;                                                        onclick="delReview(0);">삭제&ndash;&gt;-->
+<!--&lt;!&ndash;                                                </button>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                <button type="button" class="btn btn-primary btn_bg" onclick="moveUpdate();">수정</button>&ndash;&gt;-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init2/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init2/comm_script.html"></th:block>
+
+
+<script type="text/javaScript" th:inline="javascript">
+    /*<![CDATA[*/
+    let teamId = [[${myTeam?.teamId}]];
+    /*]]>*/
+
+    let table;
+    let cntChapter = 0;
+    let cntNewChapter = 0;
+    let appendItem = new Array();
+    let cntMoreChapter = parseInt($("#exChapterSize").val());
+
+    $(function () {
+        $('.menu02').addClass('menuitem-active');
+        $('.menu02 a').addClass('active');
+    });
+
+    //팀 대시보드
+    function moveDashboard() {
+        location.href = conPath + "myLecture/teamDashboard?teamId="+teamId;
+    }
+
+    //다른 팀 강의수정으로 이동
+    function moveTeamPreview(teamId) {
+        location.href = conPath+"t_lecture/lectureInfo?teamId="+teamId;
+    }
+
+    //강의 수정 모드로 변환
+    function editChapter (arguments){
+        // const deleteItemNum = $(arguments).parents('tr.rowChapter').children("td:first").text();
+        $(arguments).hide();
+        let appendButton = '<button type="button" class="btn btn-dark waves-effect waves-light btn80"\n onclick="updateChapter(this)">수정완료</button>';
+        $(arguments).parent("td").append(appendButton);
+        const editItemNum = $(arguments).parents('tr.rowChapter').children("td:eq(0)").text();
+        const editItemId = $("input[name='lectures["+editItemNum+"].lectureId']").val();
+        console.log(editItemNum);
+        console.log(editItemId);
+
+        $("input[name='lectures["+editItemNum+"].startDt']").attr("disabled", false);
+        $("input[name='lectures["+editItemNum+"].startTime']").attr("disabled", false);
+        $("input[name='lectures["+editItemNum+"].zoomLink']").attr("disabled", false);
+        $("input[name='lectures["+editItemNum+"].homework']").attr("disabled", false);
+
+        // let _td = $(this).closest('tr').find('td');
+        // _td[1].innerHTML = "<input type='text' value='"+_td[1].innerText+"' size='10' />";
+        // _td[2].innerHTML = "<button class='editDo'>완료</button> "+ "<button class='cancle'>취소</button> ";
+    }
+
+    // 강의 수정
+    function updateChapter (arguments){
+        const selectArg = $(arguments);
+
+        const editItemNum = $(arguments).parents('tr.rowChapter').children("td:eq(0)").text();
+        const lectureId = $("input[name='lectures["+editItemNum+"].lectureId']").val();
+        const startDt = $("input[name='lectures["+editItemNum+"].startDt']").val();
+        const startTime = $("input[name='lectures["+editItemNum+"].startTime']").val();
+        const zoomLink = $("input[name='lectures["+editItemNum+"].zoomLink']").val();
+        const homework = $("input[name='lectures["+editItemNum+"].homework']").is(':checked') ? 1 : 0;
+
+        console.log("homework",homework);
+
+        let sFormData = new FormData();
+        sFormData.append('fkTeamId', teamId);
+        sFormData.append('lectureId', lectureId);
+        sFormData.append('chapter', editItemNum);
+        sFormData.append('startDt', startDt);
+        sFormData.append('startTime', startTime);
+        sFormData.append('zoomLink', zoomLink);
+        sFormData.append('homework', homework);
+
+        try{
+            axios.request({method: 'POST', url:  conPath+'t_lecture/updateLecture', data: sFormData}).then(function (response) {
+                //직렬화
+                const result = JSON.parse(JSON.stringify(response));
+
+                console.log("result",result);
+                console.log("result.data",result.data);
+                console.log("result.data.status",result.data.status);
+                console.log("result.data.data",result.data.data);
+                console.log("result.data.message",result.data.message);
+
+                if(result.data.status == 200){
+                    $("input[name='lectures["+editItemNum+"].startDt']").attr("disabled", true);
+                    $("input[name='lectures["+editItemNum+"].startTime']").attr("disabled", true);
+                    $("input[name='lectures["+editItemNum+"].zoomLink']").attr("disabled", true);
+                    $("input[name='lectures["+editItemNum+"].homework']").attr("disabled", true);
+
+                    selectArg.text("수정");
+
+                    location.reload();
+                }else{
+                    alert(result.data.message);
+                }
+
+            }).catch(function (error) {
+                console.log('error:::::',error);
+            });
+        }catch (err){
+            console.error(err);
+        }
+
+    }
+
+
+
+</script>
+
+</body>
+
+</html>

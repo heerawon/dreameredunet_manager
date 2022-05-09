@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.WithdrawalMapper">
+
+    <!--회원 탈퇴 목록 조회-->
+    <select id="selectWithdrawalMemberList" resultType="StudentModel">
+        <![CDATA[
+            SELECT fk_user_id, NOW() AS TODAY, withdrawal_dt
+            FROM dreamer.student
+            WHERE withdrawal_dt is not null
+            and student_email not like '%withdrawal%'
+            and NOW() >= withdrawal_dt
+        ]]>
+    </select>
+
+    <!-- user 개인정보 대치 -->
+    <update id="updateUserWithdrawal" parameterType="HashMap">
+        UPDATE dreamer.user
+        SET user_name = #{withdrawal},
+            user_sns_email = #{withdrawal},
+            user_sns_name = #{withdrawal},
+            email = #{withdrawal}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- student 개인정보 대치 -->
+    <update id="updateStudentWithdrawal" parameterType="HashMap">
+        UPDATE dreamer.student
+        SET student_email = #{withdrawal},
+            student_cell = '0000000000'
+        WHERE fk_user_id = #{userId}
+    </update>
+
+    <!-- shipping 개인정보 대치 -->
+    <update id="updateShippingWithdrawal" parameterType="HashMap">
+        UPDATE dreamer.shipping
+        SET receiver_name = #{withdrawal},
+            receiver_cell = '0000000000',
+            receiver_zipcode = '00000',
+            receiver_address = #{withdrawal},
+            memo = #{withdrawal}
+        WHERE fk_suser_id = #{userId}
+    </update>
+
+    <!-- shipping_location 개인정보 대치 -->
+    <update id="updateShippingLocationWithdrawal" parameterType="HashMap">
+        UPDATE dreamer.shipping_location
+        SET recipient_name = #{withdrawal},
+            title = #{withdrawal},
+            cell = '0000000000',
+            zipcode = '00000',
+            address = #{withdrawal},
+            address_detail = #{withdrawal},
+            memo = #{withdrawal}
+        WHERE fk_suser_id = #{userId}
+    </update>
+
+    <!-- payment_order 개인정보 대치 -->
+    <update id="updatePamentOrderWithdrawal" parameterType="HashMap">
+        UPDATE dreamer.payment_order
+        SET order_name = #{withdrawal},
+            order_recipient = #{withdrawal},
+            order_cell = '0000000000',
+            order_address = #{withdrawal},
+            order_address_detail = #{withdrawal},
+            order_memo = #{withdrawal},
+            order_status = #{withdrawal},
+            order_zipcode = '00000'
+        WHERE fk_suser_id = #{userId}
+    </update>
+
+    <!-- pg_iamport 개인정보 대치 -->
+    <update id="updatePgWithdrawal" parameterType="HashMap">
+        UPDATE dreamer.pg_iamport
+        SET buyer_name = #{withdrawal},
+            buyer_email = #{withdrawal},
+            buyer_tel = '0000000000',
+            buyer_addr = #{withdrawal},
+            buyer_addr_detail = #{withdrawal},
+            buyer_postcode = '00000',
+            buyer_memo = #{withdrawal}
+        WHERE fk_suser_id = #{userId}
+    </update>
+
+    <!-- danal_auth_ph 정보 삭제 -->
+    <delete id="deleteDanalInfo" parameterType="HashMap">
+        <![CDATA[
+        DELETE FROM dreamer.danal_auth_ph
+        WHERE user_id = #{userId}
+        ]]>
+    </delete>
+
+    <!-- user 아이디 변경 -->
+    <update id="updateUserId" parameterType="HashMap">
+        UPDATE dreamer.user
+        SET user_id = #{newUserId}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- student 아이디 변경 -->
+    <update id="updateStudentId" parameterType="HashMap">
+        UPDATE dreamer.student
+        SET fk_user_id = #{newUserId}
+        WHERE fk_user_id = #{userId}
+    </update>
+
+    <!-- shipping user 아이디 변경 -->
+    <update id="updateShippingUserId" parameterType="HashMap">
+        UPDATE dreamer.shipping
+        SET fk_suser_id = #{newUserId}
+        WHERE fk_suser_id = #{userId}
+    </update>
+
+</mapper>

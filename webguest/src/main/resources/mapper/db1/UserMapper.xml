@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.UserMapper">
+
+    <!-- 로그인 확인  -->
+    <select id="findUserByLoginId" resultType="UserModel" parameterType="String">
+        <![CDATA[
+            SELECT user_id,user_name
+            FROM dreamer.user
+            WHERE user_id = #{userLoginId}
+        ]]>
+    </select>
+
+    <!-- 로그인 -->
+    <select id="memberLogin" resultType="UserModel" parameterType="UserModel">
+        <![CDATA[
+            SELECT user_id,user_name, user_password
+            FROM dreamer.user
+            WHERE user_id = #{userId}
+        ]]>
+    </select>
+
+    <!-- 유저 정보 등록 (공통) -->
+    <insert id="setUserInfo" parameterType="UserModel" keyProperty="userId">
+        <![CDATA[
+            INSERT into dreamer.user (user_id, user_name, user_password, user_active,role)
+            values (#{userId},#{userName},#{userPassword},#{userActive},#{role});
+        ]]>
+    </insert>
+
+    <!-- 유저 Role 등록    -->
+    <insert id="setUserRoleInfo"  parameterType="UserRoleModel">
+        <![CDATA[
+            INSERT into dreamer.user_role (fk_user_id,role)
+            values (#{fkUserId},#{role});
+        ]]>
+    </insert>
+
+    <!-- 유저 리스트 반환 -->
+    <select id="getUserList" resultType="UserModel" parameterType="String">
+        <![CDATA[
+            SELECT u.user_id, u.user_name, u.user_email, u.user_cell,
+                   u.user_birth, u.user_addr, u.user_profile,u.user_active
+            FROM dreamer.USER as u
+                     JOIN dreamer.user_role as r
+                          ON u.user_id = r.fk_user_id
+            WHERE u.user_active = 1
+        ]]>
+    </select>
+
+    <!-- 유저 삭제 -->
+    <update id="deleteUser"  parameterType="String">
+        <![CDATA[
+            UPDATE  dreamer.user
+            SET user_active = 0,
+                user_withdrawal_dt = CURRENT_TIMESTAMP
+            WHERE user_id = #{userId}
+        ]]>
+    </update>
+
+    <!-- 비밀번호 변경 -->
+    <update id="updateUserPassword"  parameterType="String">
+        <![CDATA[
+        UPDATE  dreamer.user
+        SET user_password = #{userPassword}
+        WHERE user_id = #{userId}
+        ]]>
+    </update>
+
+    <!--기간만료 유저-->
+    <update id="userUpdateRoleByExpiryDate" >
+        <![CDATA[
+            UPDATE dreamer.user
+            SET role = 'USER'
+            WHERE user_id IN(
+                SELECT STD.fk_user_id
+                FROM dreamer.student STD
+                WHERE DATE_FORMAT(expired_dt,'%Y-%m-%d') <  DATE_FORMAT(NOW(),'%Y-%m-%d')
+            )
+        ]]>
+    </update>
+
+    <!-- 유저 리스트 반환 -->
+    <select id="getUserListExpiredSoon" resultType="StudentModel" parameterType="Integer">
+        <![CDATA[
+        SELECT STD.fk_suser_id,STD.expired_dt,STD.student_cell, (CURDATE()-INTERVAL #{intervalDate} DAY)
+        FROM dreamer.view_student_user as STD
+        WHERE DATE_FORMAT(expired_dt,'%Y-%m-%d') = (CURDATE()-INTERVAL #{intervalDate} DAY)
+        ]]>
+    </select>
+
+</mapper>

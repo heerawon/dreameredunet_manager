@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!-- 에디터 css -->
+
+    <!--custom Css -->
+    <!-- end custom css -->
+
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here  -->
+    <!-- 기획서 Board-01-03 / Board-01-04 공지사항 등록, 수정-->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title">상품 등록</h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a th:href="@{/product/items}">상품 관리</a></li>
+                                    <li class="breadcrumb-item active">상품 등록</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form th:action='@{/product/items/{pathParam}(pathParam=${urlType})}' method="post">
+
+                            <!-- 첫번째 카드 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="text-end">
+                                        <span class="text-danger">*</span> 표시는 필수 입니다.
+                                    </p>
+
+                                    <div class="row">
+                                        <div class="mb-3 col-md-12">
+                                            <input type="hidden" name="productItemsId" th:value="${resModel?.productItemsId ne null ? resModel?.productItemsId : -1}">
+                                            <label class="form-label">상품명 <span class="text-danger">*</span></label>
+                                            <input name="itemsName" type="text"  class="form-control" required placeholder="상품명을 입력해 주세요."
+                                                   maxlength="20"
+                                                   th:value="${resModel?.itemsName}">
+                                        </div>
+
+                                        <div class="mb-3 col-md-12">
+                                            <label class="form-label">금액 <span class="text-danger">*</span></label>
+                                            <input name="itemsPrice" type="number"  class="form-control" required placeholder="상품금액을 입력해주세요."
+                                                   max="99999999"
+                                                   th:value="${resModel?.itemsPrice}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 하단 버튼 -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="float-start">
+                                        <button type="button" class="btn btn-outline-primary btn_bg" onclick="moveBack();">취소</button>
+                                    </div>
+                                    <div class="float-end button-list">
+                                        <button type="submit" class="btn btn-primary btn_bg" th:text="${type eq 'edit'? '수정 완료':'등록 완료'}"></button>
+<!--                                        <button type="submit" class="btn btn-primary btn_bg" onclick="moveDetail();">수정 완료</button>-->
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+
+<!-- Plugins js 에디터 -->
+
+<!-- Init js 에디터-->
+
+
+<script type="text/javaScript">
+
+    $(function () {
+        $('.menu08').addClass('menuitem-active');
+        $('.menu08-menu').addClass('show');
+        $('.menu08-4').addClass('active');
+    });
+
+    //공지사항 목록으로
+    function moveBack() {
+        location.href = conPath + "product/items";
+    }
+
+
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+@charset "UTF-8";
+
+div.childBox>.childWrap {
+  border-top: 1px solid #e6e6e6;
+  padding-top: 30px;
+  margin-top: 20px;
+}
+div.childBox>.childWrap:first-of-type {
+  border-top: none;
+  padding-top: 0px;
+  margin-top: 0px;
+}
+
+.total_money {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-left: 10px;
+}

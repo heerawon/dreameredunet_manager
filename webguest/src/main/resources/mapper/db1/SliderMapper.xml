@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webstarter.manage.mapper.db1.SliderMapper">
+
+    <!-- 슬라이드 등록 -->
+    <insert id="insertSlider"  parameterType="SliderImagesModel">
+        <![CDATA[
+        INSERT INTO dreamer.slider_images
+        (
+            type,
+            img_src
+        )
+        VALUES (
+                   #{type},
+                   #{imgSrc}
+               );
+        ]]>
+    </insert>
+
+    <!-- 슬라이드 리스트 -->
+    <select id="selectListSlider" resultType="SliderImagesModel" >
+        <![CDATA[
+            SELECT id,type,img_src,
+                   DATE_FORMAT(w_date,'%Y-%m-%d %H:%i:%s') w_date
+            FROM dreamer.slider_images
+            WHERE type = #{type}
+            ORDER BY id DESC
+        ]]>
+    </select>
+
+    <!-- 슬라이드 수정 -->
+    <update id="updateSlider"  parameterType="HashMap">
+        <![CDATA[
+            UPDATE  dreamer.slider_images
+            SET img_src = #{imgSrc}
+            WHERE id = #{id}
+        ]]>
+    </update>
+
+    <!-- 슬라이드 삭제 -->
+    <delete id="deleteSlider"  parameterType="HashMap">
+        <![CDATA[
+            DELETE FROM dreamer.slider_images
+            WHERE id = #{id}
+        ]]>
+    </delete>
+
+</mapper>

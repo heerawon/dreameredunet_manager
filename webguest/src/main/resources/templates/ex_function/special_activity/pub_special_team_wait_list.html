@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="init/comm_head.html"></th:block>
+
+    <!--custom Css -->
+    <style>
+        .color1{
+            background-color: #eeb0d3;
+        }
+        .color2{
+            background-color: #b0d8ee;
+        }
+        .color3{
+            background-color: #c7b0ee;
+        }
+    </style>
+    <!-- end custom css -->
+</head>
+
+<body class="loading">
+
+<!-- Begin page -->
+<div id="wrapper">
+    <!-- ============ 공통 !!!!!!!============ -->
+    <th:block th:include="init/comm_menu.html"></th:block>
+    <!-- ============ 공통 끝!!!!!! ============ -->
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- 기획서 Lecture-02 -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <h4 class="page-title" th:text="|신청 대기 회원 관리(${resList.size()})|"></h4>
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">신청 대기 회원 관리</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="searchTable mb-3">
+
+                                    <div class="articleWrap row">
+                                        <div class="col-lg-3 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>이름</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input type="text" class="form-control" name="userName" id="userName" th:value="${userName}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 searchList">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>성별</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <div class="form-check float-start">
+                                                    <input class="form-check-input" type="radio" name="studentGender" id="sex1" value="" checked>
+                                                    <label class="form-check-label" for="sex1">
+                                                        전체
+                                                    </label>
+                                                </div>
+                                                <div class="form-check float-start ms-2">
+                                                    <input class="form-check-input" type="radio" name="studentGender" id="sex2" value="M"
+                                                           th:checked="${studentGender} eq 'M'">
+                                                    <label class="form-check-label" for="sex2">
+                                                        남성
+                                                    </label>
+                                                </div>
+                                                <div class="form-check float-start ms-2">
+                                                    <input class="form-check-input" type="radio" name="studentGender" id="sex3" value="F"
+                                                           th:checked="${studentGender} eq 'F'">
+                                                    <label class="form-check-label" for="sex3">
+                                                        여성
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="d-table-cell align-middle text-center fw-bold articleTit">
+                                                <p>생년월일</p>
+                                            </div>
+                                            <div class="d-table-cell align-middle articleChoice">
+                                                <input type="date" class="form-control dateInput" name="birthStartDt" id="birthStartDt" th:value="${birthStartDt}"> ~
+                                                <input type="date" class="form-control dateInput" name="birthEndDt" id="birthEndDt" th:value="${birthEndDt}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--검색 날짜 articleWrap -->
+                                    <!--<th:block th:include="ex_function/init/init_pub_filter_bar.html"></th:block>-->
+                                </div>
+
+                                <div class="button-list text-center mb-3">
+                                    <button type="button" class="btn btn-primary btn_bg btn90" id="btn_serch">검색</button>
+                                </div>
+
+
+                                <table id="table" class="table nowrap w-100">
+                                    <thead>
+                                    <tr class="text-center">
+                                        <th>dataID</th>
+                                        <th>#</th>
+                                        <th>특별활동 신청일시</th>
+                                        <th>이름</th>
+                                        <th>생년월일</th>
+                                        <th>나이</th>
+                                        <th>신청 특별활동</th>
+                                        <th>대기중인 기간</th>
+                                    </tr>
+                                    </thead>
+
+
+                                    <tbody>
+                                    <th:block th:each='_,num : ${resList}'>
+                                        <tr class="text-center" th:classappend="${_.teamCategoryId eq 1 ? 'color1' : (_.teamCategoryId eq 2 ? 'color2' : 'color3')}">
+                                            <td th:text='${_.userId}'></td>
+                                            <td th:text='${num.count}'></td>
+                                            <td th:text="${_.regDt}"></td>
+                                            <td th:text='${_.userName}'></td>
+                                            <td th:text='${_.studentBirth}'></td>
+                                            <td th:text='${_.studentAge}'></td>
+                                            <td th:text="${_.categoryName}"></td>
+                                            <td th:text="${_.waitingDt}"></td>
+                                        </tr>
+                                    </th:block>
+
+                                    </tbody>
+                                </table>
+
+
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+                    </div><!-- end col-->
+                </div>
+                <!-- end row-->
+
+
+            </div> <!-- container -->
+
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        <th:block th:include="init/comm_footer.html"></th:block>
+        <!-- end Footer -->
+
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- End Page content -->
+    <!-- ============================================================== -->
+
+
+</div>
+<!-- END wrapper -->
+<th:block th:include="init/comm_script.html"></th:block>
+
+<!-- custom date setting  -->
+<script th:src="@{/assets/js/date_setting.js}"></script>
+<script type="text/javaScript">
+    let table;
+
+    $(function () {
+        table = $('#table').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false,
+                },
+            ],
+            "ordering": false,
+            "scrollX": true,
+            "searching": false, //검색 삭제
+
+            "language": {
+                "paginate": {
+                    "previous": "<i class='mdi mdi-chevron-left'>",
+                    "next": "<i class='mdi mdi-chevron-right'>"
+                }
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+            },
+        });
+
+        //조건 검색 동작
+        $("#btn_serch").on( "click", function() {
+            const userName = $("#userName").val();
+            const studentGender = $("input[name = studentGender]:checked").val();
+            const birthStartDt = $("#birthStartDt").val();
+            const birthEndDt = $("#birthEndDt").val();
+            // const searchStartDt = $("#searchStart").val();
+            // const searchEndDt = $("#searchEnd").val();
+            location.href = conPath+"specialActivity/waitingList?userName="+userName+"&studentGender="+studentGender+"&birthStartDt="+birthStartDt+"&birthEndDt="+birthEndDt;
+        });
+
+        //날짜 세팅 버튼 동작
+        $(".btn_func_date").on("click", function() {s
+            setStartEnd($(this));
+        });
+
+        //날짜 초기화 버튼 동작
+        $("#btn_set_no_date").on( "click", function() {
+            $("#searchStart").val("");
+            $("#searchEnd").val("");
+        });
+    });
+
+
+    $('#table tbody').on('click', 'td', function () {
+        let indexColumnVisible = table.cell(this).index().columnVisible; //노출되는 컬럼(열) 중 클릭한 컬럼의 index
+        let indexColumn = table.cell(this).index().column; // 감춰진 것 까지 포함된 컬럼(열)의 index
+        let indexRow = table.cell(this).index().row; //클릭한 Row(행)의  index
+        let totalColumnCount = table.columns().count(); //전체 열 갯수
+        let indexData = table.row(this).data()[0]; //감춰진 0번째 dataID 값
+
+        // if (indexColumn < totalColumnCount) {
+        //     location.href = "/pub/sale/detail?id=" + indexData;
+        // }
+    });
+
+
+    //input date 세팅부
+    const setStartEnd = function (argument) {
+        let type = String($(argument).attr("id")).trim();
+        const getDates =  getFormatDate(type);
+
+        $("#searchStart").val("");
+        $("#searchEnd").val("");
+        $("#searchStart").val(getDates.startDt);
+        $("#searchEnd").val(getDates.endDt);
+    }
+
+</script>
+
+</body>
+
+</html>
